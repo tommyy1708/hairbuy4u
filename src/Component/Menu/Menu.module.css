@@ -1,0 +1,10 @@
+.navFrame{
+  height: calc(100%-120px);
+  margin:10rem;
+  line-height: 20rem;
+}
+
+.navItem{
+  margin:20rem;
+}
+
