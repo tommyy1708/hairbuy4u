@@ -4,7 +4,7 @@ import {
   MailOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
-import { Menu, Switch } from 'antd';
+import { Menu } from 'antd';
 
 const SiderMenu = () =>{
 function getItem(label, key, icon, children, type) {
