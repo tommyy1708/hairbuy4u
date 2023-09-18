@@ -1,10 +1,14 @@
-.navFrame{
-  height: calc(100%-120px);
-  margin:10rem;
-  line-height: 20rem;
+
+.navFrame {
+  /* height: calc(100%-120px); */
+  height: 100vh;
+  padding: 10rem 0;
 }
 
-.navItem{
-  margin:20rem;
+.navFrame li{
+  font-size: 20rem;
+  text-transform:uppercase;
+  padding: 10rem 0;
+  width: 100%;;
+  list-style: none;
 }
-

@@ -1,36 +1,40 @@
 import React from 'react';
 import styles from './Menu.module.css'
+import {Link} from 'react-router-dom';
+
 const Menu = () => {
   const items = [
     {
       key: 1,
-      label: `Sale`,
+      label: `sale`,
       children: [
-        { key: 2, label: 'CheckOut' },
-        { key: 3, label: 'Inquiry' },
+        { key: 2, label: 'checkOut' },
+        { key: 3, label: 'inquiry' },
       ],
     },
-    { key: 4, label: 'Buy', children: [{ key: 5, label: 'Import' }] },
+    { key: 4, label: 'buy', children: [{ key: 5, label: 'import' }] },
     {
       key: 6,
-      label: 'Products',
-      children: [{ key: 7, label: 'Inquiry' }],
+      label: 'products',
+      children: [{ key: 7, label: 'inquiry' }],
     },
     {
       key: 8,
-      label: 'Inventory',
-      children: [{ key: 9, label: 'Inquiry' }],
+      label: 'inventory',
+      children: [{ key: 9, label: 'inquiry' }],
     },
   ];
 
   return (
-    <>
-    <ul className={`${styles.navFrame}`}>
-      {items.map((item) => (
-        <li style={{ fontSize: '20rem',}} className={`${styles.navItem}`} key={item.key}>{item.label}</li>
-      ))}
-    </ul>
-    </>
+    <div className="menu">
+      <ul className={`${styles.navFrame}`}>
+        {items.map((items) => (
+          <Link to={`${items.label}`}>
+            <li key={items.key}>{items.label}</li>
+          </Link>
+        ))}
+      </ul>
+    </div>
   );
 };
 
