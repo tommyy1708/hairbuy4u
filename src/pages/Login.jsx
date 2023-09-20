@@ -4,7 +4,6 @@ export default function Login() {
   return (
     <div id="login">
       <div className="login_box">
-        <img src={''} alt="" />
         <Form
           name="basic"
           initialValues={{ remember: true }}

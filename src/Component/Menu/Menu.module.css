@@ -2,13 +2,13 @@
 .navFrame {
   /* height: calc(100%-120px); */
   height: 100vh;
-  padding: 10rem 0;
+  padding:0 0 10rem 0;
 }
 
 .navFrame li{
-  font-size: 20rem;
+  font-size: 25rem;
   text-transform:uppercase;
-  padding: 10rem 0;
+  padding:10rem 0;
   width: 100%;;
   list-style: none;
 }

@@ -1,27 +1,33 @@
 import React, { useState } from 'react';
 import { Space, Table } from 'antd';
-import { Button } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import {
+  Link,
+  useLocation,
+} from 'react-router-dom';
+import Item from './Item';
+import Filter from '../Component/Filter/Filter';
 const columns = [
   {
-    title: 'CKU',
-    dataIndex: 'cku',
-    key: 'cku',
+    title: 'ItemCode',
+    dataIndex: 'item_code',
+    key: 'item_code',
+    render: (_, record) => {
+      return (
+        <Link key={record.key} to="item">
+          {record.item_code}
+        </Link>
+      );
+    },
   },
   {
-    title: 'SKU',
-    dataIndex: 'sku',
-    key: 'sku',
+    title: 'USC',
+    dataIndex: 'usc',
+    key: 'usc',
   },
   {
-    title: 'Category',
-    dataIndex: 'category',
-    key: 'category',
-  },
-  {
-    title: 'Name',
-    key: 'name',
-    dataIndex: 'name',
+    title: 'Item',
+    key: 'item',
+    dataIndex: 'item',
   },
   {
     title: 'Qty.',
@@ -34,7 +40,9 @@ const columns = [
     dataIndex: 'msrp',
     render: (_, record) => (
       <>
-        <Space>${parseFloat(record.msrp).toFixed(2)}</Space>
+        <Space key={record.key}>
+          ${parseFloat(record.msrp).toFixed(2)}
+        </Space>
       </>
     ),
   },
@@ -44,89 +52,87 @@ const columns = [
     dataIndex: 'cost',
     render: (_, record) => (
       <>
-        <Space>${parseFloat(record.cost).toFixed(2)}</Space>
+        <Space key={record.key}>
+          ${parseFloat(record.cost).toFixed(2)}
+        </Space>
       </>
     ),
+  },
+  {
+    title: 'Category',
+    dataIndex: 'category',
+    key: 'category',
   },
 ];
 const data = [
   {
     key: '1',
-    cku: 'BD1120448',
-    sku: 32,
-    category: 'Swiss Lace Wigs & Bob Wigs',
-    name: 'Human Hair Bundles, Natural Black, Straight',
+    item_code: 'BD1120448',
+    usc: 32,
+    item: 'Human Hair Bundles, Natural Black, Straight',
     qty: 99,
     msrp: 124,
     cost: 50,
+    category: 'Swiss Lace Wigs & Bob Wigs',
   },
   {
     key: '2',
-    cku: 'BD1120449',
-    sku: 32,
-    category: 'Swiss Lace Wigs & Bob Wigs',
-    name: 'Human Hair Bundles, Natural Black, Straight',
+    item_code: 'BD1120449',
+    usc: 32,
+    item: 'Human Hair Bundles, Natural Black, Straight',
     qty: 99,
     msrp: 124,
     cost: 50,
+    category: 'Swiss Lace Wigs & Bob Wigs',
   },
   {
     key: '3',
-    cku: 'BD1120450',
-    sku: 32,
-    category: 'Swiss Lace Wigs & Bob Wigs',
-    name: 'Human Hair Bundles, Natural Black, Straight',
+    item_code: 'BD1120450',
+    usc: 32,
+    item: 'Human Hair Bundles, Natural Black, Straight',
     qty: 99,
     msrp: 124,
     cost: 50,
+    category: 'Swiss Lace Wigs & Bob Wigs',
   },
   {
     key: '4',
-    cku: 'BD1120448',
-    sku: 32,
-    category: 'Swiss Lace Wigs & Bob Wigs',
-    name: 'Human Hair',
+    item_code: 'BD1120448',
+    usc: 32,
+    item: 'Human Hair',
     qty: 49,
     msrp: 134,
     cost: 50,
+    category: 'Swiss Lace Wigs & Bob Wigs',
   },
 ];
 const Inquiry = () => {
-  const [itemsData, setItemsData] = useState(data);
 
-  const inputChangeHandler = (e) => {
-    const input = document.getElementById('filter_input');
-    const keyword = input.value.trim();
-    const newData = data.filter((e) => e.cku.indexOf(keyword) !== -1);
-    setItemsData(newData);
-  };
-  const emptySearch = () => {
-    setItemsData(data);
-    const input = document.getElementById('filter_input');
-    input.value = '';
-  };
+  const [itemsData, setItemsData] = useState(data);
+  //Start get path name
+  const { pathname } = useLocation();
+  //end get path name
+
+    const emptySearch = () => {
+      setItemsData(data);
+      const input = document.getElementById('filter_input');
+      input.value = '';
+    };
 
   return (
     <div className="inquiry">
-      <div className="searchInput">
-        <input
-          id="filter_input"
-          type="text"
-          placeholder={'Enter here'}
-        />
-        <Button
-          icon={<SearchOutlined />}
-          onClick={inputChangeHandler}
-        >
-          Search
-        </Button>
-        <Button icon={<SearchOutlined />} onClick={emptySearch}>
-          Empty
-        </Button>
-      </div>
-      <div className="inquiry_table">
-        <Table columns={columns} dataSource={itemsData} />
-      </div>
+      <Filter
+        setItemsData={setItemsData}
+        itemsData={itemsData}
+        emptySearch={emptySearch}
+      ></Filter>
+      {pathname.indexOf('item') !== -1 ? (
+        <Item />
+      ) : (
+        <div className="inquiry_table">
+          <Table columns={columns} dataSource={itemsData} />
+        </div>
+      )}
     </div>
   );
 };

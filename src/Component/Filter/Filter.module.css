@@ -1,0 +1,17 @@
+
+.searchInput {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+}
+
+#filter_input{
+  border-radius: 5px;
+  align-self: center;
+  border: 2rem solid #ccc ;
+  box-shadow:1px 1px 2px 1px rgb(255, 255, 255) ;
+  font-size: 16.48rem;
+}
+
+.content{
+  margin: 5rem 15rem;
+}

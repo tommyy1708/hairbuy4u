@@ -61,9 +61,3 @@ button {
   display: flex;
   align-items: center;
 }
-#filter_input{
-    border-radius: 5px;
-  align-self: center;
-  border: 1px solid #555;
-  padding: 10rem;
-}

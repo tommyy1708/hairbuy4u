@@ -31,12 +31,7 @@ const items = [
     getItem('Inquiry', '5'),
   ]),
 ];
-// const SiderMenu = () => {
-//   const [current, setCurrent] = useState('1');
-//   const onClick = (e) => {
-//     console.log('click ', e);
-//     setCurrent(e.key);
-  //   };
+
   const rootSubmenuKeys = ['sub1', 'sub2','sub4', 'sub4'];
 const [openKeys, setOpenKeys] = useState(['sub1']);
   const onOpenChange = (keys) => {

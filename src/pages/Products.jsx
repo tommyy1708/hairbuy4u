@@ -1,12 +1,15 @@
 import React from 'react';
-import { Form, Input, Button, message } from 'antd';
-import { useParams } from 'react-router-dom';
+import {  useLocation} from 'react-router-dom';
+import Inquiry from './Inquiry';
 
 export default function Products() {
-  const { id } = useParams();
+  const { pathname } = useLocation();
+  console.log(pathname);
   return (
     <div>
-      <h2>products-{id}</h2>
+      <div style={{ backgroundColor: '#bfc', height: '100vh' }}>
+        <Inquiry></Inquiry>
+      </div>
     </div>
   );
 }
