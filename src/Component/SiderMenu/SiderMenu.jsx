@@ -27,7 +27,7 @@ const items = [
   getItem('Products', 'sub3', <SettingOutlined />, [
     getItem('Inquiry', '4'),
   ]),
-  getItem('Inventory', 'sub4', <SettingOutlined />, [
+  getItem('Customer', 'sub4', <SettingOutlined />, [
     getItem('Inquiry', '5'),
   ]),
 ];

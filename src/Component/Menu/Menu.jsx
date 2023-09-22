@@ -23,7 +23,7 @@ const Menu = () => {
     },
     {
       key: 4,
-      label: 'inventory',
+      label: 'customer',
       // children: [{ key: 9, label: 'inquiry' }],
     },
   ];

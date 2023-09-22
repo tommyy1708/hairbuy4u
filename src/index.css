@@ -61,3 +61,27 @@ button {
   display: flex;
   align-items: center;
 }
+
+.searchContainer {
+  height: 100rem;
+  overflow: auto;
+}
+
+.searchItem {
+  padding: 0 10rem;
+  font-size: 20rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1rem solid #111;
+  background-color: lightblue;
+  margin: 10rem 0;
+  height: 50rem;
+}
+
+
+.buttonContainer{
+  margin: 10rem;
+}
+
+

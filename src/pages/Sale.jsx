@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import Option from '../Component/Option/Option';
 import Checkout from './Checkout';
 import TradeHistory from './TradeHistory';
 import {useLocation} from 'react-router-dom'
+import CheckOutContent from '../store/CheckOutContent';
 const Sale = () => {
+  const ctx = useContext(CheckOutContent)
   //@OPTIONS is settings of direction for sub pages
   const OPTIONS = [
     {
@@ -21,6 +23,8 @@ const Sale = () => {
   //Start get path name
   const { pathname } = useLocation();
   //end get path name
+
+
 
   return (
     <div className="sale">
