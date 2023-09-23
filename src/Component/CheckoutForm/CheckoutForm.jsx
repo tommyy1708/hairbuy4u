@@ -2,35 +2,32 @@ import React, { useContext, useEffect, useState } from 'react';
 import styles from './CheckoutForm.module.css';
 
 const CheckoutForm = (props) => {
-  console.log('props cartdata', props.orderList.items);
+  const orderList = props.orderList;
 
   return (
-    <div>
-      {props.orderList && props.orderList.length > 0 ? (
-        props.orderList.items.map((order, index) => (
-          <div
-            key={`order_${index}`}
-            className={`${styles.orderContainer}`}
-          >
-            <h2>Order #{index + 1}</h2>
-            <ul className={`${styles.listContainer}`}>
-              {order.items.map((item, itemIndex) => (
-                <li
-                  key={`item_${itemIndex}`}
-                  className={`${styles.listItem}`}
-                >
-                  <p>Item Code: {item.item_code}</p>
-                  <p>Amount: {item.amount}</p>
-                  <p>MSRP: {item.msrp}</p>
+    <>
+      {orderList && orderList.items.length > 0 ? (
+        <div className={`${styles.orderListFrame}`}>
+          {orderList.items.map((order) => (
+            <div
+              key={order.key}
+              className={`${styles.orderContainer}`}
+            >
+              <ul className={`${styles.listContainer}`}>
+                <li className={`${styles.listItem}`}>
+                  <p>Item Code: {order.item_code}</p>
+                  <p>Item Code: {order.item}</p>
+                  <p>Amount: {order.amount}</p>
+                  <p>MSRP: ${order.msrp}</p>
                 </li>
-              ))}
-            </ul>
-          </div>
-        ))
+              </ul>
+            </div>
+          ))}
+        </div>
       ) : (
-        <p>No orders to display.</p>
+        <p>cart empty</p>
       )}
-    </div>
+    </>
   );
 };
 

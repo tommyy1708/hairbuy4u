@@ -3,12 +3,12 @@ import Styles from './Filter.module.css';
 import { Button } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 const Filter = (props) => {
-  const { setItemsData, itemsData, emptySearch } = props;
+  const { setItemsData, inventoryData, emptySearch } = props;
 
   const inputChangeHandler = (e) => {
     const input = document.getElementById('filter_input');
     const keyword = input.value.trim();
-    const newData = itemsData.filter(
+    const newData = inventoryData.filter(
       (e) => e.item_code.indexOf(keyword) !== -1
     );
     setItemsData(newData);

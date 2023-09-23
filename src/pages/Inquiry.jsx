@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Space, Table } from 'antd';
 import {
   Link,
@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 import Item from './Item';
 import Filter from '../Component/Filter/Filter';
+import CheckOutContent from '../store/CheckOutContent';
 const columns = [
   {
     title: 'ItemCode',
@@ -64,57 +65,17 @@ const columns = [
     key: 'category',
   },
 ];
-const data = [
-  {
-    key: '1',
-    item_code: 'BD1120448',
-    usc: 32,
-    item: 'Human Hair Bundles, Natural Black, Straight',
-    qty: 99,
-    msrp: 124,
-    cost: 50,
-    category: 'Swiss Lace Wigs & Bob Wigs',
-  },
-  {
-    key: '2',
-    item_code: 'BD1120449',
-    usc: 32,
-    item: 'Human Hair Bundles, Natural Black, Straight',
-    qty: 99,
-    msrp: 124,
-    cost: 50,
-    category: 'Swiss Lace Wigs & Bob Wigs',
-  },
-  {
-    key: '3',
-    item_code: 'BD1120450',
-    usc: 32,
-    item: 'Human Hair Bundles, Natural Black, Straight',
-    qty: 99,
-    msrp: 124,
-    cost: 50,
-    category: 'Swiss Lace Wigs & Bob Wigs',
-  },
-  {
-    key: '4',
-    item_code: 'BD1120448',
-    usc: 32,
-    item: 'Human Hair',
-    qty: 49,
-    msrp: 134,
-    cost: 50,
-    category: 'Swiss Lace Wigs & Bob Wigs',
-  },
-];
-const Inquiry = () => {
 
-  const [itemsData, setItemsData] = useState(data);
+const Inquiry = () => {
+  const ctx = useContext(CheckOutContent)
+  console.log('p data = ', ctx.inventoryData);
+  const [itemsData, setItemsData] = useState(ctx.inventoryData);
   //Start get path name
   const { pathname } = useLocation();
   //end get path name
 
     const emptySearch = () => {
-      setItemsData(data);
+      setItemsData(ctx.inventoryData);
       const input = document.getElementById('filter_input');
       input.value = '';
     };
@@ -123,7 +84,7 @@ const Inquiry = () => {
     <div className="inquiry">
       <Filter
         setItemsData={setItemsData}
-        itemsData={itemsData}
+        inventoryData={ctx.inventoryData}
         emptySearch={emptySearch}
       ></Filter>
       {pathname.indexOf('item') !== -1 ? (

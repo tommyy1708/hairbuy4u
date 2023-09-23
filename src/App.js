@@ -17,9 +17,33 @@ import Inquiry from './pages/Inquiry.jsx';
 import Checkout from './pages/Checkout.jsx';
 import TradeHistory from './pages/TradeHistory.jsx';
 import CheckOutContent from './store/CheckOutContent.js';
+/**
+ *
+ * @cartData structure{
+ *  orderNumber: oNmber(),
+    items: [
+        // key: '',
+        // item_code: '',
+        // usc: '',
+        // item: '',
+        // qty: 0,
+        // msrp: 0,
+        // cost: 0,
+        // category: '',
+        // amount: 0,
+    ],
+    date: '',
+    client: '',
+    discount: 0,
+    totalAmount: 0,
+    tax: 0,
+    total: 0,
+ * }
+ *
+ */
 const App = () => {
   //Test data
-  const ItemsData = [
+  const productsData = [
     {
       key: '1',
       item_code: 'BD1120448',
@@ -29,32 +53,38 @@ const App = () => {
       msrp: 124,
       cost: 50,
       category: 'Swiss Lace Wigs & Bob Wigs',
-      amount: 1,
+      amount: 0,
     },
   ];
+  //order number generator
+  const oNmber = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const milliseconds = String(now.getMilliseconds()).padStart(
+      3,
+      '0'
+    );
+
+    const orderNumber = `${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}`;
+    return orderNumber;
+  };
+
   const [orderHistory, setOrderHistory] = useState('');
   //inventoryData
-  const [inventoryData, setInventoryData] = useState(ItemsData);
+  const [inventoryData, setInventoryData] = useState(productsData);
   //Initial cartData
   const [cartData, setCartData] = useState({
-    orderNumber: '',
-    items: [
-      {
-        key: 'kjhgf',
-        item_code: 'fsdfdsf',
-        usc: 'dsfdsf',
-        item: 'fsdfsdfsf',
-        qty: 1,
-        msrp: 124,
-        cost: 12,
-        category: 'fsdfds',
-        amount: 1,
-      },
-    ],
+    orderNumber: oNmber(),
+    items: [],
     date: '',
     client: '',
     discount: 0,
-    totalAmount: 1,
+    totalAmount: 0,
     tax: 0,
     total: 0,
   });
@@ -62,10 +92,12 @@ const App = () => {
   const addItemToCart = (item) => {
     const newCart = { ...cartData };
     if (cartData.items.indexOf(item) === -1) {
+      item.amount = 1;
       newCart.items.push(item);
     } else {
       item.amount += 1;
     }
+
     newCart.tax += item.msrp * 0.07;
     newCart.totalAmount += 1;
     newCart.total += item.msrp;

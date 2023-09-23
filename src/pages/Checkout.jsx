@@ -3,9 +3,9 @@ import CheckOutContent from '../store/CheckOutContent';
 import {Link} from 'react-router-dom'
 import { Table ,Space,Button, message} from 'antd'
 import CheckoutForm from '../Component/CheckoutForm/CheckoutForm';
+import printJS from 'print-js';
 const Checkout = () => {
   const ctx = useContext(CheckOutContent);
-  console.log("checkout page",ctx.cartData);
   const [searchTerm, setSearchTerm] = useState('');
 
   const orderColumns = [
@@ -57,19 +57,6 @@ const Checkout = () => {
     },
   ];
 
-    const addItemToCart = (item) => {
-      const newCart = { ...ctx.cartData };
-      if (ctx.cartData.items.indexOf(item) === -1) {
-        newCart.items.push(item);
-      } else {
-        item.amount += 1;
-      }
-      newCart.tax += item.msrp * 0.07;
-      newCart.totalAmount += 1;
-      newCart.total += item.msrp;
-      ctx.setCartData(newCart);
-    };
-
   const searchClicked = () => {
     const input = document.getElementById('searchInput');
     const keyword = input.value.trim();
@@ -79,22 +66,35 @@ const Checkout = () => {
     setSearchTerm(newData);
   };
 
+// template for print
+  const printRecept=()=> {
+      printJS({
+        printable: ctx.cartData.items,
+        type: 'json',
+        header: `<p>Total:$${ctx.cartData.total}</p>`,
+        properties: [
+         'item_code',
+         'item',
+         'msrp',
+         'amount',
+        ],
+      });
+  }
   return (
     <div>
       <div className="searchInput">
         <input id="searchInput" type="text" />
         <button onClick={searchClicked}>Search</button>
       </div>
-
-      <div>
-        <ul className="searchContainer">
+      <div className="searchList">
+        <ul>
           {searchTerm.length > 0
             ? searchTerm.map((item) => (
                 <li key={item.key} className="searchItem">
                   <h3>{item.item_code}</h3>
                   <p>${item.msrp}</p>
                   <h4>{item.item}</h4>
-                  <button onClick={() => addItemToCart(item)}>
+                  <button onClick={() => ctx.addItemToCart(item)}>
                     add To Cart
                   </button>
                 </li>
@@ -102,17 +102,29 @@ const Checkout = () => {
             : null}
         </ul>
       </div>
-
-      <div className="orderTable">
-        <CheckoutForm
-          orderColumns={orderColumns}
-          orderList={ctx.cartData}/>
-      </div>
-      <div className="buttonContainer">
-        <Space size={100}>
-          <Button>Submit</Button>
-          <Button type="primary">Cancel</Button>
-        </Space>
+      <div className="orderDetails">
+        <div className="orderTable">
+          <CheckoutForm
+            orderColumns={orderColumns}
+            orderList={ctx.cartData}
+          />
+        </div>
+        <div className="buttonContainer">
+          {ctx.cartData && ctx.cartData.items.length > 0 ? (
+            <div className={'orderSummarize'}>
+              <h3>OrderNumber</h3>
+              <h5>{ctx.cartData.orderNumber}</h5>
+              <p>Tax:${ctx.cartData.tax.toFixed(2)}</p>
+              <p>Amount:{ctx.cartData.totalAmount}</p>
+              <p>Discount:${ctx.cartData.discount}</p>
+              <p>Total:${ctx.cartData.total}</p>
+              <Space size={20}>
+                <Button>Cancel</Button>
+                <Button type="primary" onClick={printRecept}>Submit</Button>
+              </Space>
+            </div>
+          ) : null}
+        </div>
       </div>
     </div>
   );

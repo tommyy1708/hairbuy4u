@@ -13,7 +13,7 @@ const CheckOutContent = React.createContext({
       total: 0,
     },
   ],
-  inventoryData: [
+  productsData: [
     {
       key: '',
       item_code: '',

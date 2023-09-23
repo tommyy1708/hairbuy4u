@@ -48,7 +48,7 @@ button {
   outline: none;
 }
 
-.missing{
+.missing {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -57,13 +57,7 @@ button {
   font-size: 40rem;
 }
 
-.searchInput {
-  display: flex;
-  align-items: center;
-}
-
-.searchContainer {
-  height: 100rem;
+.searchList {
   overflow: auto;
 }
 
@@ -79,9 +73,20 @@ button {
   height: 50rem;
 }
 
-
-.buttonContainer{
-  margin: 10rem;
+.orderSummarize {
+  position: fixed;
+  width: 150rem;
+  top: 160rem;
+  right: 10rem;
+  font-size: 8rem;
+  padding: 10rem;
+  text-align: right;
+  line-height: 15rem;
+  letter-spacing: 0.5rem;
+  border: 1px solid #bfbfbf;
+  box-shadow: 10px 10px 5px #aaaaaa;
 }
 
-
+.orderDetails{
+  margin:0 200rem 0 80rem;
+}
