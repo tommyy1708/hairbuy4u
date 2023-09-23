@@ -102,21 +102,36 @@ const App = () => {
     newCart.totalAmount += 1;
     newCart.total += item.msrp;
     setCartData(newCart);
-    console.log(cartData.items);
   };
 
   const subItemToCart = (item) => {
     const newCart = { ...cartData };
-    item.amount -= 1;
-    if (item.amount === 0) {
-      newCart.items.splice(newCart.items.indexOf(item), 1);
+    if (cartData.items.indexOf(item) === -1) {
+      console.log(`item doesn't appear`);
     }
-
-    newCart.totalAmount -= 1;
-    newCart.totalPrice -= item.msrp;
+    if (item.amount > 1) {
+      item.amount -= 1;
+      newCart.tax -= item.msrp * 0.07;
+      newCart.totalAmount -= 1;
+      newCart.total -= item.msrp;
+    }
 
     setCartData(newCart);
   };
+
+  const removeItemToCart = (item) => {
+    const newCart = { ...cartData };
+    const index = cartData.items.indexOf(item);
+      if (cartData.items.indexOf(item) === -1) {
+        console.log(`item doesn't appear`);
+      }
+      newCart.tax -= item.amount * item.msrp * 0.07;
+      newCart.totalAmount -= item.amount;
+      newCart.total -= item.amount * item.msrp;
+      newCart.items.splice(index,1)
+
+      setCartData(newCart);
+  }
 
   return (
     <CheckOutContent.Provider
@@ -124,6 +139,8 @@ const App = () => {
         cartData,
         setCartData,
         addItemToCart,
+        subItemToCart,
+        removeItemToCart,
         inventoryData,
         orderHistory,
       }}

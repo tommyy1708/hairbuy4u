@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React from 'react';
 import styles from './CheckoutForm.module.css';
-
+import { Button } from 'antd';
 const CheckoutForm = (props) => {
   const orderList = props.orderList;
-
+  const { addItemToCart, subItemToCart, removeItemToCart } = props;
   return (
     <>
       {orderList && orderList.items.length > 0 ? (
@@ -21,11 +21,27 @@ const CheckoutForm = (props) => {
                   <p>MSRP: ${order.msrp}</p>
                 </li>
               </ul>
+
+              <Button danger onClick={() => removeItemToCart(order)}>
+                remove
+              </Button>
+              <Button
+                type="primary"
+                onClick={() => subItemToCart(order)}
+              >
+                -
+              </Button>
+              <Button
+                onClick={() => addItemToCart(order)}
+                type="primary"
+              >
+                +
+              </Button>
             </div>
           ))}
         </div>
       ) : (
-        <p>cart empty</p>
+        <h2>cart empty</h2>
       )}
     </>
   );

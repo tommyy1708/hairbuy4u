@@ -107,6 +107,9 @@ const Checkout = () => {
           <CheckoutForm
             orderColumns={orderColumns}
             orderList={ctx.cartData}
+            addItemToCart={ctx.addItemToCart}
+            subItemToCart={ctx.subItemToCart}
+            removeItemToCart={ctx.removeItemToCart}
           />
         </div>
         <div className="buttonContainer">
@@ -120,7 +123,9 @@ const Checkout = () => {
               <p>Total:${ctx.cartData.total}</p>
               <Space size={20}>
                 <Button>Cancel</Button>
-                <Button type="primary" onClick={printRecept}>Submit</Button>
+                <Button type="primary" onClick={printRecept}>
+                  Submit
+                </Button>
               </Space>
             </div>
           ) : null}
