@@ -115,12 +115,12 @@ const Checkout = () => {
         <div className="buttonContainer">
           {ctx.cartData && ctx.cartData.items.length > 0 ? (
             <div className={'orderSummarize'}>
-              <h3>OrderNumber</h3>
+              <h3>OrderNumber:</h3>
               <h5>{ctx.cartData.orderNumber}</h5>
-              <p>Tax:${ctx.cartData.tax.toFixed(2)}</p>
-              <p>Amount:{ctx.cartData.totalAmount}</p>
               <p>Discount:${ctx.cartData.discount}</p>
-              <p>Total:${ctx.cartData.total}</p>
+              <p>Amount:{ctx.cartData.totalAmount}</p>
+              <p>Tax:${(ctx.cartData.tax).toFixed(2)}</p>
+              <p>Total:${(ctx.cartData.total).toFixed(2)}</p>
               <Space size={20}>
                 <Button>Cancel</Button>
                 <Button type="primary" onClick={printRecept}>

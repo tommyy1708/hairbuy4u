@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
 } from 'react-router-dom';
+import axios from 'axios';
 //Components
 import MainLayout from './Component/MainLayout/MainLayout.jsx';
 //Pages
@@ -42,6 +43,8 @@ import CheckOutContent from './store/CheckOutContent.js';
  *
  */
 const App = () => {
+
+
   //Test data
   const productsData = [
     {
@@ -56,6 +59,11 @@ const App = () => {
       amount: 0,
     },
   ];
+  // const [orderHistory, setOrderHistory] = useState('');
+  //inventoryData
+  const [inventoryData, setInventoryData] = useState(productsData);
+  //Initial cartData
+
   //order number generator
   const oNmber = () => {
     const now = new Date();
@@ -74,10 +82,6 @@ const App = () => {
     return orderNumber;
   };
 
-  const [orderHistory, setOrderHistory] = useState('');
-  //inventoryData
-  const [inventoryData, setInventoryData] = useState(productsData);
-  //Initial cartData
   const [cartData, setCartData] = useState({
     orderNumber: oNmber(),
     items: [],
@@ -89,6 +93,7 @@ const App = () => {
     total: 0,
   });
 
+  //! function
   const addItemToCart = (item) => {
     const newCart = { ...cartData };
     if (cartData.items.indexOf(item) === -1) {
@@ -97,13 +102,13 @@ const App = () => {
     } else {
       item.amount += 1;
     }
-
-    newCart.tax += item.msrp * 0.07;
+    let tax = (item.msrp*10000 * 0.07/10000);
+    newCart.tax += tax;
     newCart.totalAmount += 1;
-    newCart.total += item.msrp;
+    newCart.total += item.msrp * 1.07;
     setCartData(newCart);
   };
-
+  //! function
   const subItemToCart = (item) => {
     const newCart = { ...cartData };
     if (cartData.items.indexOf(item) === -1) {
@@ -113,25 +118,27 @@ const App = () => {
       item.amount -= 1;
       newCart.tax -= item.msrp * 0.07;
       newCart.totalAmount -= 1;
-      newCart.total -= item.msrp;
+      newCart.total -= parseFloat(item.msrp * 1.07).toFixed(2);
     }
 
     setCartData(newCart);
   };
-
+  //! function
   const removeItemToCart = (item) => {
     const newCart = { ...cartData };
     const index = cartData.items.indexOf(item);
-      if (cartData.items.indexOf(item) === -1) {
-        console.log(`item doesn't appear`);
-      }
-      newCart.tax -= item.amount * item.msrp * 0.07;
-      newCart.totalAmount -= item.amount;
-      newCart.total -= item.amount * item.msrp;
-      newCart.items.splice(index,1)
+    if (cartData.items.indexOf(item) === -1) {
+      console.log(`item doesn't appear`);
+    }
+    newCart.tax -= item.amount * item.msrp * 0.07;
+    newCart.totalAmount -= item.amount;
+    newCart.total -= parseFloat(
+      item.amount * item.msrp * 1.07
+    ).toFixed(2);
+    newCart.items.splice(index, 1);
 
-      setCartData(newCart);
-  }
+    setCartData(newCart);
+  };
 
   return (
     <CheckOutContent.Provider
@@ -142,7 +149,7 @@ const App = () => {
         subItemToCart,
         removeItemToCart,
         inventoryData,
-        orderHistory,
+        // orderHistory,
       }}
     >
       <div className="App">

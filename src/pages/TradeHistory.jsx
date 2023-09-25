@@ -1,27 +1,39 @@
 import React, { useState,useEffect } from 'react';
 import { Table, Space } from 'antd';
-import {Routes,Route, Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import HistoryDetail from '../pages/HistoryDetail'
-const TradeHistory = () => {
-    useEffect(() => {
-      if (path.pathname.indexOf('detail') !== -1) {
-        setShowDetail(true);
-      } else {
-        setShowDetail(false);
-      }
-    });
-  const [showDetail, setShowDetail] = useState(false);
-  const path = useLocation();
 
-  const ORDERDATA = [
-    {
-      key: '1',
-      order_number: 'OD202309091122',
-      total: '1240',
-      client: 'Tommy',
-      date: '2023-09-10',
-    },
-  ];
+const TradeHistory = (props) => {
+  //! save for later checking
+//     useEffect(() => {
+//       if (path.pathname.indexOf('detail') !== -1) {
+//         setShowDetail(true);
+//       } else {
+//         setShowDetail(false);
+//       }
+// });
+
+  const [showDetail, setShowDetail] = useState(false);
+  // const path = useLocation();
+//!
+
+  // const [orderdata, setOrderData] = useState(|| [{
+  //     key: '',
+  //     order_number: '',
+  //     total: '',
+  //     client: '',
+  //     date: '',
+  // }])
+
+  // const orderdata = [
+  //   {
+  //     key: '',
+  //     order_number: '',
+  //     total: '',
+  //     client: '',
+  //     date: '',
+  //   },
+  // ];
 
   const history = [
     {
@@ -54,7 +66,11 @@ const TradeHistory = () => {
 
   return (
     <div>
-      {showDetail ?<HistoryDetail></HistoryDetail> :  <Table columns={history} dataSource={ORDERDATA} /> }
+      {showDetail ? (
+        <HistoryDetail></HistoryDetail>
+      ) : (
+        <Table columns={history} dataSource={props.orderdata} />
+      )}
     </div>
   );
 };

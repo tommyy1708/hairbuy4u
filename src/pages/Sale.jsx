@@ -1,11 +1,21 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Option from '../Component/Option/Option';
 import Checkout from './Checkout';
 import TradeHistory from './TradeHistory';
 import {useLocation} from 'react-router-dom'
-import CheckOutContent from '../store/CheckOutContent';
+import axios from 'axios';
+
 const Sale = () => {
-  const ctx = useContext(CheckOutContent)
+
+  const fetchMyAPI = async () => {
+   const result = await axios.get('/api/orderhistory');
+    setOrderData(result.data.data);
+  };
+  useEffect(() => {
+    fetchMyAPI()
+  },[])
+
+  const [orderdata, setOrderData] = useState([]);
   //@OPTIONS is settings of direction for sub pages
   const OPTIONS = [
     {
@@ -24,18 +34,26 @@ const Sale = () => {
   const { pathname } = useLocation();
   //end get path name
 
-
-
   return (
     <div className="sale">
-      <Option options={OPTIONS}></Option>
-      {pathname.indexOf('checkout') !== -1 ? (
-        <Checkout />
-      ) : (
-        <TradeHistory />
-      )}
+          <Option options={OPTIONS}></Option>
+     {
+       pathname.indexOf('checkout') !== -1 ? (
+         <Checkout />
+       ) : (
+         <TradeHistory orderdata={orderdata} />
+       )
+     }
     </div>
   );
 }
 
 export default Sale;
+    //  <Option options={OPTIONS}></Option>;
+    //  {
+    //    pathname.indexOf('checkout') !== -1 ? (
+    //      <Checkout />
+    //    ) : (
+    //      <TradeHistory orderdata={orderdata} />
+    //    );
+    //  }

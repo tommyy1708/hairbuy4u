@@ -1,11 +1,17 @@
 import React from 'react';
 import { Form, Input, Button } from 'antd';
-import { InfoApi } from '../request/api';
 import axios from 'axios';
+import { LoginApi } from '../request/api';
 export default function Login() {
 
-  const onFinish = () => {
-    axios.get('/api/login')
+  const onFinish = (values) => {
+    console.log(values);
+    LoginApi({
+      username: values.username,
+      password:values.password
+    }).then(res => {
+               localStorage.setItem('username', res.data.username);
+    })
   }
   return (
     <div id="login">
@@ -41,6 +47,7 @@ export default function Login() {
           >
             <Input.Password />
           </Form.Item>
+
           <Form.Item>
             <Button type="primary" htmlType="submit" block>
               Submit
