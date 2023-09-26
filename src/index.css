@@ -76,7 +76,7 @@ button {
 .orderSummarize {
   position: fixed;
   width: 150rem;
-  top: 160rem;
+  top: 230rem;
   right: 10rem;
   font-size: 8rem;
   padding: 10rem;
@@ -89,4 +89,8 @@ button {
 
 .orderDetails{
   margin:0 200rem 0 80rem;
+}
+
+.searchList{
+  height: 125rem;
 }

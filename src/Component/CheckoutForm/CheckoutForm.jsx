@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './CheckoutForm.module.css';
 import { Button } from 'antd';
 const CheckoutForm = (props) => {
+  //This components to shows items in the cart
   const orderList = props.orderList;
   const { addItemToCart, subItemToCart, removeItemToCart } = props;
   return (
@@ -18,7 +19,7 @@ const CheckoutForm = (props) => {
                   <p>Item Code: {order.item_code}</p>
                   <p>Item Code: {order.item}</p>
                   <p>Amount: {order.amount}</p>
-                  <p>MSRP: ${order.msrp}</p>
+                  <p>MSRP: ${order.price}</p>
                 </li>
               </ul>
 

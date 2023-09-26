@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import CheckOutContent from '../store/CheckOutContent';
 import {Link} from 'react-router-dom'
-import { Table ,Space,Button, message} from 'antd'
+import {Space,Button} from 'antd'
 import CheckoutForm from '../Component/CheckoutForm/CheckoutForm';
 import printJS from 'print-js';
 const Checkout = () => {
@@ -75,8 +75,11 @@ const Checkout = () => {
         properties: [
          'item_code',
          'item',
-         'msrp',
-         'amount',
+         'price',
+          'amount',
+         'subtotal',
+         'tax',
+         'total',
         ],
       });
   }
@@ -92,7 +95,7 @@ const Checkout = () => {
             ? searchTerm.map((item) => (
                 <li key={item.key} className="searchItem">
                   <h3>{item.item_code}</h3>
-                  <p>${item.msrp}</p>
+                  <p>${item.price}</p>
                   <h4>{item.item}</h4>
                   <button onClick={() => ctx.addItemToCart(item)}>
                     add To Cart
@@ -117,8 +120,9 @@ const Checkout = () => {
             <div className={'orderSummarize'}>
               <h3>OrderNumber:</h3>
               <h5>{ctx.cartData.orderNumber}</h5>
-              <p>Discount:${ctx.cartData.discount}</p>
+              <p>Discount:${(ctx.cartData.discount).toFixed(2)}</p>
               <p>Amount:{ctx.cartData.totalAmount}</p>
+              <p>Subtotal:${(ctx.cartData.subtotal).toFixed(2)}</p>
               <p>Tax:${(ctx.cartData.tax).toFixed(2)}</p>
               <p>Total:${(ctx.cartData.total).toFixed(2)}</p>
               <Space size={20}>

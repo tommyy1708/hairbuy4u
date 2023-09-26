@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -43,25 +43,31 @@ import CheckOutContent from './store/CheckOutContent.js';
  *
  */
 const App = () => {
-
+  const fetchInventory = async () => {
+    const result = await axios.get('/api/sale');
+    setInventoryData(result.data.data);
+  };
+  useEffect(() => {
+    fetchInventory();
+  }, []);
 
   //Test data
-  const productsData = [
-    {
-      key: '1',
-      item_code: 'BD1120448',
-      usc: 32,
-      item: 'Human Hair Bundles, Natural Black, Straight',
-      qty: 99,
-      msrp: 124,
-      cost: 50,
-      category: 'Swiss Lace Wigs & Bob Wigs',
-      amount: 0,
-    },
-  ];
+  // const productsData = [
+  //   {
+  //     key: '1',
+  //     item_code: 'BD1120448',
+  //     usc: 32,
+  //     item: 'Human Hair Bundles, Natural Black, Straight',
+  //     qty: 99,
+  //     msrp: 124,
+  //     cost: 50,
+  //     category: 'Swiss Lace Wigs & Bob Wigs',
+  //     amount: 0,
+  //   },
+  // ];
   // const [orderHistory, setOrderHistory] = useState('');
   //inventoryData
-  const [inventoryData, setInventoryData] = useState(productsData);
+  const [inventoryData, setInventoryData] = useState([]);
   //Initial cartData
 
   //order number generator
@@ -89,6 +95,7 @@ const App = () => {
     client: '',
     discount: 0,
     totalAmount: 0,
+    subtotal: 0,
     tax: 0,
     total: 0,
   });
@@ -102,10 +109,14 @@ const App = () => {
     } else {
       item.amount += 1;
     }
-    let tax = (item.msrp*10000 * 0.07/10000);
-    newCart.tax += tax;
+    let subtotal = item.price;
+    // let tax = (item.price*10000 * 0.07/10000);
+    let item_tax = item.price * 0.07;
+    let item_total = item_tax + item.price;
+    newCart.tax += item_tax;
+    newCart.subtotal += subtotal;
     newCart.totalAmount += 1;
-    newCart.total += item.msrp * 1.07;
+    newCart.total += item_total;
     setCartData(newCart);
   };
   //! function
@@ -116,9 +127,12 @@ const App = () => {
     }
     if (item.amount > 1) {
       item.amount -= 1;
-      newCart.tax -= item.msrp * 0.07;
+      let item_tax = item.price * 0.07;
+      let item_total = item_tax + item.price;
+      newCart.tax -= item_tax;
+      newCart.subtotal -= item.price;
       newCart.totalAmount -= 1;
-      newCart.total -= parseFloat(item.msrp * 1.07).toFixed(2);
+      newCart.total -= item_total;
     }
 
     setCartData(newCart);
@@ -130,11 +144,17 @@ const App = () => {
     if (cartData.items.indexOf(item) === -1) {
       console.log(`item doesn't appear`);
     }
-    newCart.tax -= item.amount * item.msrp * 0.07;
+    // let total = newCart.tax + item.price * item.amount;
+    let item_tax = item.price * 0.07 * item.amount;
+    let item_subtotal = item.price * item.amount;
+      let item_total = item_tax + item_subtotal;
+    newCart.tax -= item_tax;
+    newCart.subtotal -= item_subtotal;
     newCart.totalAmount -= item.amount;
-    newCart.total -= parseFloat(
-      item.amount * item.msrp * 1.07
-    ).toFixed(2);
+    newCart.total -= item_total;
+    //   parseFloat(
+    //   item.amount * item.price * 1.07
+    // ).toFixed(2);
     newCart.items.splice(index, 1);
 
     setCartData(newCart);

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Option from '../Component/Option/Option';
 import Checkout from './Checkout';
 import TradeHistory from './TradeHistory';
@@ -49,11 +49,3 @@ const Sale = () => {
 }
 
 export default Sale;
-    //  <Option options={OPTIONS}></Option>;
-    //  {
-    //    pathname.indexOf('checkout') !== -1 ? (
-    //      <Checkout />
-    //    ) : (
-    //      <TradeHistory orderdata={orderdata} />
-    //    );
-    //  }

@@ -1,16 +1,22 @@
 import React from 'react';
 import { Form, Input, Button } from 'antd';
-import axios from 'axios';
 import { LoginApi } from '../request/api';
 export default function Login() {
 
   const onFinish = (values) => {
-    console.log(values);
     LoginApi({
       username: values.username,
       password:values.password
     }).then(res => {
-               localStorage.setItem('username', res.data.username);
+      let password = res.data.password;
+      console.log("🚀 ~ file: Login.jsx:12 ~ onFinish ~ password:", password)
+      let username = res.data.username;
+      console.log("🚀 ~ file: Login.jsx:14 ~ onFinish ~ username:", username)
+      if (values.password === password) {
+        localStorage.setItem('username', username);
+      } else {
+        console.log('something wrong!')
+      }
     })
   }
   return (
