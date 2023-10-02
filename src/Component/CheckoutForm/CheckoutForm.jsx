@@ -1,12 +1,12 @@
 import React from 'react';
 import styles from './CheckoutForm.module.css';
-import { Button } from 'antd';
+import { Button, Result } from 'antd';
 const CheckoutForm = (props) => {
   //This components to shows items in the cart
   const orderList = props.orderList;
   const { addItemToCart, subItemToCart, removeItemToCart } = props;
   return (
-    <>
+    <div className={`${styles.orderListComponent}`}>
       {orderList && orderList.items.length > 0 ? (
         <div className={`${styles.orderListFrame}`}>
           {orderList.items.map((order) => (
@@ -22,16 +22,10 @@ const CheckoutForm = (props) => {
                   <p>MSRP: ${order.price}</p>
                 </li>
               </ul>
-
               <Button danger onClick={() => removeItemToCart(order)}>
                 remove
               </Button>
-              <Button
-                type="primary"
-                onClick={() => subItemToCart(order)}
-              >
-                -
-              </Button>
+              <Button onClick={() => subItemToCart(order)}>-</Button>
               <Button
                 onClick={() => addItemToCart(order)}
                 type="primary"
@@ -42,9 +36,9 @@ const CheckoutForm = (props) => {
           ))}
         </div>
       ) : (
-        <h2>cart empty</h2>
+            <Result title="Please add item by search" />
       )}
-    </>
+    </div>
   );
 };
 

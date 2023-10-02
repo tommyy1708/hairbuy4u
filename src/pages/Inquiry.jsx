@@ -14,7 +14,7 @@ const columns = [
     key: 'item_code',
     render: (_, record) => {
       return (
-        <Link key={record.key} to="item">
+        <Link to={`item?id=${record.item_code}`} >
           {record.item_code}
         </Link>
       );
@@ -42,7 +42,7 @@ const columns = [
     render: (_, record) => (
       <>
         <Space key={record.key}>
-          ${parseFloat(record.msrp).toFixed(2)}
+          ${parseFloat(record.price).toFixed(2)}
         </Space>
       </>
     ),
@@ -68,11 +68,12 @@ const columns = [
 
 const Inquiry = () => {
   const ctx = useContext(CheckOutContent)
-  console.log('p data = ', ctx.inventoryData);
+
   const [itemsData, setItemsData] = useState(ctx.inventoryData);
-  //Start get path name
+
+  // get path name
   const { pathname } = useLocation();
-  //end get path name
+
 
     const emptySearch = () => {
       setItemsData(ctx.inventoryData);

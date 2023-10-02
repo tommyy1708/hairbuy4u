@@ -18,30 +18,8 @@ import Inquiry from './pages/Inquiry.jsx';
 import Checkout from './pages/Checkout.jsx';
 import TradeHistory from './pages/TradeHistory.jsx';
 import CheckOutContent from './store/CheckOutContent.js';
-/**
- *
- * @cartData structure{
- *  orderNumber: oNmber(),
-    items: [
-        // key: '',
-        // item_code: '',
-        // usc: '',
-        // item: '',
-        // qty: 0,
-        // msrp: 0,
-        // cost: 0,
-        // category: '',
-        // amount: 0,
-    ],
-    date: '',
-    client: '',
-    discount: 0,
-    totalAmount: 0,
-    tax: 0,
-    total: 0,
- * }
- *
- */
+import HistoryDetail from './pages/HistoryDetail.jsx';
+
 const App = () => {
   const fetchInventory = async () => {
     const result = await axios.get('/api/sale');
@@ -50,27 +28,11 @@ const App = () => {
   useEffect(() => {
     fetchInventory();
   }, []);
-
-  //Test data
-  // const productsData = [
-  //   {
-  //     key: '1',
-  //     item_code: 'BD1120448',
-  //     usc: 32,
-  //     item: 'Human Hair Bundles, Natural Black, Straight',
-  //     qty: 99,
-  //     msrp: 124,
-  //     cost: 50,
-  //     category: 'Swiss Lace Wigs & Bob Wigs',
-  //     amount: 0,
-  //   },
-  // ];
-  // const [orderHistory, setOrderHistory] = useState('');
   //inventoryData
-  const [inventoryData, setInventoryData] = useState([]);
+  const [inventoryData, setInventoryData] = useState('');
   //Initial cartData
 
-  //order number generator
+  //Start order number generator
   const oNmber = () => {
     const now = new Date();
     const year = now.getFullYear();
@@ -87,10 +49,12 @@ const App = () => {
     const orderNumber = `${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}`;
     return orderNumber;
   };
+  //End order number generator
 
   const [cartData, setCartData] = useState({
     orderNumber: oNmber(),
     items: [],
+    order_type: '',
     date: '',
     client: '',
     discount: 0,
@@ -110,7 +74,6 @@ const App = () => {
       item.amount += 1;
     }
     let subtotal = item.price;
-    // let tax = (item.price*10000 * 0.07/10000);
     let item_tax = item.price * 0.07;
     let item_total = item_tax + item.price;
     newCart.tax += item_tax;
@@ -144,17 +107,14 @@ const App = () => {
     if (cartData.items.indexOf(item) === -1) {
       console.log(`item doesn't appear`);
     }
-    // let total = newCart.tax + item.price * item.amount;
+
     let item_tax = item.price * 0.07 * item.amount;
     let item_subtotal = item.price * item.amount;
-      let item_total = item_tax + item_subtotal;
+    let item_total = item_tax + item_subtotal;
     newCart.tax -= item_tax;
     newCart.subtotal -= item_subtotal;
     newCart.totalAmount -= item.amount;
     newCart.total -= item_total;
-    //   parseFloat(
-    //   item.amount * item.price * 1.07
-    // ).toFixed(2);
     newCart.items.splice(index, 1);
 
     setCartData(newCart);
@@ -178,17 +138,20 @@ const App = () => {
             <Route path="/login" element={<Login />}></Route>
             <Route path="/" element={<MainLayout />}>
               <Route path="/sale/*" element={<Sale />}>
-                <Route path="checkout" element={<Checkout />} />
                 <Route
-                  path="trade_history/:id?"
+                  path="order_history"
                   element={<TradeHistory />}
-                ></Route>
+                >
+                  <Route
+                    path="order_detail/:id"
+                    element={<HistoryDetail />}
+                  />
+                </Route>
+                <Route path="checkout" element={<Checkout />} />
               </Route>
               <Route path="/buy" element={<Buy />}></Route>
-              <Route
-                path="/products/*"
-                element={<Products />}
-              ></Route>
+              <Route path="/products/*" element={<Products />}>
+              </Route>
               <Route path="/customer" element={<Customer />}>
                 <Route path="inquiry" element={<Inquiry />}></Route>
               </Route>

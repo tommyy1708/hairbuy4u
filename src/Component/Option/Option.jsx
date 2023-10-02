@@ -4,18 +4,29 @@ import styles from './Option.module.css';
 import {  Link } from 'react-router-dom';
 
 
-const Option = (props) => {
-  const { options } = props;
+const Option = () => {
 
+  const OPTIONS = [
+    {
+      key: '1',
+      address: 'order_history',
+      name: 'trade_history',
+    },
+    {
+      key: '2',
+      address: 'checkout',
+      name: 'checkout',
+    },
+  ];
   return (
     <div className={`${styles.option}`}>
       <div className={`${styles.option_content}`}>
-        {options.map((item) =>(
-            <div key={item.key} className={`${styles.buttons}`}>
-              <Link to={item.address}>
-                <Button type="primary">{item.name}</Button>
-              </Link>
-            </div>
+        {OPTIONS.map((item) => (
+          <div key={item.key} className={`${styles.buttons}`}>
+            <Link to={item.address}>
+              <Button type="primary">{item.name}</Button>
+            </Link>
+          </div>
         ))}
       </div>
     </div>

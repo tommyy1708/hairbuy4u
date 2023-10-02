@@ -1,12 +1,30 @@
 import React, { useContext, useState } from 'react';
 import CheckOutContent from '../store/CheckOutContent';
-import {Link} from 'react-router-dom'
-import {Space,Button} from 'antd'
+import { Link } from 'react-router-dom';
+import { Space, Button, Modal } from 'antd';
 import CheckoutForm from '../Component/CheckoutForm/CheckoutForm';
 import printJS from 'print-js';
+import { TestApi } from '../request/api';
 const Checkout = () => {
+  const { modal } = Modal.useModal();
   const ctx = useContext(CheckOutContent);
   const [searchTerm, setSearchTerm] = useState('');
+  //Modal setting Start
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const quoteFinished = () => {
+    
+    console.log('quote clicked');
+      Modal.destroyAll();
+  };
+  const receptFinished = () => {
+    // console.log(ctx.cartData);
+    TestApi().then((res) => {
+      console.log(res.data);
+})
+    Modal.destroyAll();
+  }
+  //Modal end
 
   const orderColumns = [
     {
@@ -33,12 +51,12 @@ const Checkout = () => {
     },
     {
       title: 'MSRP',
-      key: 'msrp',
-      dataIndex: 'msrp',
+      key: 'price',
+      dataIndex: 'price',
       render: (_, record) => (
         <>
           <Space key={record.key}>
-            ${parseFloat(record.msrp).toFixed(2)}
+            ${parseFloat(record.price).toFixed(2)}
           </Space>
         </>
       ),
@@ -66,26 +84,51 @@ const Checkout = () => {
     setSearchTerm(newData);
   };
 
-// template for print
-  const printRecept=()=> {
-      printJS({
-        printable: ctx.cartData.items,
-        type: 'json',
-        header: `<p>Total:$${ctx.cartData.total}</p>`,
-        properties: [
-         'item_code',
-         'item',
-         'price',
-          'amount',
-         'subtotal',
-         'tax',
-         'total',
-        ],
-      });
-  }
+  // Start template for print
+  const printRecept = () => {
+    printJS({
+      printable: ctx.cartData.items,
+      type: 'json',
+      header: `
+      <div style="padding:0; margin=0;">
+      <h4>Hairbuy4u Quotation
+      (Make order at our website for pay less: www.hairbuy4u.com )</h3>
+      </div>
+      <div style="display:flex; justify-content:space-between;">
+      <p>Subtotal:$${ctx.cartData.subtotal.toFixed(2)}</p>
+      <p>Tax:$${ctx.cartData.tax.toFixed(2)}</p>
+      <p>Total:$${ctx.cartData.total.toFixed(2)}</p>
+      </div>
+      `,
+      properties: ['item_code', 'item', 'price', 'amount'],
+      onPrintDialogClose: receptFinished,
+    });
+  };
+  //end template for print
+
+  const printQuote = () => {
+    printJS({
+      printable: ctx.cartData.items,
+      type: 'json',
+      header: `
+      <div style="padding:0; margin=0;">
+      <h4>Hairbuy4u Quotation
+      (Make order at our website for pay less: www.hairbuy4u.com )</h3>
+      </div>
+      <div style="display:flex; justify-content:space-between;">
+      <p>Subtotal:$${ctx.cartData.subtotal.toFixed(2)}</p>
+      <p>Tax:$${ctx.cartData.tax.toFixed(2)}</p>
+      <p>Total:$${ctx.cartData.total.toFixed(2)}</p>
+      </div>
+      `,
+      properties: ['item_code', 'item', 'price', 'amount'],
+      onPrintDialogClose: quoteFinished,
+    });
+  };
+
   return (
     <div>
-      <div className="searchInput">
+      <div className="searchInputFrame">
         <input id="searchInput" type="text" />
         <button onClick={searchClicked}>Search</button>
       </div>
@@ -120,15 +163,53 @@ const Checkout = () => {
             <div className={'orderSummarize'}>
               <h3>OrderNumber:</h3>
               <h5>{ctx.cartData.orderNumber}</h5>
-              <p>Discount:${(ctx.cartData.discount).toFixed(2)}</p>
+              <p>Discount:${ctx.cartData.discount.toFixed(2)}</p>
               <p>Amount:{ctx.cartData.totalAmount}</p>
-              <p>Subtotal:${(ctx.cartData.subtotal).toFixed(2)}</p>
-              <p>Tax:${(ctx.cartData.tax).toFixed(2)}</p>
-              <p>Total:${(ctx.cartData.total).toFixed(2)}</p>
+              <p>Subtotal:${ctx.cartData.subtotal.toFixed(2)}</p>
+              <p>Tax:${ctx.cartData.tax.toFixed(2)}</p>
+              <p>Total:${ctx.cartData.total.toFixed(2)}</p>
               <Space size={20}>
-                <Button>Cancel</Button>
-                <Button type="primary" onClick={printRecept}>
-                  Submit
+                <Button
+                  onClick={() => {
+                    Modal.confirm({
+                      title: 'Quote Confirm',
+                      content:
+                        'This action to print out the quotation',
+                      footer: (_, { CancelBtn }) => (
+                        <>
+                          <CancelBtn />
+                          <Button type="primary" onClick={printQuote}>
+                            Print
+                          </Button>
+                        </>
+                      ),
+                    });
+                  }}
+                >
+                  Quote
+                </Button>
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    Modal.confirm({
+                      title: 'Confirm',
+                      content:
+                        'This action to print out the recept and not allow undo!!!',
+                      footer: (_, { CancelBtn }) => (
+                        <>
+                          <CancelBtn />
+                          <Button
+                            type="primary"
+                            onClick={printRecept}
+                          >
+                            Print
+                          </Button>
+                        </>
+                      ),
+                    });
+                  }}
+                >
+                  Recept
                 </Button>
               </Space>
             </div>
@@ -137,6 +218,6 @@ const Checkout = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Checkout;

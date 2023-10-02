@@ -58,7 +58,9 @@ button {
 }
 
 .searchList {
-  overflow: auto;
+  height: 125rem;
+  box-shadow:5rem 25rem 15rem lightblue;
+  overflow: scroll;
 }
 
 .searchItem {
@@ -72,16 +74,19 @@ button {
   margin: 10rem 0;
   height: 50rem;
 }
+.searchItem button{
+  height: 100%;
+  padding: 15rem;
+}
 
 .orderSummarize {
   position: fixed;
   width: 150rem;
-  top: 230rem;
+  top: 250rem;
   right: 10rem;
-  font-size: 8rem;
+  font-size: 10rem;
   padding: 10rem;
   text-align: right;
-  line-height: 15rem;
   letter-spacing: 0.5rem;
   border: 1px solid #bfbfbf;
   box-shadow: 10px 10px 5px #aaaaaa;
@@ -91,6 +96,19 @@ button {
   margin:0 200rem 0 80rem;
 }
 
-.searchList{
-  height: 125rem;
+
+#searchInput{
+  height: 100%;
+  min-width: 200rem;
+}
+.searchInputFrame button{
+  height: 100%;
+  margin: 0 15rem;
+  padding: 0 10rem;
+}
+
+.searchInputFrame{
+  vertical-align: middle;
+  height: 30rem;
+  font-size: 18rem;
 }

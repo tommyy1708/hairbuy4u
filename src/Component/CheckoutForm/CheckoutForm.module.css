@@ -1,3 +1,4 @@
+
 .orderListFrame {
   margin-top: 50rem;
   text-align: left;
@@ -25,3 +26,8 @@
   color: #333;
 }
 
+.line{
+  width: 100vw;
+  max-height: 2rem;
+  background-color: #333;
+}
