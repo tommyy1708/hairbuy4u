@@ -1,7 +1,6 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Button, Badge, Descriptions } from 'antd';
+import { Badge, Descriptions } from 'antd';
 const HistoryDetail = () => {
    const params = useParams();
    const order_number = params.id;

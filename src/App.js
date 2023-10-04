@@ -5,6 +5,8 @@ import {
   Route,
 } from 'react-router-dom';
 import axios from 'axios';
+import moment from 'moment';
+
 //Components
 import MainLayout from './Component/MainLayout/MainLayout.jsx';
 //Pages
@@ -19,6 +21,7 @@ import Checkout from './pages/Checkout.jsx';
 import TradeHistory from './pages/TradeHistory.jsx';
 import CheckOutContent from './store/CheckOutContent.js';
 import HistoryDetail from './pages/HistoryDetail.jsx';
+
 
 const App = () => {
   const fetchInventory = async () => {
@@ -52,10 +55,9 @@ const App = () => {
   //End order number generator
 
   const [cartData, setCartData] = useState({
-    orderNumber: oNmber(),
+    order_number: oNmber(),
     items: [],
-    order_type: '',
-    date: '',
+    date: moment(),
     client: '',
     discount: 0,
     totalAmount: 0,
@@ -129,7 +131,6 @@ const App = () => {
         subItemToCart,
         removeItemToCart,
         inventoryData,
-        // orderHistory,
       }}
     >
       <div className="App">

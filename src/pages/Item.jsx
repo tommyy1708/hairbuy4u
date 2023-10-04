@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Badge,Button, Descriptions } from 'antd';
+import { Badge, Descriptions } from 'antd';
 const Item = () => {
   const [itemDetail, setItemDetail] = useState('');
    const params = useParams();
   const item_code = params.id;
-  const navigate = useNavigate();
 
 
   const items: DescriptionsProps['items'] = [

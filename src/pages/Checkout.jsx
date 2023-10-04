@@ -6,25 +6,13 @@ import CheckoutForm from '../Component/CheckoutForm/CheckoutForm';
 import printJS from 'print-js';
 import { TestApi } from '../request/api';
 const Checkout = () => {
-  const { modal } = Modal.useModal();
   const ctx = useContext(CheckOutContent);
   const [searchTerm, setSearchTerm] = useState('');
-  //Modal setting Start
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+
   const quoteFinished = () => {
-    
     console.log('quote clicked');
       Modal.destroyAll();
   };
-  const receptFinished = () => {
-    // console.log(ctx.cartData);
-    TestApi().then((res) => {
-      console.log(res.data);
-})
-    Modal.destroyAll();
-  }
-  //Modal end
 
   const orderColumns = [
     {
@@ -85,7 +73,8 @@ const Checkout = () => {
   };
 
   // Start template for print
-  const printRecept = () => {
+const printRecept = () => {
+  // let values = ctx.cartData;
     printJS({
       printable: ctx.cartData.items,
       type: 'json',
@@ -101,7 +90,15 @@ const Checkout = () => {
       </div>
       `,
       properties: ['item_code', 'item', 'price', 'amount'],
-      onPrintDialogClose: receptFinished,
+      onPrintDialogClose: () => {
+        console.log('cardata =', ctx.cartData);
+        TestApi({
+          cartData: JSON.stringify(ctx.cartData),
+        }).then((res) => {
+          console.log(res.data);
+        });
+        Modal.destroyAll();
+      },
     });
   };
   //end template for print
@@ -162,7 +159,7 @@ const Checkout = () => {
           {ctx.cartData && ctx.cartData.items.length > 0 ? (
             <div className={'orderSummarize'}>
               <h3>OrderNumber:</h3>
-              <h5>{ctx.cartData.orderNumber}</h5>
+              <h5>{ctx.cartData.order_number}</h5>
               <p>Discount:${ctx.cartData.discount.toFixed(2)}</p>
               <p>Amount:{ctx.cartData.totalAmount}</p>
               <p>Subtotal:${ctx.cartData.subtotal.toFixed(2)}</p>

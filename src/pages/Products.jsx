@@ -1,9 +1,8 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import Filter from '../Component/Filter/Filter';
-import { Link, useSearchParams, useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Space, Table } from 'antd';
 import CheckOutContent from '../store/CheckOutContent';
-import axios from 'axios';
 
 export default function Products() {
   const ctx = useContext(CheckOutContent);
