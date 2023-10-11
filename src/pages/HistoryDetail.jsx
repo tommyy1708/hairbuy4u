@@ -2,9 +2,33 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Badge, Descriptions } from 'antd';
 const HistoryDetail = () => {
-   const params = useParams();
-   const order_number = params.id;
-  const [orderDetail, setOrderDetail] = useState('');
+    const params = useParams();
+    const order_number = params.id;
+    const [orderDetail, setOrderDetail] = useState('');
+    const [itemDetail, setItemDetail] = useState('');
+    useEffect(
+      () => async (title, body) => {
+        await fetch('/api/order_history/order_detail/:id', {
+          method: 'POST',
+          body: JSON.stringify({
+            order_number,
+          }),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            setOrderDetail(data.orderDetail);
+            setItemDetail(data.orderDetail.items);
+          })
+          .catch((err) => {
+            console.log(err.message);
+          });
+      },[]);
+
+
+
   const items: DescriptionsProps['items'] = [
     {
       key: '1',
@@ -39,53 +63,28 @@ const HistoryDetail = () => {
 
     {
       key: '7',
-      label: 'Order List Info',
+      label: 'Order Info',
       children: (
-        <>
-          Data disk type: MongoDB
-          <br />
-          Database version: 3.4
-          <br />
-          Package: dds.mongo.mid
-          <br />
-          Storage space: 10 GB
-          <br />
-          Replication factor: 3
-          <br />
-          Region: East China 1
-          <br />
-        </>
+        <div>
+          {itemDetail.length > 1 ? (
+            itemDetail.map((item, index) => (
+              <div key={index}>
+                <p>{item.item}</p>
+                <p>{item.item_code}</p>
+                <p>${item.price}</p>
+                <p>x{item.amount}</p>
+              </div>
+            ))
+          ) : (
+            <div>
+             ppp
+            </div>
+          )}
+        </div>
       ),
       span: 3,
     },
   ];
-
-
-
-  useEffect(
-    () => async (title, body) => {
-      await fetch('/api/order_history/order_detail/:id', {
-        method: 'POST',
-        body: JSON.stringify({
-          order_number,
-        }),
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8',
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.errCode === 0) {
-            setOrderDetail(data.orderDetail);
-            console.log("🚀 ~ file: HistoryDetail.jsx:80 ~ .then ~ data.orderDetail:", data)
-          }
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
-    },
-    []
-  );
 
   return (
     <div>

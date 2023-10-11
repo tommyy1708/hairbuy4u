@@ -21,7 +21,7 @@ import Checkout from './pages/Checkout.jsx';
 import TradeHistory from './pages/TradeHistory.jsx';
 import CheckOutContent from './store/CheckOutContent.js';
 import HistoryDetail from './pages/HistoryDetail.jsx';
-
+import ProductDetail from './pages/ProductDetail.jsx';
 
 const App = () => {
   const fetchInventory = async () => {
@@ -65,9 +65,16 @@ const App = () => {
     tax: 0,
     total: 0,
   });
+  //! function
+  const clientNameChange = (name) => {
+    const newCart = { ...cartData };
+    newCart.client = name;
+    setCartData(newCart);
+  };
 
   //! function
   const addItemToCart = (item) => {
+
     const newCart = { ...cartData };
     if (cartData.items.indexOf(item) === -1) {
       item.amount = 1;
@@ -130,6 +137,7 @@ const App = () => {
         addItemToCart,
         subItemToCart,
         removeItemToCart,
+        clientNameChange,
         inventoryData,
       }}
     >
@@ -151,7 +159,11 @@ const App = () => {
                 <Route path="checkout" element={<Checkout />} />
               </Route>
               <Route path="/buy" element={<Buy />}></Route>
-              <Route path="/products/*" element={<Products />}>
+              <Route
+                path="/products/"
+                element={<Products />}
+              >
+                <Route path=':id' element={<ProductDetail/>}></Route>
               </Route>
               <Route path="/customer" element={<Customer />}>
                 <Route path="inquiry" element={<Inquiry />}></Route>

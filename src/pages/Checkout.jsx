@@ -1,17 +1,16 @@
 import React, { useContext, useState } from 'react';
 import CheckOutContent from '../store/CheckOutContent';
 import { Link } from 'react-router-dom';
-import { Space, Button, Modal } from 'antd';
+import { Space, Button, Modal, message } from 'antd';
 import CheckoutForm from '../Component/CheckoutForm/CheckoutForm';
 import printJS from 'print-js';
 import { TestApi } from '../request/api';
 const Checkout = () => {
   const ctx = useContext(CheckOutContent);
   const [searchTerm, setSearchTerm] = useState('');
-
-  const quoteFinished = () => {
-    console.log('quote clicked');
-      Modal.destroyAll();
+  const handleInputChange = () => {
+    let clientInput = document.getElementById('clientInput');
+    ctx.clientNameChange(clientInput.value);
   };
 
   const orderColumns = [
@@ -71,23 +70,29 @@ const Checkout = () => {
     );
     setSearchTerm(newData);
   };
+  // <div style="display:flex; justify-content:space-between;">
 
   // Start template for print
-const printRecept = () => {
-  // let values = ctx.cartData;
+  const printRecept = () => {
+    // let values = ctx.cartData;
     printJS({
       printable: ctx.cartData.items,
       type: 'json',
       header: `
-      <div style="padding:0; margin=0;">
-      <h4>Hairbuy4u Quotation
-      (Make order at our website for pay less: www.hairbuy4u.com )</h3>
+      <div>
+      <div style="padding:0; margin=0; font-size:14px;line-height: normal;">
+      <h4>Hairbuy4u Receipt
+      (Save more Pay less at our Website: www.hairbuy4u.com )</h4>
+      <p>4980 NW 165th Street Suite A21</p>
+      <p>Miami Gardens, Florida 33014 United States</p>
+      <p>(305)454-9121</p>
       </div>
-      <div style="display:flex; justify-content:space-between;">
+      <div styles:“line-height:14px; width:100px” >
       <p>Subtotal:$${ctx.cartData.subtotal.toFixed(2)}</p>
-      <p>Tax:$${ctx.cartData.tax.toFixed(2)}</p>
+      <p>Tax(7%):$${ctx.cartData.tax.toFixed(2)}</p>
       <p>Total:$${ctx.cartData.total.toFixed(2)}</p>
       </div>
+       </div>
       `,
       properties: ['item_code', 'item', 'price', 'amount'],
       onPrintDialogClose: () => {
@@ -95,9 +100,15 @@ const printRecept = () => {
         TestApi({
           cartData: JSON.stringify(ctx.cartData),
         }).then((res) => {
-          console.log(res.data);
+          console.log(res.data.message);
         });
         Modal.destroyAll();
+        ctx.setCartData('');
+        message.loading(`Print...`, [2000]);
+        setTimeout(() => {
+          window.location.reload(false);
+        }, 2000);
+        message.success('Order Success!');
       },
     });
   };
@@ -108,18 +119,31 @@ const printRecept = () => {
       printable: ctx.cartData.items,
       type: 'json',
       header: `
-      <div style="padding:0; margin=0;">
-      <h4>Hairbuy4u Quotation
-      (Make order at our website for pay less: www.hairbuy4u.com )</h3>
+      <div>
+      <div style="padding:0; margin=0; font-size:14px;line-height: normal;">
+      <h4>Hairbuy4u Receipt
+      (Save more Pay less at our Website: www.hairbuy4u.com )</h4>
+      <p>4980 NW 165th Street Suite A21</p>
+      <p>Miami Gardens, Florida 33014 United States</p>
+      <p>(305)454-9121</p>
       </div>
-      <div style="display:flex; justify-content:space-between;">
+      <div styles:“line-height:14px; width:100px” >
       <p>Subtotal:$${ctx.cartData.subtotal.toFixed(2)}</p>
-      <p>Tax:$${ctx.cartData.tax.toFixed(2)}</p>
+      <p>Tax(7%):$${ctx.cartData.tax.toFixed(2)}</p>
       <p>Total:$${ctx.cartData.total.toFixed(2)}</p>
       </div>
+       </div>
       `,
       properties: ['item_code', 'item', 'price', 'amount'],
-      onPrintDialogClose: quoteFinished,
+      onPrintDialogClose: () => {
+        Modal.destroyAll();
+        ctx.setCartData('');
+        message.loading(`Print...`, [2000]);
+        setTimeout(() => {
+          window.location.reload(false);
+        }, 2000);
+        message.success('Order Success!');
+      },
     });
   };
 
@@ -165,6 +189,16 @@ const printRecept = () => {
               <p>Subtotal:${ctx.cartData.subtotal.toFixed(2)}</p>
               <p>Tax:${ctx.cartData.tax.toFixed(2)}</p>
               <p>Total:${ctx.cartData.total.toFixed(2)}</p>
+              <div className="clientNameFrame">
+                <p>Client Name:</p>
+                <input
+                  id="clientInput"
+                  placeholder="Client Name"
+                  type="text"
+                  onChange={handleInputChange}
+                />
+              </div>
+
               <Space size={20}>
                 <Button
                   onClick={() => {

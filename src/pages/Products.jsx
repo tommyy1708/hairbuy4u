@@ -1,33 +1,26 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Filter from '../Component/Filter/Filter';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Outlet, useParams } from 'react-router-dom';
 import { Space, Table } from 'antd';
 import CheckOutContent from '../store/CheckOutContent';
+import ProductDetail from './ProductDetail';
 
 export default function Products() {
+  const params = useParams();
   const ctx = useContext(CheckOutContent);
   const navigate = useNavigate();
   const [itemsData, setItemsData] = useState(ctx.inventoryData);
   const goToDetail = (itemNum) => {
     navigate(`/products/'${itemNum}'`);
-}
+  };
   const columns = [
     {
       title: 'ItemCode',
       dataIndex: 'item_code',
       key: 'item_code',
       render: (_, record) => {
-        return (
-          <p onClick={() => goToDetail(record.item_code)}>
-            {record.item_code}
-          </p>
-        );
+        return <p>{record.item_code}</p>;
       },
-    },
-    {
-      title: 'USC',
-      dataIndex: 'usc',
-      key: 'usc',
     },
     {
       title: 'Item',
@@ -68,6 +61,16 @@ export default function Products() {
       dataIndex: 'category',
       key: 'category',
     },
+    {
+      title: 'Act',
+      render: (_, record) => (
+        <>
+          <button onClick={() => goToDetail(record.item_code)}>
+            Edit
+          </button>
+        </>
+      ),
+    },
   ];
 
   const emptySearch = () => {
@@ -76,15 +79,23 @@ export default function Products() {
     input.value = '';
   };
   return (
-    <>
-      <Filter
-        setItemsData={setItemsData}
-        inventoryData={ctx.inventoryData}
-        emptySearch={emptySearch}
-      ></Filter>
-      <div className="inquiry_table">
-        <Table columns={columns} dataSource={itemsData} />
-      </div>
-    </>
+    <div className='productsFrame'>
+      {params.id ? (
+        <>
+          <ProductDetail id={params.id} />
+        </>
+      ) : (
+        <>
+          <Filter
+            setItemsData={setItemsData}
+            inventoryData={ctx.inventoryData}
+            emptySearch={emptySearch}
+          />
+          <div className="inquiry_table">
+            <Table columns={columns} dataSource={itemsData} />
+          </div>
+        </>
+      )}
+    </div>
   );
 }

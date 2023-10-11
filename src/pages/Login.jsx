@@ -1,31 +1,35 @@
 import React from 'react';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import { LoginApi } from '../request/api';
+import { useNavigate } from 'react-router';
 export default function Login() {
+  const navigate = useNavigate();
 
-  const onFinish = (values) => {
-    LoginApi({
-      username: values.username,
-      password:values.password
-    }).then(res => {
-      let password = res.data.password;
-      console.log("🚀 ~ file: Login.jsx:12 ~ onFinish ~ password:", password)
-      let username = res.data.username;
-      console.log("🚀 ~ file: Login.jsx:14 ~ onFinish ~ username:", username)
-      if (values.password === password) {
-        localStorage.setItem('username', username);
+  const onSubmit = (values) => {
+    LoginApi(values).then((res) => {
+      let code = res.data.errCode;
+      if (code === 0) {
+        localStorage.setItem('username', res.data.userInfo[0].username);
+        localStorage.setItem('token', res.data.userInfo[0].token);
+        message.success(res.data.message);
+        setTimeout(() => {
+          navigate('/');
+        }, 2000);
+      } else if (code === 1) {
+        message.info(res.data.message);
       } else {
-        console.log('something wrong!')
+        message.info(res.data.message);
       }
-    })
-  }
+    });
+  };
+
   return (
     <div id="login">
       <div className="login_box">
         <Form
           name="basic"
           initialValues={{ remember: true }}
-          onFinish={onFinish}
+          onFinish={onSubmit}
           autoComplete="off"
         >
           <Form.Item

@@ -17,11 +17,6 @@ const TradeHistory = (props) => {
 
   const order_historyApi = async () => {
     const result = await axios.get('/api/order_history');
-    console.log(
-      '🚀 ~ file: TradeHistory.jsx:23 ~ constorder_historyApi= ~ result:',
-      result.allOrderData
-    );
-
     setOrder_Data(result.data.allOrderData);
   };
 

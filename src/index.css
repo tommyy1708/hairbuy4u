@@ -92,10 +92,19 @@ button {
   box-shadow: 10px 10px 5px #aaaaaa;
 }
 
+.clientNameFrame{
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 10rem;
+}
+#clientInput{
+  width: 100%;
+  margin-left: 10rem;
+}
 .orderDetails{
   margin:0 200rem 0 80rem;
 }
-
 
 #searchInput{
   height: 100%;

@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^13.5.0",
     "antd": "^5.9.1",
     "axios": "^1.5.0",
+    "jsonwebtoken": "^9.0.2",
     "moment": "^2.29.4",
     "print-js": "^1.6.0",
     "react": "^18.2.0",

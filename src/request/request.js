@@ -8,7 +8,6 @@ const instance = axios.create({
 
 //add request interceptor
 instance.interceptors.request.use(function (config) {
-  console.log('send request ');
   // let token = localStorage.getItem("cms-token")
   // if (token) {
   //   config.headers = {
