@@ -1,8 +1,8 @@
 import axios from "axios";
-import request from "./request";
 
+export const VerifyTokenApi = (params) => axios.get('/api/verify', params);
 
-export const TestApi = (params) => axios.post('/api/finished', params);
+export const CartDataApi = (params) => axios.post('/api/finished', params);
 
 export const ProductsDetailApi = (params) => axios.post('/api/products/:id', params);
 

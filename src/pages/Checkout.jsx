@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Space, Button, Modal, message } from 'antd';
 import CheckoutForm from '../Component/CheckoutForm/CheckoutForm';
 import printJS from 'print-js';
-import { TestApi } from '../request/api';
+import { CartDataApi } from '../request/api';
 const Checkout = () => {
   const ctx = useContext(CheckOutContent);
   const [searchTerm, setSearchTerm] = useState('');
@@ -70,7 +70,7 @@ const Checkout = () => {
     );
     setSearchTerm(newData);
   };
-  // <div style="display:flex; justify-content:space-between;">
+
 
   // Start template for print
   const printRecept = () => {
@@ -96,8 +96,7 @@ const Checkout = () => {
       `,
       properties: ['item_code', 'item', 'price', 'amount'],
       onPrintDialogClose: () => {
-        console.log('cardata =', ctx.cartData);
-        TestApi({
+        CartDataApi({
           cartData: JSON.stringify(ctx.cartData),
         }).then((res) => {
           console.log(res.data.message);

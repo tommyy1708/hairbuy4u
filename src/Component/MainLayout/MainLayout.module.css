@@ -18,6 +18,11 @@
   justify-content: flex-start;
 }
 
+.header p{
+  margin-left: 10rem;
+  font-size: 14rem;
+}
+
 .leftBar{
   width: 200rem;
   padding: 10rem 0;
