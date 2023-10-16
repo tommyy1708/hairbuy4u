@@ -78,13 +78,14 @@ const Checkout = () => {
       header: `
       <div>
       <div style="padding:0; margin=0; font-size:14px;line-height: normal;">
-      <h4>Hairbuy4u Receipt
+      <h4>Hair Natural Inc. Receipt
       (Save more Pay less at our Website: www.hairbuy4u.com )</h4>
       <p>4980 NW 165th Street Suite A21</p>
       <p>Miami Gardens, Florida 33014 United States</p>
       <p>(305)454-9121</p>
       </div>
       <div styles:“line-height:14px; width:100px” >
+      <p>Client:${ctx.cartData.client}</p>
       <p>Subtotal:$${ctx.cartData.subtotal.toFixed(2)}</p>
       <p>Tax(7%):$${ctx.cartData.tax.toFixed(2)}</p>
       <p>Total:$${ctx.cartData.total.toFixed(2)}</p>
@@ -93,7 +94,7 @@ const Checkout = () => {
       `,
       properties: ['item_code', 'item', 'price', 'amount'],
       onPrintDialogClose: async () => {
-       await CartDataApi({
+        await CartDataApi({
           cartData: JSON.stringify(ctx.cartData),
         }).then((res) => {
           if (res.data.errCode === 0) {
@@ -125,6 +126,7 @@ const Checkout = () => {
       <p>(305)454-9121</p>
       </div>
       <div styles:“line-height:14px; width:100px” >
+       <p>Client:${ctx.cartData.client}</p>
       <p>Subtotal:$${ctx.cartData.subtotal.toFixed(2)}</p>
       <p>Tax(7%):$${ctx.cartData.tax.toFixed(2)}</p>
       <p>Total:$${ctx.cartData.total.toFixed(2)}</p>
