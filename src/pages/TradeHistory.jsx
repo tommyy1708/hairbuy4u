@@ -35,7 +35,8 @@ const TradeHistory = (props) => {
       width: '180rem',
       ellipsis: true,
       textWrap: 'word-break',
-      render: (_, record) => <p>{record.date}</p>,
+      render: (_, record) =>
+        <p>{record.date}</p>
     },
     {
       align: 'center',

@@ -5,7 +5,7 @@ import {
   Route,
 } from 'react-router-dom';
 import axios from 'axios';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 //Components
 import MainLayout from './Component/MainLayout/MainLayout.jsx';
@@ -52,12 +52,13 @@ const App = () => {
     const orderNumber = `${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}`;
     return orderNumber;
   };
+
   //End order number generator
 
   const [cartData, setCartData] = useState({
     order_number: oNmber(),
     items: [],
-    date: moment(),
+    date: moment().tz('America/New_York').format('YYYY-MM-DD-HH:mm'),
     client: '',
     discount: 0,
     totalAmount: 0,
