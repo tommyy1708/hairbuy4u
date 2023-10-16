@@ -132,6 +132,7 @@ const App = () => {
 //! function
   const editPrice = (item, newPrice, newAmount) => {
     const newCart = { ...cartData };
+
     const updatedItem = {
       ...item,
       price: newPrice,

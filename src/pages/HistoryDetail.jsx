@@ -66,7 +66,7 @@ const HistoryDetail = () => {
       label: 'Order Info',
       children: (
         <div>
-          {itemDetail.length > 1 ? (
+          {itemDetail.length > 0 ? (
             itemDetail.map((item, index) => (
               <div key={index}>
                 <p>{item.item}</p>

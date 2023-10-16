@@ -98,15 +98,21 @@ const Checkout = () => {
         CartDataApi({
           cartData: JSON.stringify(ctx.cartData),
         }).then((res) => {
-          console.log(res.data.message);
+          if (res.errCode === 0) {
+            message.success(res.data.message);
+          } else {
+            message.info(res.data.message);
+          }
         });
+
         Modal.destroyAll();
         ctx.setCartData('');
-        message.loading(`Print...`, [2000]);
+        message.loading(`Print...`, [1500]);
+
         setTimeout(() => {
           window.location.reload(false);
         }, 2000);
-        message.success('Order Success!');
+        // message.success('Order Success!');
       },
     });
   };

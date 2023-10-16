@@ -11,7 +11,9 @@ const CheckoutForm = (props) => {
     removeItemToCart,
   } = props;
   const handleUpPrice = (item) => {
-    let newPrice = document.getElementById('editPrice').value;
+
+    let newPrice =
+      document.getElementsByClassName(`input${item.key}`)[0].value;
     let newAmount = item.amount;
     editPrice(item, newPrice, newAmount);
   };
@@ -35,7 +37,11 @@ const CheckoutForm = (props) => {
                 </li>
               </ul>
               <div className={`${styles.editPrice}`}>
-                <input type="text" style={{ width: '20rem' }} />
+                <input
+                  className={`input${item.key}`}
+                  type="text"
+                  style={{ width: '20rem' }}
+                />
               </div>
               <div>
                 <Button
