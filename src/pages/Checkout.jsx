@@ -74,7 +74,6 @@ const Checkout = () => {
 
   // Start template for print
   const printRecept = () => {
-    // let values = ctx.cartData;
     printJS({
       printable: ctx.cartData.items,
       type: 'json',
@@ -120,7 +119,7 @@ const Checkout = () => {
       header: `
       <div>
       <div style="padding:0; margin=0; font-size:14px;line-height: normal;">
-      <h4>Hairbuy4u Receipt
+      <h4>Hair Natural Inc. Receipt
       (Save more Pay less at our Website: www.hairbuy4u.com )</h4>
       <p>4980 NW 165th Street Suite A21</p>
       <p>Miami Gardens, Florida 33014 United States</p>
@@ -169,12 +168,16 @@ const Checkout = () => {
         </ul>
       </div>
       <div className="orderDetails">
+        <div className="note">
+          <p>!!! Before editing price make sure you confirm to the final amount of this item !!!</p>
+        </div>
         <div className="orderTable">
           <CheckoutForm
             orderColumns={orderColumns}
             orderList={ctx.cartData}
             addItemToCart={ctx.addItemToCart}
             subItemToCart={ctx.subItemToCart}
+            editPrice={ctx.editPrice}
             removeItemToCart={ctx.removeItemToCart}
           />
         </div>
@@ -183,7 +186,6 @@ const Checkout = () => {
             <div className={'orderSummarize'}>
               <h3>OrderNumber:</h3>
               <h5>{ctx.cartData.order_number}</h5>
-              <p>Discount:${ctx.cartData.discount.toFixed(2)}</p>
               <p>Amount:{ctx.cartData.totalAmount}</p>
               <p>Subtotal:${ctx.cartData.subtotal.toFixed(2)}</p>
               <p>Tax:${ctx.cartData.tax.toFixed(2)}</p>

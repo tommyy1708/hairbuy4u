@@ -1,4 +1,9 @@
-
+.button{
+  padding: 2rem;
+}
+.editPrice::before{
+content: '$';
+}
 .orderListFrame {
   margin-top: 50rem;
   text-align: left;
@@ -6,6 +11,7 @@
   border: 1px solid #ccc;
   padding: 10px;
 }
+
 .listItem {
   width: 400rem;
   list-style-type: none;

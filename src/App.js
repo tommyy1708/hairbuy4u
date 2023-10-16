@@ -129,11 +129,37 @@ const App = () => {
     setCartData(newCart);
   };
 
+//! function
+  const editPrice = (item, newPrice, newAmount) => {
+    const newCart = { ...cartData };
+    const updatedItem = {
+      ...item,
+      price: newPrice,
+      amount: newAmount,
+    };
+
+    const oldPrice = item.price;
+    const discount = oldPrice - newPrice;
+    const discountTax = discount * 0.07 * newAmount;
+
+    newCart.items = newCart.items.map((cartItem) =>
+      cartItem.key === updatedItem.key ? updatedItem : cartItem
+    );
+    newCart.discount += (discount * newAmount);
+    newCart.tax -= discountTax;
+    newCart.subtotal = newCart.items.reduce((total, cartItem) => total + cartItem.price * cartItem.amount,0);
+    newCart.total = newCart.subtotal + newCart.tax;
+
+    setCartData(newCart);
+  };
+
+
   return (
     <CheckOutContent.Provider
       value={{
         cartData,
         setCartData,
+        editPrice,
         addItemToCart,
         subItemToCart,
         removeItemToCart,

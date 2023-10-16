@@ -4,30 +4,58 @@ import { Button, Result } from 'antd';
 const CheckoutForm = (props) => {
   //This components to shows items in the cart
   const orderList = props.orderList;
-  const { addItemToCart, subItemToCart, removeItemToCart } = props;
+  const {
+    editPrice,
+    addItemToCart,
+    subItemToCart,
+    removeItemToCart,
+  } = props;
+  const handleUpPrice = (item) => {
+    let newPrice = document.getElementById('editPrice').value;
+    let newAmount = item.amount;
+    editPrice(item, newPrice, newAmount);
+  };
+
   return (
     <div className={`${styles.orderListComponent}`}>
       {orderList && orderList.items.length > 0 ? (
         <div className={`${styles.orderListFrame}`}>
-          {orderList.items.map((order) => (
+          {orderList.items.map((item) => (
             <div
-              key={order.key}
+              key={item.key}
               className={`${styles.orderContainer}`}
             >
               <ul className={`${styles.listContainer}`}>
                 <li className={`${styles.listItem}`}>
-                  <p>Item Code: {order.item_code}</p>
-                  <p>Item Code: {order.item}</p>
-                  <p>Amount: {order.amount}</p>
-                  <p>MSRP: ${order.price}</p>
+                  <p>Item Code: {item.item_code}</p>
+                  <p>Item Code: {item.item}</p>
+                  <p>Amount: {item.amount}</p>
+                  {/* <p>MSRP: ${item.price}</p> */}
+                  <p>Final Price: ${item.price}</p>
                 </li>
               </ul>
-              <Button danger onClick={() => removeItemToCart(order)}>
-                remove
-              </Button>
-              <Button onClick={() => subItemToCart(order)}>-</Button>
+              <div className={`${styles.editPrice}`}>
+                <input type="text" style={{ width: '20rem' }} />
+              </div>
+              <div>
+                <Button
+                  className={`${styles.button}`}
+                  danger
+                  onClick={() => handleUpPrice(item)}
+                >
+                  update
+                </Button>
+                <Button
+                  className={`${styles.button}`}
+                  danger
+                  onClick={() => removeItemToCart(item)}
+                >
+                  remove
+                </Button>
+              </div>
+              <Button onClick={() => subItemToCart(item)}>-</Button>
               <Button
-                onClick={() => addItemToCart(order)}
+                onClick={() => addItemToCart(item)}
                 type="primary"
               >
                 +
@@ -36,7 +64,7 @@ const CheckoutForm = (props) => {
           ))}
         </div>
       ) : (
-            <Result title="Please add item by search" />
+        <Result title="Please add item by search" />
       )}
     </div>
   );

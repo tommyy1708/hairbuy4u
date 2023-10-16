@@ -121,3 +121,9 @@ button {
   height: 30rem;
   font-size: 18rem;
 }
+
+
+.note{
+  font-size: 15rem;
+  color: red;
+}
