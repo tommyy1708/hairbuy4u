@@ -92,8 +92,8 @@ const Checkout = () => {
        </div>
       `,
       properties: ['item_code', 'item', 'price', 'amount'],
-      onPrintDialogClose: () => {
-        CartDataApi({
+      onPrintDialogClose: async () => {
+       await CartDataApi({
           cartData: JSON.stringify(ctx.cartData),
         }).then((res) => {
           if (res.data.errCode === 0) {
