@@ -71,8 +71,6 @@ const Checkout = () => {
     setSearchTerm(newData);
   };
 
-
-  // Start template for print
   const printRecept = () => {
     printJS({
       printable: ctx.cartData.items,
@@ -98,25 +96,20 @@ const Checkout = () => {
         CartDataApi({
           cartData: JSON.stringify(ctx.cartData),
         }).then((res) => {
-          if (res.errCode === 0) {
+          if (res.data.errCode === 0) {
             message.success(res.data.message);
           } else {
             message.info(res.data.message);
           }
         });
-
-        Modal.destroyAll();
-        ctx.setCartData('');
-        message.loading(`Print...`, [1500]);
-
         setTimeout(() => {
+          Modal.destroyAll();
+          ctx.setCartData('');
           window.location.reload(false);
-        }, 2000);
-        // message.success('Order Success!');
+        }, [2000]);
       },
     });
   };
-  //end template for print
 
   const printQuote = () => {
     printJS({
@@ -140,13 +133,12 @@ const Checkout = () => {
       `,
       properties: ['item_code', 'item', 'price', 'amount'],
       onPrintDialogClose: () => {
-        Modal.destroyAll();
-        ctx.setCartData('');
-        message.loading(`Print...`, [2000]);
+        message.success('Print Success!');
         setTimeout(() => {
+          Modal.destroyAll();
+          ctx.setCartData('');
           window.location.reload(false);
-        }, 2000);
-        message.success('Order Success!');
+        }, [2000]);
       },
     });
   };
@@ -175,7 +167,10 @@ const Checkout = () => {
       </div>
       <div className="orderDetails">
         <div className="note">
-          <p>!!! Before editing price make sure you confirm to the final amount of this item !!!</p>
+          <p>
+            !!! Before editing price make sure you confirm to the
+            final amount of this item !!!
+          </p>
         </div>
         <div className="orderTable">
           <CheckoutForm
