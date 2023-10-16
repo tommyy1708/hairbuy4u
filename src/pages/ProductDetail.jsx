@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { ProductsDetailApi } from '../request/api';
 const ProductDetail = (props) => {
   const { id } = props;
+  console.log("🚀 ~ file: ProductDetail.jsx:5 ~ ProductDetail ~ id:", id)
+  const cleanedString = id.replace(/'/g, '');
 //  TestApi({
 //    cartData: JSON.stringify(ctx.cartData),
 //  }).then((res) => {
@@ -9,14 +11,14 @@ const ProductDetail = (props) => {
 //  });
 
   ProductsDetailApi({
-    item_code: id,
+    item_code: cleanedString,
   }).then((res) => {
-    console.log(res)
-  })
+    console.log(res);
+  });
   // const { proDetail, setProDetail } = useState();
   return (
     <div>
-      <p>{id}</p>
+      <p>{cleanedString}</p>
     </div>
   );
 }

@@ -11,7 +11,6 @@ const CheckoutForm = (props) => {
     removeItemToCart,
   } = props;
   const handleUpPrice = (item) => {
-
     let newPrice =
       document.getElementsByClassName(`input${item.key}`)[0].value;
     let newAmount = item.amount;

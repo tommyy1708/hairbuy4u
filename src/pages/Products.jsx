@@ -1,6 +1,6 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import Filter from '../Component/Filter/Filter';
-import { useNavigate, Outlet, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Space, Table } from 'antd';
 import CheckOutContent from '../store/CheckOutContent';
 import ProductDetail from './ProductDetail';
@@ -78,6 +78,7 @@ export default function Products() {
     const input = document.getElementById('filter_input');
     input.value = '';
   };
+  
   return (
     <div className='productsFrame'>
       {params.id ? (
