@@ -11,8 +11,13 @@ const CheckoutForm = (props) => {
     removeItemToCart,
   } = props;
   const handleUpPrice = (item) => {
-    let newPrice =
-      document.getElementsByClassName(`input${item.key}`)[0].value;
+    let newPrice = document.getElementsByClassName(
+      `input${item.key}`
+    )[0].value;
+    let buttons = document.getElementsByClassName(`adjustButton${item.key}`);
+    for (let i = 0; i < buttons.length; i++){
+      buttons[i].setAttribute('disabled', 'disabled');
+    }
     let newAmount = item.amount;
     editPrice(item, newPrice, newAmount);
   };
@@ -58,8 +63,14 @@ const CheckoutForm = (props) => {
                   remove
                 </Button>
               </div>
-              <Button onClick={() => subItemToCart(item)}>-</Button>
               <Button
+                className={`adjustButton${item.key}`}
+                onClick={() => subItemToCart(item)}
+              >
+                -
+              </Button>
+              <Button
+                className={`adjustButton${item.key}`}
                 onClick={() => addItemToCart(item)}
                 type="primary"
               >
