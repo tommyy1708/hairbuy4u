@@ -39,7 +39,7 @@ const MainLayout = () => {
         <Link to={'/'}>
           <h2>HairBuy4u CMS</h2>
         </Link>
-        <p>Welcome-{username}</p>
+        <p>Casher-{username}</p>
       </div>
       <div className={`${styles.dark} ${styles.leftBar}`}>
         <Menu />

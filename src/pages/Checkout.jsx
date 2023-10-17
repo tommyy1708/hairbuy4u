@@ -71,6 +71,9 @@ const Checkout = () => {
     setSearchTerm(newData);
   };
 
+  console.log(ctx.cartData);
+
+
   const printRecept = () => {
     printJS({
       printable: ctx.cartData.items,
@@ -202,7 +205,6 @@ const Checkout = () => {
                   onChange={handleInputChange}
                 />
               </div>
-
               <Space size={20}>
                 <Button
                   onClick={() => {

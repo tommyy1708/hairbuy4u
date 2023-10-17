@@ -28,6 +28,7 @@ const App = () => {
     const result = await axios.get('/api/sale');
     setInventoryData(result.data.data);
   };
+
   useEffect(() => {
     fetchInventory();
   }, []);
@@ -65,7 +66,9 @@ const App = () => {
     subtotal: 0,
     tax: 0,
     total: 0,
+    casher:localStorage.getItem('username'),
   });
+  
   //! function
   const clientNameChange = (name) => {
     const newCart = { ...cartData };
@@ -75,7 +78,6 @@ const App = () => {
 
   //! function
   const addItemToCart = (item) => {
-
     const newCart = { ...cartData };
     if (cartData.items.indexOf(item) === -1) {
       item.amount = 1;
@@ -130,7 +132,7 @@ const App = () => {
     setCartData(newCart);
   };
 
-//! function
+  //! function
   const editPrice = (item, newPrice, newAmount) => {
     const newCart = { ...cartData };
 
@@ -147,14 +149,16 @@ const App = () => {
     newCart.items = newCart.items.map((cartItem) =>
       cartItem.key === updatedItem.key ? updatedItem : cartItem
     );
-    newCart.discount += (discount * newAmount);
+    newCart.discount += discount * newAmount;
     newCart.tax -= discountTax;
-    newCart.subtotal = newCart.items.reduce((total, cartItem) => total + cartItem.price * cartItem.amount,0);
+    newCart.subtotal = newCart.items.reduce(
+      (total, cartItem) => total + cartItem.price * cartItem.amount,
+      0
+    );
     newCart.total = newCart.subtotal + newCart.tax;
 
     setCartData(newCart);
   };
-
 
   return (
     <CheckOutContent.Provider
@@ -187,11 +191,8 @@ const App = () => {
                 <Route path="checkout" element={<Checkout />} />
               </Route>
               <Route path="/buy" element={<Buy />}></Route>
-              <Route
-                path="/products/"
-                element={<Products />}
-              >
-                <Route path=':id' element={<ProductDetail/>}></Route>
+              <Route path="/products/" element={<Products />}>
+                <Route path=":id" element={<ProductDetail />}></Route>
               </Route>
               <Route path="/customer" element={<Customer />}>
                 <Route path="inquiry" element={<Inquiry />}></Route>

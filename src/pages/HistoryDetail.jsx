@@ -5,7 +5,8 @@ const HistoryDetail = () => {
     const params = useParams();
     const order_number = params.id;
     const [orderDetail, setOrderDetail] = useState('');
-    const [itemDetail, setItemDetail] = useState('');
+  const [itemDetail, setItemDetail] = useState('');
+
     useEffect(
       () => async (title, body) => {
         await fetch('/api/order_history/order_detail/:id', {
@@ -26,7 +27,7 @@ const HistoryDetail = () => {
             console.log(err.message);
           });
       },[]);
-
+console.log(orderDetail);
 
 
   const items: DescriptionsProps['items'] = [
@@ -60,7 +61,6 @@ const HistoryDetail = () => {
       label: 'Status',
       children: <Badge status="success" text="Finished" />,
     },
-
     {
       key: '7',
       label: 'Order Info',
@@ -76,13 +76,16 @@ const HistoryDetail = () => {
               </div>
             ))
           ) : (
-            <div>
-             ppp
-            </div>
+            <div>ppp</div>
           )}
         </div>
       ),
       span: 3,
+    },
+    {
+      key: '8',
+      label: 'Casher',
+      children: <p>{orderDetail.casher}</p>,
     },
   ];
 
