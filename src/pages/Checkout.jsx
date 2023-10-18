@@ -98,7 +98,10 @@ const Checkout = () => {
       onPrintDialogClose: async () => {
         // The CartDataApi response for send data to backend for update SQL database. It will receives success or wrong status.
         setSpin(true);
-        message.info({ type: 'loading', content: 'waiting for printing and update..' });
+        message.info({
+          type: 'loading',
+          content: 'waiting for printing and update..',
+        });
         await CartDataApi({
           cartData: JSON.stringify(ctx.cartData),
         }).then((res) => {
@@ -140,11 +143,16 @@ const Checkout = () => {
       `,
       properties: ['item_code', 'item', 'price', 'amount'],
       onPrintDialogClose: () => {
-        message.success('Print Success!');
+        setSpin(true);
+        message.info({
+          type: 'loading',
+          content: 'waiting for printing and update..',
+        });
+
         setTimeout(() => {
+          message.success('Print Success!');
           Modal.destroyAll();
           ctx.setCartData('');
-          setSpin(true);
           window.location.reload(false);
         }, [2000]);
       },
@@ -154,8 +162,7 @@ const Checkout = () => {
   return (
     <div>
       {spin ? (
-        <Spin className="spinFrame" tip="Loading" size="large">
-        </Spin>
+        <Spin className="spinFrame" tip="Loading" size="large"></Spin>
       ) : null}
       <div className="searchInputFrame">
         <input id="searchInput" type="text" />

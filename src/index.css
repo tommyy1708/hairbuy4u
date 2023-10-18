@@ -59,7 +59,7 @@ button {
 
 .searchList {
   height: 125rem;
-  box-shadow:5rem 25rem 15rem lightblue;
+  box-shadow: 5rem 25rem 15rem lightblue;
   overflow: scroll;
 }
 
@@ -74,7 +74,7 @@ button {
   margin: 10rem 0;
   height: 50rem;
 }
-.searchItem button{
+.searchItem button {
   height: 100%;
   padding: 15rem;
 }
@@ -92,37 +92,37 @@ button {
   box-shadow: 10px 10px 5px #aaaaaa;
 }
 
-.clientNameFrame{
+.clientNameFrame {
   text-align: left;
   display: flex;
   justify-content: space-between;
   padding-bottom: 10rem;
 }
-#clientInput{
+#clientInput {
   width: 100%;
   margin-left: 10rem;
 }
-.orderDetails{
-  margin:0 200rem 0 80rem;
+.orderDetails {
+  margin: 0 200rem 0 80rem;
 }
 
-#searchInput{
+#searchInput {
   height: 100%;
   min-width: 200rem;
 }
-.searchInputFrame button{
+.searchInputFrame button {
   height: 100%;
   margin: 0 15rem;
   padding: 0 10rem;
 }
 
-.searchInputFrame{
+.searchInputFrame {
   vertical-align: middle;
   height: 30rem;
   font-size: 18rem;
 }
 
-.spinFrame{
+.spinFrame {
   position: absolute;
   top: 0;
   left: 0;
@@ -132,20 +132,32 @@ button {
   width: 100vw;
   height: 100vh;
   z-index: 999999;
-  background-color: rgba(80, 78 , 78, 0.2);
-
+  background-color: rgba(80, 78, 78, 0.2);
 }
 
-.note{
+.note {
   font-size: 15rem;
   color: red;
 }
 
-.productsDetailFrame{
+.productsDetailFrame {
   display: flex;
   justify-content: left;
   align-items: center;
   width: 500rem;
   padding: 20rem;
   font-size: 32rem;
+}
+#login {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login_box {
+  padding: 50rem;
+  border: 1px solid #ddd;
+  box-shadow:12px 12px 6px 1px rgba(255, 0, 119, 0.109);;
 }

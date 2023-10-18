@@ -62,7 +62,6 @@ const onFinishFailed = (errorInfo) => {
         <Form.Item label="Category" name="newCategory">
           <Input placeholder={productsDetail.category} />
         </Form.Item>
-
         <Form.Item
           wrapperCol={{
             offset: 8,
@@ -73,27 +72,6 @@ const onFinishFailed = (errorInfo) => {
             Submit
           </Button>
         </Form.Item>
-        {/* <Form.Item label="item_code">
-          <Input placeholder={`${productsDetail.item_code}`} />
-        </Form.Item>
-        <Form.Item label="item">
-          <Input placeholder={`${productsDetail.item}`} />
-        </Form.Item>
-        <Form.Item label="price">
-          <Input placeholder={`${productsDetail.price}`} />
-        </Form.Item>
-        <Form.Item label="qty">
-          <Input placeholder={`${productsDetail.qty}`} />
-        </Form.Item>
-        <Form.Item label="cost">
-          <Input placeholder={`${productsDetail.cost}`} />
-        </Form.Item>
-        <Form.Item label="category">
-          <Input placeholder={`${productsDetail.category}`} />
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary">Submit</Button>
-        </Form.Item> */}
       </Form>
     </div>
   );

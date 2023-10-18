@@ -9,7 +9,10 @@ export default function Login() {
     LoginApi(values).then((res) => {
       let code = res.data.errCode;
       if (code === 0) {
-        localStorage.setItem('username', res.data.userInfo[0].username);
+        localStorage.setItem(
+          'username',
+          res.data.userInfo[0].username
+        );
         localStorage.setItem('token', res.data.userInfo[0].token);
         message.success(res.data.message);
         setTimeout(() => {
@@ -25,6 +28,7 @@ export default function Login() {
 
   return (
     <div id="login">
+      <h3>Hair Natural Inc.</h3>
       <div className="login_box">
         <Form
           name="basic"
@@ -57,7 +61,6 @@ export default function Login() {
           >
             <Input.Password />
           </Form.Item>
-
           <Form.Item>
             <Button type="primary" htmlType="submit" block>
               Submit
