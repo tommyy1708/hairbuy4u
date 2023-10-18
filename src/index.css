@@ -122,6 +122,19 @@ button {
   font-size: 18rem;
 }
 
+.spinFrame{
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999999;
+  background-color: rgba(80, 78 , 78, 0.2);
+
+}
 
 .note{
   font-size: 15rem;

@@ -27,8 +27,6 @@ const HistoryDetail = () => {
             console.log(err.message);
           });
       },[]);
-console.log(orderDetail);
-
 
   const items: DescriptionsProps['items'] = [
     {
@@ -92,7 +90,7 @@ console.log(orderDetail);
   return (
     <div>
       <p>{order_number}</p>
-      <Descriptions title="Order Details" items={items} />
+      <Descriptions bordered={true} title="Order Details" items={items} />
     </div>
   );
 };

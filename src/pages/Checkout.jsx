@@ -1,13 +1,15 @@
 import React, { useContext, useState } from 'react';
 import CheckOutContent from '../store/CheckOutContent';
 import { Link } from 'react-router-dom';
-import { Space, Button, Modal, message } from 'antd';
+import { Space, Button, Modal, message, Spin } from 'antd';
 import CheckoutForm from '../Component/CheckoutForm/CheckoutForm';
 import printJS from 'print-js';
 import { CartDataApi } from '../request/api';
+import { type } from '@testing-library/user-event/dist/type';
 const Checkout = () => {
   const ctx = useContext(CheckOutContent);
   const [searchTerm, setSearchTerm] = useState('');
+  const [spin, setSpin] = useState(false);
   const handleInputChange = () => {
     let clientInput = document.getElementById('clientInput');
     ctx.clientNameChange(clientInput.value);
@@ -71,9 +73,6 @@ const Checkout = () => {
     setSearchTerm(newData);
   };
 
-  console.log(ctx.cartData);
-
-
   const printRecept = () => {
     printJS({
       printable: ctx.cartData.items,
@@ -97,20 +96,23 @@ const Checkout = () => {
       `,
       properties: ['item_code', 'item', 'price', 'amount'],
       onPrintDialogClose: async () => {
+        // The CartDataApi response for send data to backend for update SQL database. It will receives success or wrong status.
+        setSpin(true);
+        message.info({ type: 'loading', content: 'waiting for printing and update..' });
         await CartDataApi({
           cartData: JSON.stringify(ctx.cartData),
         }).then((res) => {
           if (res.data.errCode === 0) {
+            Modal.destroyAll();
             message.success(res.data.message);
+            setTimeout(() => {
+              ctx.setCartData('');
+              window.location.reload(false);
+            }, [2000]);
           } else {
             message.info(res.data.message);
           }
         });
-        setTimeout(() => {
-          Modal.destroyAll();
-          ctx.setCartData('');
-          window.location.reload(false);
-        }, [2000]);
       },
     });
   };
@@ -142,6 +144,7 @@ const Checkout = () => {
         setTimeout(() => {
           Modal.destroyAll();
           ctx.setCartData('');
+          setSpin(true);
           window.location.reload(false);
         }, [2000]);
       },
@@ -150,6 +153,10 @@ const Checkout = () => {
 
   return (
     <div>
+      {spin ? (
+        <Spin className="spinFrame" tip="Loading" size="large">
+        </Spin>
+      ) : null}
       <div className="searchInputFrame">
         <input id="searchInput" type="text" />
         <button onClick={searchClicked}>Search</button>
