@@ -5,8 +5,15 @@ import { useNavigate } from 'react-router';
 export default function Login() {
   const navigate = useNavigate();
   const [showloading, setShowLoading] = useState(false);
-
+  const [count, setCount] = useState(0);
+  let lgButton = document.getElementById('loginButton');
+  
   const onSubmit = (values) => {
+    setCount(prev => prev + 1);
+    if (count >= 4) {
+      message.error('You had multiple wrong, please contact manager!')
+      lgButton?.setAttribute('disabled', 'disabled');
+    }
     setShowLoading(true);
     LoginApi(values).then((res) => {
       let code = res.data.errCode;
