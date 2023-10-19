@@ -1,20 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {
+  useNavigate,
+  Outlet,
+  useLocation,
+  Link,
+} from 'react-router-dom';
 import { message } from 'antd';
 import styles from './MainLayout.module.css';
 import Menu from '../Menu/Menu';
 import SubWindow from '../SubWindow/SubWindow';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const MainLayout = () => {
   let navigate = useNavigate();
   const [username, setUsername] = useState('');
-
+  const [showSub, setShowSub] = useState(false);
+  let location = useLocation();
   useEffect(() => {
     let token = localStorage.getItem('token');
-    let username = localStorage.getItem('username');
-    setUsername(username);
+    setUsername(localStorage.getItem('username'));
+    if (location.pathname === '/') {
+      setShowSub(true);
+    } else {
+      setShowSub(false);
+    }
     axios
       .get('/api/verify', {
         headers: {
@@ -45,7 +54,11 @@ const MainLayout = () => {
         <Menu />
       </div>
       <div className={`${styles.subWindow}`}>
-        <SubWindow />
+        {showSub === true ?
+          <SubWindow username={username}></SubWindow>
+         :
+          <Outlet></Outlet>
+        }
       </div>
       <div className={`${styles.footer}`}></div>
     </div>

@@ -68,7 +68,7 @@ const App = () => {
     total: 0,
     casher:localStorage.getItem('username'),
   });
-  
+
   //! function
   const clientNameChange = (name) => {
     const newCart = { ...cartData };
