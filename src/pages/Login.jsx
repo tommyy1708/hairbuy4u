@@ -1,11 +1,13 @@
-import React from 'react';
-import { Form, Input, Button, message } from 'antd';
+import React, { useState } from 'react';
+import { Form, Input, Button, message, Spin } from 'antd';
 import { LoginApi } from '../request/api';
 import { useNavigate } from 'react-router';
 export default function Login() {
   const navigate = useNavigate();
+  const [showloading, setShowLoading] = useState(false);
 
   const onSubmit = (values) => {
+    setShowLoading(true);
     LoginApi(values).then((res) => {
       let code = res.data.errCode;
       if (code === 0) {
@@ -20,14 +22,25 @@ export default function Login() {
         }, 2000);
       } else if (code === 1) {
         message.info(res.data.message);
+        setTimeout(() => {
+          setShowLoading(false);
+        }, [2000]);
       } else {
         message.info(res.data.message);
+        setTimeout(() => {
+          setShowLoading(false);
+        }, [2000]);
       }
     });
   };
 
   return (
     <div id="login">
+      {showloading ? (
+        <>
+          <Spin delay="500" className="spinFrame" size="large"></Spin>
+        </>
+      ) : null}
       <h3>Hair Natural Inc.</h3>
       <div className="login_box">
         <Form
@@ -62,7 +75,12 @@ export default function Login() {
             <Input.Password />
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit" block>
+            <Button
+              id="loginButton"
+              type="primary"
+              htmlType="submit"
+              block
+            >
               Submit
             </Button>
           </Form.Item>

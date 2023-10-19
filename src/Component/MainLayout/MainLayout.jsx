@@ -54,13 +54,15 @@ const MainLayout = () => {
         <Menu />
       </div>
       <div className={`${styles.subWindow}`}>
-        {showSub === true ?
+        {showSub === true ? (
           <SubWindow username={username}></SubWindow>
-         :
+        ) : (
           <Outlet></Outlet>
-        }
+        )}
       </div>
-      <div className={`${styles.footer}`}></div>
+      <div className={`${styles.footer}`}>
+        <p>Copyright by Hua Zhang</p>
+      </div>
     </div>
   );
 };

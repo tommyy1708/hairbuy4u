@@ -32,3 +32,8 @@
   width: calc(100% - 200rem);
   color: #000;
 }
+.footer{
+  width: 100%;
+  background-color: #101c2d;
+  color: #fff;
+}
