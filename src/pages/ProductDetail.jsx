@@ -87,10 +87,10 @@ const ProductDetail = (props) => {
         <Form.Item label="Stock" name="qty">
           <Input placeholder={productsDetail.qty} />
         </Form.Item>
-        <Form.Item label="Price" name="price">
+        <Form.Item label="Price $" name="price">
           <Input placeholder={productsDetail.price} />
         </Form.Item>
-        <Form.Item label="Cost" name="cost">
+        <Form.Item label="Cost $" name="cost">
           <Input placeholder={productsDetail.cost} />
         </Form.Item>
         <Form.Item label="Category" name="category">

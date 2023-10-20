@@ -162,3 +162,12 @@ button {
   box-shadow:12px 12px 6px 1px rgba(255, 0, 119, 0.109);;
 }
 
+.addingButton{
+  display: flex;
+  justify-content: space-evenly;
+  background-color:#fff;
+  border-bottom: 1px solid #999;
+}
+.addingButton button{
+  margin: 10rem;
+}

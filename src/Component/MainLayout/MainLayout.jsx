@@ -16,6 +16,7 @@ const MainLayout = () => {
   const [username, setUsername] = useState('');
   const [showSub, setShowSub] = useState(false);
   let location = useLocation();
+  
   useEffect(() => {
     let token = localStorage.getItem('token');
     setUsername(localStorage.getItem('username'));

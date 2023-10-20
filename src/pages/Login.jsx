@@ -7,7 +7,7 @@ export default function Login() {
   const [showloading, setShowLoading] = useState(false);
   const [count, setCount] = useState(0);
   let lgButton = document.getElementById('loginButton');
-  
+
   const onSubmit = (values) => {
     setCount(prev => prev + 1);
     if (count >= 4) {
@@ -44,9 +44,12 @@ export default function Login() {
   return (
     <div id="login">
       {showloading ? (
-        <>
-          <Spin delay="500" className="spinFrame" size="large"></Spin>
-        </>
+        <Spin
+          tip="Loading..."
+          delay="500"
+          className="spinFrame"
+          size="large"
+        ></Spin>
       ) : null}
       <h3>Hair Natural Inc.</h3>
       <div className="login_box">

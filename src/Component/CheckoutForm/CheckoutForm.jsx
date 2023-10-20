@@ -36,7 +36,6 @@ const CheckoutForm = (props) => {
                   <p>Item Code: {item.item_code}</p>
                   <p>Item Code: {item.item}</p>
                   <p>Amount: {item.amount}</p>
-                  {/* <p>MSRP: ${item.price}</p> */}
                   <p>Final Price: ${item.price}</p>
                 </li>
               </ul>

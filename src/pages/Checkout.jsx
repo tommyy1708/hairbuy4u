@@ -5,7 +5,7 @@ import { Space, Button, Modal, message, Spin } from 'antd';
 import CheckoutForm from '../Component/CheckoutForm/CheckoutForm';
 import printJS from 'print-js';
 import { CartDataApi } from '../request/api';
-import { type } from '@testing-library/user-event/dist/type';
+
 const Checkout = () => {
   const ctx = useContext(CheckOutContent);
   const [searchTerm, setSearchTerm] = useState('');
@@ -102,20 +102,18 @@ const Checkout = () => {
           type: 'loading',
           content: 'waiting for printing and update..',
         });
-        await CartDataApi({
+        let result = await CartDataApi({
           cartData: JSON.stringify(ctx.cartData),
-        }).then((res) => {
-          if (res.data.errCode === 0) {
-            Modal.destroyAll();
-            message.success(res.data.message);
-            setTimeout(() => {
-              ctx.setCartData('');
-              window.location.reload(false);
-            }, [2000]);
-          } else {
-            message.info(res.data.message);
-          }
         });
+
+        if (result.data.errCode === 0) {
+          message.success(result.data.message);
+          setTimeout(() => {
+            window.location.reload(false);
+          }, [2000]);
+        } else {
+          message.info(result.data.message);
+        }
       },
     });
   };
@@ -230,7 +228,7 @@ const Checkout = () => {
                         <>
                           <CancelBtn />
                           <Button type="primary" onClick={printQuote}>
-                            Print
+                            Print Quote
                           </Button>
                         </>
                       ),
@@ -253,7 +251,7 @@ const Checkout = () => {
                             type="primary"
                             onClick={printRecept}
                           >
-                            Print
+                            Print Recept
                           </Button>
                         </>
                       ),

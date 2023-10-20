@@ -12,3 +12,9 @@ export const LoginApi = (params) => axios.post('/api/login', params);
 //Update products from inventory
 export const ProductsUpdateApi = (params) =>
   axios.put('/api/products/update', params);
+
+//Add new client
+export const AddNewClientApi = (params) => axios.post('/api/client')
+
+//Inquiry client
+export const InquiryClientApi = () => axios.get('/api/client')
