@@ -73,7 +73,10 @@ const Checkout = () => {
     setSearchTerm(newData);
   };
 
-  const printRecept = () => {
+  const printRecept = async () => {
+    let result = await CartDataApi({
+      cartData: JSON.stringify(ctx.cartData),
+    });
     printJS({
       printable: ctx.cartData.items,
       type: 'json',
@@ -95,15 +98,12 @@ const Checkout = () => {
        </div>
       `,
       properties: ['item_code', 'item', 'price', 'amount'],
-      onPrintDialogClose: async () => {
+      onPrintDialogClose: () => {
         // The CartDataApi response for send data to backend for update SQL database. It will receives success or wrong status.
         setSpin(true);
         message.info({
           type: 'loading',
           content: 'waiting for printing and update..',
-        });
-        let result = await CartDataApi({
-          cartData: JSON.stringify(ctx.cartData),
         });
 
         if (result.data.errCode === 0) {
