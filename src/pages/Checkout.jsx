@@ -10,6 +10,7 @@ const Checkout = () => {
   const ctx = useContext(CheckOutContent);
   const [searchTerm, setSearchTerm] = useState('');
   const [spin, setSpin] = useState(false);
+
   const handleInputChange = () => {
     let clientInput = document.getElementById('clientInput');
     ctx.clientNameChange(clientInput.value);
@@ -74,13 +75,15 @@ const Checkout = () => {
   };
 
   const printRecept = async () => {
-    let result = await CartDataApi({
-      cartData: JSON.stringify(ctx.cartData),
-    });
-    printJS({
-      printable: ctx.cartData.items,
-      type: 'json',
-      header: `
+    setSpin(true);
+    try {
+     await CartDataApi({
+        cartData: JSON.stringify(ctx.cartData),
+      });
+      printJS({
+        printable: ctx.cartData.items,
+        type: 'json',
+        header: `
       <div>
       <div style="padding:0; margin=0; font-size:14px;line-height: normal;">
       <h4>Hair Natural Inc. Receipt
@@ -97,25 +100,17 @@ const Checkout = () => {
       </div>
        </div>
       `,
-      properties: ['item_code', 'item', 'price', 'amount'],
-      onPrintDialogClose: () => {
-        // The CartDataApi response for send data to backend for update SQL database. It will receives success or wrong status.
-        setSpin(true);
-        message.info({
-          type: 'loading',
-          content: 'waiting for printing and update..',
-        });
+        properties: ['item_code', 'item', 'price', 'amount'],
+      });
 
-        if (result.data.errCode === 0) {
-          message.success(result.data.message);
-          setTimeout(() => {
-            window.location.reload(false);
-          }, [2000]);
-        } else {
-          message.info(result.data.message);
-        }
-      },
-    });
+      setTimeout(() => {
+        window.location.reload(false);
+      }, [5000]);
+    } catch (error) {
+      message.info('Something wrong!');
+      console.log(error);
+    }
+    return;
   };
 
   const printQuote = () => {
@@ -140,21 +135,17 @@ const Checkout = () => {
        </div>
       `,
       properties: ['item_code', 'item', 'price', 'amount'],
-      onPrintDialogClose: () => {
-        setSpin(true);
-        message.info({
-          type: 'loading',
-          content: 'waiting for printing and update..',
-        });
-
-        setTimeout(() => {
-          message.success('Print Success!');
-          Modal.destroyAll();
-          ctx.setCartData('');
-          window.location.reload(false);
-        }, [2000]);
-      },
     });
+    setSpin(true);
+    try {
+      setTimeout(() => {
+        window.location.reload(false);
+      }, [5000]);
+    } catch (error) {
+      message.info('Something wrong!');
+      console.log(error);
+    }
+    return;
   };
 
   return (
@@ -218,46 +209,10 @@ const Checkout = () => {
                 />
               </div>
               <Space size={20}>
-                <Button
-                  onClick={() => {
-                    Modal.confirm({
-                      title: 'Quote Confirm',
-                      content:
-                        'This action to print out the quotation',
-                      footer: (_, { CancelBtn }) => (
-                        <>
-                          <CancelBtn />
-                          <Button type="primary" onClick={printQuote}>
-                            Print Quote
-                          </Button>
-                        </>
-                      ),
-                    });
-                  }}
-                >
+                <Button type="primary" onClick={() => printQuote()}>
                   Quote
                 </Button>
-                <Button
-                  type="primary"
-                  onClick={() => {
-                    Modal.confirm({
-                      title: 'Confirm',
-                      content:
-                        'This action to print out the recept and not allow undo!!!',
-                      footer: (_, { CancelBtn }) => (
-                        <>
-                          <CancelBtn />
-                          <Button
-                            type="primary"
-                            onClick={printRecept}
-                          >
-                            Print Recept
-                          </Button>
-                        </>
-                      ),
-                    });
-                  }}
-                >
+                <Button type="primary" onClick={() => printRecept()}>
                   Recept
                 </Button>
               </Space>
