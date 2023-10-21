@@ -35,14 +35,15 @@ const TradeHistory = (props) => {
       width: '180rem',
       ellipsis: true,
       textWrap: 'word-break',
-      render: (_, record) =>
-        <p>{record.date}</p>
+      render: (_, record) => <p>{record.date}</p>,
     },
     {
       align: 'center',
       title: 'OrderNumber',
       dataIndex: 'order_number',
       key: 'order_number',
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => a.order_number - b.order_number,
       render: (_, record) => (
         <Link to={`order_detail/${record.order_number}`}>
           {record.order_number}
@@ -65,7 +66,7 @@ const TradeHistory = (props) => {
       {showDetail ? (
         <HistoryDetail></HistoryDetail>
       ) : (
-        <Table
+          <Table
           columns={historyColumns}
           dataSource={order_data}
           rowKey={(record) => record.order_number}

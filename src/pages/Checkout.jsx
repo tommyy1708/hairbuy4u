@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react';
 import CheckOutContent from '../store/CheckOutContent';
 import { Link } from 'react-router-dom';
-import { Space, Button, Modal, message, Spin } from 'antd';
+import { Space, Button, message, Spin } from 'antd';
 import CheckoutForm from '../Component/CheckoutForm/CheckoutForm';
 import printJS from 'print-js';
-import { CartDataApi } from '../request/api';
+import { AddCartDataApi, UpdateStockDataApi } from '../request/api';
 
 const Checkout = () => {
   const ctx = useContext(CheckOutContent);
@@ -75,42 +75,52 @@ const Checkout = () => {
   };
 
   const printRecept = async () => {
+    const items = ctx.cartData.items;
+    let token = localStorage.getItem('token');
     setSpin(true);
     try {
-     await CartDataApi({
+      await AddCartDataApi({
         cartData: JSON.stringify(ctx.cartData),
       });
-      printJS({
-        printable: ctx.cartData.items,
-        type: 'json',
-        header: `
-      <div>
-      <div style="padding:0; margin=0; font-size:14px;line-height: normal;">
-      <h4>Hair Natural Inc. Receipt
-      (Save more Pay less at our Website: www.hairbuy4u.com )</h4>
-      <p>4980 NW 165th Street Suite A21</p>
-      <p>Miami Gardens, Florida 33014 United States</p>
-      <p>(305)454-9121</p>
-      </div>
-      <div styles:“line-height:14px; width:100px” >
-      <p>Client:${ctx.cartData.client}</p>
-      <p>Subtotal:$${ctx.cartData.subtotal.toFixed(2)}</p>
-      <p>Tax(7%):$${ctx.cartData.tax.toFixed(2)}</p>
-      <p>Total:$${ctx.cartData.total.toFixed(2)}</p>
-      </div>
-       </div>
-      `,
-        properties: ['item_code', 'item', 'price', 'amount'],
+      let returnData = await UpdateStockDataApi({
+        data: items,
+        token: token,
       });
+      if (returnData.data.errCode !== 0) {
+        message.error('Something Wrong!')
+        return;
+      } else {
+        printJS({
+          printable: ctx.cartData.items,
+          type: 'json',
+          header: `
+        <div>
+        <div style="padding:0; margin=0; font-size:14px;line-height: normal;">
+        <h4>Hair Natural Inc. Receipt
+        (Save more Pay less at our Website: www.hairbuy4u.com )</h4>
+        <p>4980 NW 165th Street Suite A21</p>
+        <p>Miami Gardens, Florida 33014 United States</p>
+        <p>(305)454-9121</p>
+        </div>
+        <div styles:“line-height:14px; width:100px” >
+        <p>Client:${ctx.cartData.client}</p>
+        <p>Subtotal:$${ctx.cartData.subtotal.toFixed(2)}</p>
+        <p>Tax(7%):$${ctx.cartData.tax.toFixed(2)}</p>
+        <p>Total:$${ctx.cartData.total.toFixed(2)}</p>
+        </div>
+         </div>
+        `,
+          properties: ['item_code', 'item', 'price', 'amount'],
+        });
 
-      setTimeout(() => {
-        window.location.reload(false);
-      }, [5000]);
+        setTimeout(() => {
+          window.location.reload(false);
+        }, [5000]);
+      }
     } catch (error) {
       message.info('Something wrong!');
       console.log(error);
     }
-    return;
   };
 
   const printQuote = () => {
@@ -136,11 +146,12 @@ const Checkout = () => {
       `,
       properties: ['item_code', 'item', 'price', 'amount'],
     });
+
     setSpin(true);
     try {
       setTimeout(() => {
         window.location.reload(false);
-      }, [5000]);
+      }, [10000]);
     } catch (error) {
       message.info('Something wrong!');
       console.log(error);
@@ -162,9 +173,10 @@ const Checkout = () => {
           {searchTerm.length > 0
             ? searchTerm.map((item) => (
                 <li key={item.key} className="searchItem">
-                  <h3>{item.item_code}</h3>
+                  <p>{item.item_code}</p>
                   <p>${item.price}</p>
-                  <h4>{item.item}</h4>
+                  <p>{item.item}</p>
+                  <p>{item.qty}</p>
                   <button onClick={() => ctx.addItemToCart(item)}>
                     add To Cart
                   </button>
