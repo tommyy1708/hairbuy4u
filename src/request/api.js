@@ -5,8 +5,12 @@ export const VerifyTokenApi = (params) => axios.get('/api/verify', params);
 export const AddCartDataApi = (params) =>
   axios.post('/api/shopping-cart', params);
 
-//minus amount where from newOrder
+//update stock by new order
 export const UpdateStockDataApi = (params) => axios.post('/api/shopping-cart/update', params);
+
+//count spend on client
+export const AddSpendOnClient = (params) =>
+  axios.post('/api/shopping-cart/client_update/', params);
 
 export const ProductsDetailApi = (params) => axios.post('/api/products/:id', params);
 
@@ -17,7 +21,8 @@ export const ProductsUpdateApi = (params) =>
   axios.put('/api/products/update', params);
 
 //Add new client
-export const AddNewClientApi = (params) => axios.post('/api/client',params)
+export const AddNewClientApi = (params) => axios.post('/api/client', params);
 
 //Inquiry client
-export const InquiryClientApi = () => axios.get('/api/client')
+export const InquiryClientApi = () => axios.get('/api/client');
+

@@ -4,7 +4,11 @@ import { Link } from 'react-router-dom';
 import { Space, Button, message, Spin } from 'antd';
 import CheckoutForm from '../Component/CheckoutForm/CheckoutForm';
 import printJS from 'print-js';
-import { AddCartDataApi, UpdateStockDataApi } from '../request/api';
+import {
+  AddCartDataApi,
+  UpdateStockDataApi,
+  AddSpendOnClient,
+} from '../request/api';
 
 const Checkout = () => {
   const ctx = useContext(CheckOutContent);
@@ -76,18 +80,31 @@ const Checkout = () => {
 
   const printRecept = async () => {
     const items = ctx.cartData.items;
-    let token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
+    const clientName = ctx.cartData.client;
+    let data = {
+      clientSpend: ctx.cartData.total,
+      clientName: ctx.cartData.client
+    }
+    let returnData = await UpdateStockDataApi({
+      data: items,
+      token: token,
+    });
     setSpin(true);
     try {
+      //This Api for add new order into order database
       await AddCartDataApi({
         cartData: JSON.stringify(ctx.cartData),
       });
-      let returnData = await UpdateStockDataApi({
-        data: items,
-        token: token,
-      });
+      // This api for update stock from inventory database
+      if (clientName !== null) {
+        const returnResult =  await AddSpendOnClient(data);
+        console.log("🚀 ~ file: Checkout.jsx:102 ~ printRecept ~ data:", data)
+
+
+      }
       if (returnData.data.errCode !== 0) {
-        message.error('Something Wrong!')
+        message.error('Something Wrong!');
         return;
       } else {
         printJS({
@@ -112,18 +129,20 @@ const Checkout = () => {
         `,
           properties: ['item_code', 'item', 'price', 'amount'],
         });
-
+        setSpin(false);
         setTimeout(() => {
           window.location.reload(false);
         }, [5000]);
       }
     } catch (error) {
+      setSpin(false);
       message.info('Something wrong!');
       console.log(error);
     }
   };
 
   const printQuote = () => {
+    setSpin(true);
     printJS({
       printable: ctx.cartData.items,
       type: 'json',
@@ -146,8 +165,6 @@ const Checkout = () => {
       `,
       properties: ['item_code', 'item', 'price', 'amount'],
     });
-
-    setSpin(true);
     try {
       setTimeout(() => {
         window.location.reload(false);
@@ -161,9 +178,7 @@ const Checkout = () => {
 
   return (
     <div>
-      {spin ? (
-        <Spin className="spinFrame" tip="Loading" size="large"></Spin>
-      ) : null}
+      {spin ? <Spin className="spinFrame" size="large" /> : null}
       <div className="searchInputFrame">
         <input id="searchInput" type="text" />
         <button onClick={searchClicked}>Search</button>

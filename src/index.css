@@ -148,6 +148,7 @@ button {
   padding: 20rem;
   font-size: 32rem;
 }
+/* UI from login page */
 #login {
   width: 100vw;
   height: 100vh;
@@ -161,6 +162,8 @@ button {
   border: 1px solid #ddd;
   box-shadow:12px 12px 6px 1px rgba(255, 0, 119, 0.109);;
 }
+/* End UI from login page */
+
 
 .addingButton{
   display: flex;
@@ -173,4 +176,8 @@ button {
 }
 .newClientFrame{
   padding: 20rem;
+}
+/* Products page */
+.editButton{
+  padding: 5rem;
 }

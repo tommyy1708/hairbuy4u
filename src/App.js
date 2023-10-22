@@ -69,14 +69,12 @@ const App = () => {
     casher:localStorage.getItem('username'),
   });
 
-  //! function
   const clientNameChange = (name) => {
     const newCart = { ...cartData };
     newCart.client = name;
     setCartData(newCart);
   };
 
-  //! function
   const addItemToCart = (item) => {
     const newCart = { ...cartData };
     if (cartData.items.indexOf(item) === -1) {
@@ -94,7 +92,6 @@ const App = () => {
     newCart.total += item_total;
     setCartData(newCart);
   };
-  //! function
   const subItemToCart = (item) => {
     const newCart = { ...cartData };
     if (cartData.items.indexOf(item) === -1) {
@@ -112,7 +109,6 @@ const App = () => {
 
     setCartData(newCart);
   };
-  //! function
   const removeItemToCart = (item) => {
     const newCart = { ...cartData };
     const index = cartData.items.indexOf(item);
@@ -132,7 +128,6 @@ const App = () => {
     setCartData(newCart);
   };
 
-  //! function
   const editPrice = (item, newPrice, newAmount) => {
     const newCart = { ...cartData };
 

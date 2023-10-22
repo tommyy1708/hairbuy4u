@@ -6,7 +6,7 @@ const ProductDetail = (props) => {
   const { id } = props;
   const cleanedString = id.replace(/'/g, '');
   const [productsDetail, setProductsDetail] = useState('');
-  const [showloading, setShowLoading] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
 
   useEffect(() => {
     setShowLoading(false);
@@ -50,12 +50,11 @@ const ProductDetail = (props) => {
   };
   return (
     <div className="productsDetailFrame">
-      {showloading ? (
+      {showLoading ? (
         <div>
         <Spin
           delay="500"
           className="spinFrame"
-          tip="Loading"
           size="large"
         ></Spin>
         </div>

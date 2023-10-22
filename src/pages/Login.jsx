@@ -4,7 +4,7 @@ import { LoginApi } from '../request/api';
 import { useNavigate } from 'react-router';
 export default function Login() {
   const navigate = useNavigate();
-  const [showloading, setShowLoading] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
   const [count, setCount] = useState(0);
   let lgButton = document.getElementById('loginButton');
 
@@ -43,13 +43,14 @@ export default function Login() {
 
   return (
     <div id="login">
-      {showloading ? (
-        <Spin
-          tip="Loading..."
-          delay="500"
-          className="spinFrame"
-          size="large"
-        ></Spin>
+      {showLoading ? (
+        <div>
+          <Spin
+            delay="500"
+            className="spinFrame"
+            size="large"
+          />
+        </div>
       ) : null}
       <h3>Hair Natural Inc.</h3>
       <div className="login_box">

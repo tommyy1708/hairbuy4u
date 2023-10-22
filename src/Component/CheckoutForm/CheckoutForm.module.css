@@ -1,8 +1,8 @@
-.button{
+.button {
   padding: 2rem;
 }
-.editPrice::before{
-content: '$';
+.editPrice::before {
+  content: '$';
 }
 .orderListFrame {
   margin-top: 50rem;
@@ -10,30 +10,26 @@ content: '$';
   margin-bottom: 20px;
   border: 1px solid #ccc;
   padding: 10px;
-}
-
-.listItem {
-  width: 400rem;
-  list-style-type: none;
-  margin-top: 10px;
-  padding: 5px;
   background-color: #f5f5f5;
 }
 
-.orderContainer{
+.orderContainer {
   display: flex;
   align-items: center;
   justify-content: space-around;
 }
 
-
-.orderContainer h2 {
-  font-size: 18px;
-  color: #333;
-}
-
-.line{
+.line {
   width: 100vw;
   max-height: 2rem;
   background-color: #333;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.buttons button{
+  margin-left: 5rem;
 }

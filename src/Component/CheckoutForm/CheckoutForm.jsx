@@ -31,14 +31,12 @@ const CheckoutForm = (props) => {
               key={item.key}
               className={`${styles.orderContainer}`}
             >
-              <ul className={`${styles.listContainer}`}>
-                <li className={`${styles.listItem}`}>
+              <div className={`${styles.listContainer}`}>
                   <p>Item Code: {item.item_code}</p>
                   <p>Item Code: {item.item}</p>
                   <p>Amount: {item.amount}</p>
                   <p>Final Price: ${item.price}</p>
-                </li>
-              </ul>
+              </div>
               <div className={`${styles.editPrice}`}>
                 <input
                   className={`input${item.key}`}
@@ -46,22 +44,19 @@ const CheckoutForm = (props) => {
                   style={{ width: '20rem' }}
                 />
               </div>
-              <div>
+              <div className={`${styles.buttons}`}>
                 <Button
-                  className={`${styles.button}`}
                   danger
                   onClick={() => handleUpPrice(item)}
                 >
                   update
                 </Button>
                 <Button
-                  className={`${styles.button}`}
                   danger
                   onClick={() => removeItemToCart(item)}
                 >
                   remove
                 </Button>
-              </div>
               <Button
                 className={`adjustButton${item.key}`}
                 onClick={() => subItemToCart(item)}
@@ -75,6 +70,7 @@ const CheckoutForm = (props) => {
               >
                 +
               </Button>
+              </div>
             </div>
           ))}
         </div>

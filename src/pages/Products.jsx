@@ -65,7 +65,7 @@ export default function Products() {
       title: 'Act',
       render: (_, record) => (
         <>
-          <button onClick={() => goToDetail(record.item_code)}>
+          <button className='editButton' onClick={() => goToDetail(record.item_code)}>
             Edit
           </button>
         </>
@@ -78,7 +78,7 @@ export default function Products() {
     const input = document.getElementById('filter_input');
     input.value = '';
   };
-  
+
   return (
     <div className='productsFrame'>
       {params.id ? (
