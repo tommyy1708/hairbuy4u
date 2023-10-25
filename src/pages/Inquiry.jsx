@@ -7,6 +7,7 @@ import {
 import Item from './Item';
 import Filter from '../Component/Filter/Filter';
 import CheckOutContent from '../store/CheckOutContent';
+
 const columns = [
   {
     title: 'ItemCode',

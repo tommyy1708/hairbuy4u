@@ -176,8 +176,16 @@ button {
 }
 .newClientFrame{
   padding: 20rem;
+
 }
 /* Products page */
 .editButton{
   padding: 5rem;
+}
+
+/* Customer Page */
+.searchFrame{
+  display:  flex;
+  padding: 10rem;
+  border-bottom: 1px solid #aaa;
 }

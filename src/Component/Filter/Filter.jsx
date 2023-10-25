@@ -2,6 +2,7 @@ import React from 'react';
 import Styles from './Filter.module.css';
 import { Button } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
+
 const Filter = (props) => {
   const { setItemsData, inventoryData, emptySearch } = props;
 

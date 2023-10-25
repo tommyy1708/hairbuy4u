@@ -9,11 +9,6 @@ const Option = () => {
   const OPTIONS = [
     {
       key: '1',
-      address: 'order_history',
-      name: 'trade_history',
-    },
-    {
-      key: '2',
       address: 'checkout',
       name: 'checkout',
     },

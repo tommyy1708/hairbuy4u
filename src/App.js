@@ -10,13 +10,12 @@ import moment from 'moment-timezone';
 //Components
 import MainLayout from './Component/MainLayout/MainLayout.jsx';
 //Pages
-import Sale from './pages/Sale';
+import Sale from './pages/Sale.jsx';
 import Buy from './pages/Buy';
 import Login from './pages/Login';
 import Products from './pages/Products';
 import Customer from './pages/Customer';
 import Missing from './pages/404.jsx';
-import Inquiry from './pages/Inquiry.jsx';
 import Checkout from './pages/Checkout.jsx';
 import TradeHistory from './pages/TradeHistory.jsx';
 import CheckOutContent from './store/CheckOutContent.js';
@@ -66,7 +65,7 @@ const App = () => {
     subtotal: 0,
     tax: 0,
     total: 0,
-    casher:localStorage.getItem('username'),
+    casher: localStorage.getItem('username'),
   });
 
   const clientNameChange = (name) => {
@@ -171,26 +170,25 @@ const App = () => {
       <div className="App">
         <Router>
           <Routes>
-            <Route path="/login" element={<Login />}></Route>
             <Route path="/" element={<MainLayout />}>
-              <Route path="/sale/*" element={<Sale />}>
-                <Route
-                  path="order_history"
-                  element={<TradeHistory />}
-                >
-                  <Route
-                    path="order_detail/:id"
-                    element={<HistoryDetail />}
-                  />
-                </Route>
-                <Route path="checkout" element={<Checkout />} />
-              </Route>
+              <Route path="/login" element={<Login />}></Route>
               <Route path="/buy" element={<Buy />}></Route>
+              <Route path="/history" element={<TradeHistory />}>
+                <Route
+                  path="order_detail/:id"
+                  element={<HistoryDetail />}
+                />
+              </Route>
+              {/*Start products page */}
               <Route path="/products/" element={<Products />}>
                 <Route path=":id" element={<ProductDetail />}></Route>
               </Route>
-              <Route path="/customer" element={<Customer />}>
-                <Route path="inquiry" element={<Inquiry />}></Route>
+              {/* Start customer page */}
+              <Route path="/customer/" element={<Customer />}>
+                <Route
+                  path="checkout/:number"
+                  element={<Checkout />}
+                />
               </Route>
             </Route>
             <Route path="*" element={<Missing />}></Route>

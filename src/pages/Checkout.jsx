@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import CheckOutContent from '../store/CheckOutContent';
 import { Link } from 'react-router-dom';
-import { Space, Button, message, Spin } from 'antd';
+import { Space, Button, message, Spin, Input } from 'antd';
 import CheckoutForm from '../Component/CheckoutForm/CheckoutForm';
 import printJS from 'print-js';
 import {
@@ -98,10 +98,7 @@ const Checkout = () => {
       });
       // This api for update stock from inventory database
       if (clientName !== null) {
-        const returnResult =  await AddSpendOnClient(data);
-        console.log("🚀 ~ file: Checkout.jsx:102 ~ printRecept ~ data:", data)
-
-
+        await AddSpendOnClient(data);
       }
       if (returnData.data.errCode !== 0) {
         message.error('Something Wrong!');
@@ -228,12 +225,13 @@ const Checkout = () => {
               <p>Total:${ctx.cartData.total.toFixed(2)}</p>
               <div className="clientNameFrame">
                 <p>Client Name:</p>
-                <input
+                {/* <input
                   id="clientInput"
                   placeholder="Client Name"
                   type="text"
                   onChange={handleInputChange}
-                />
+                /> */}
+                <Input value={'test'} disabled></Input>
               </div>
               <Space size={20}>
                 <Button type="primary" onClick={() => printQuote()}>
