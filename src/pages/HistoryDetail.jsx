@@ -2,31 +2,33 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Badge, Descriptions } from 'antd';
 const HistoryDetail = () => {
-    const params = useParams();
-    const order_number = params.id;
-    const [orderDetail, setOrderDetail] = useState('');
+  const params = useParams();
+  const order_number = params.id;
+  const [orderDetail, setOrderDetail] = useState('');
   const [itemDetail, setItemDetail] = useState('');
 
-    useEffect(
-      () => async (title, body) => {
-        await fetch('/api/order_history/order_detail/:id', {
-          method: 'POST',
-          body: JSON.stringify({
-            order_number,
-          }),
-          headers: {
-            'Content-type': 'application/json; charset=UTF-8',
-          },
+  useEffect(
+    () => async (title, body) => {
+      await fetch('/api/order_history/order_detail/:id', {
+        method: 'POST',
+        body: JSON.stringify({
+          order_number,
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setOrderDetail(data.orderDetail);
+          setItemDetail(data.orderDetail.items);
         })
-          .then((response) => response.json())
-          .then((data) => {
-            setOrderDetail(data.orderDetail);
-            setItemDetail(data.orderDetail.items);
-          })
-          .catch((err) => {
-            console.log(err.message);
-          });
-      },[]);
+        .catch((err) => {
+          console.log(err.message);
+        });
+    },
+    []
+  );
 
   const items: DescriptionsProps['items'] = [
     {
@@ -47,7 +49,7 @@ const HistoryDetail = () => {
     {
       key: '4',
       label: 'Total',
-      children: <p>${orderDetail.total}</p>,
+      children: <p>${parseFloat(orderDetail.total).toFixed(2)}</p>,
     },
     {
       key: '5',
@@ -74,7 +76,7 @@ const HistoryDetail = () => {
               </div>
             ))
           ) : (
-            <div>ppp</div>
+            <div>Nothing</div>
           )}
         </div>
       ),
@@ -90,7 +92,11 @@ const HistoryDetail = () => {
   return (
     <div>
       <p>{order_number}</p>
-      <Descriptions bordered={true} title="Order Details" items={items} />
+      <Descriptions
+        bordered={true}
+        title="Order Details"
+        items={items}
+      />
     </div>
   );
 };

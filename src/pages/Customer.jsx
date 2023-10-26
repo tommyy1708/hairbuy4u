@@ -103,7 +103,7 @@ const Customer = () => {
       dataIndex: 'newOrder',
       render: (_, record) => (
         <Button>
-          <Link to={`/customer/checkout/${record.phone}`}>
+          <Link to={`/customer/checkout/${record.phone}/${record.name}`}>
             New Order
           </Link>
         </Button>

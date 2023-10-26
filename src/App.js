@@ -10,7 +10,6 @@ import moment from 'moment-timezone';
 //Components
 import MainLayout from './Component/MainLayout/MainLayout.jsx';
 //Pages
-import Sale from './pages/Sale.jsx';
 import Buy from './pages/Buy';
 import Login from './pages/Login';
 import Products from './pages/Products';
@@ -68,6 +67,12 @@ const App = () => {
     casher: localStorage.getItem('username'),
   });
 
+  const minusTax = () => {
+    let newTotal = cartData.total - cartData.tax;
+    const updatedTotal = { ...cartData, total: newTotal, tax: 0 };
+    setCartData(updatedTotal);
+  };
+
   const clientNameChange = (name) => {
     const newCart = { ...cartData };
     newCart.client = name;
@@ -91,6 +96,7 @@ const App = () => {
     newCart.total += item_total;
     setCartData(newCart);
   };
+
   const subItemToCart = (item) => {
     const newCart = { ...cartData };
     if (cartData.items.indexOf(item) === -1) {
@@ -164,6 +170,7 @@ const App = () => {
         subItemToCart,
         removeItemToCart,
         clientNameChange,
+        minusTax,
         inventoryData,
       }}
     >
@@ -171,7 +178,6 @@ const App = () => {
         <Router>
           <Routes>
             <Route path="/" element={<MainLayout />}>
-              <Route path="/login" element={<Login />}></Route>
               <Route path="/buy" element={<Buy />}></Route>
               <Route path="/history" element={<TradeHistory />}>
                 <Route
@@ -186,12 +192,13 @@ const App = () => {
               {/* Start customer page */}
               <Route path="/customer/" element={<Customer />}>
                 <Route
-                  path="checkout/:number"
+                  path="checkout/:phone/:name"
                   element={<Checkout />}
                 />
               </Route>
             </Route>
             <Route path="*" element={<Missing />}></Route>
+            <Route path="/login" element={<Login />}></Route>
           </Routes>
         </Router>
       </div>

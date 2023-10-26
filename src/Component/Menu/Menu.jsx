@@ -16,14 +16,6 @@ const Menu = () => {
       key: 5,
       label: 'history',
     },
-    {
-      key: 1,
-      label: `sale`,
-    },
-    {
-      key: 2,
-      label: 'buy',
-    },
   ];
 
   return (

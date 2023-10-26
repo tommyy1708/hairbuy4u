@@ -1,7 +1,7 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import CheckOutContent from '../store/CheckOutContent';
-import { Link } from 'react-router-dom';
-import { Space, Button, message, Spin, Input } from 'antd';
+import { Link, useParams } from 'react-router-dom';
+import { Space, Button,Switch, message, Spin, Input } from 'antd';
 import CheckoutForm from '../Component/CheckoutForm/CheckoutForm';
 import printJS from 'print-js';
 import {
@@ -14,11 +14,27 @@ const Checkout = () => {
   const ctx = useContext(CheckOutContent);
   const [searchTerm, setSearchTerm] = useState('');
   const [spin, setSpin] = useState(false);
+  // const [tax, setTax] = useState(ctx.cartData.tax)
+  // const [total, setTotal] = useState(ctx.cartData.total)
+  // console.log("🚀 ~ file: Checkout.jsx:18 ~ Checkout ~ tax:", tax)
+  // console.log("🚀 ~ file: Checkout.jsx:18 ~ Checkout ~ total:", total)
+  const { phone, name } = useParams();
+  ctx.cartData.client = name;
 
+  /*Start Here segment of HTML and function for input client name at checkout page
   const handleInputChange = () => {
     let clientInput = document.getElementById('clientInput');
     ctx.clientNameChange(clientInput.value);
   };
+
+  <input
+        id="clientInput"
+        placeholder="Client Name"
+        type="text"
+        onChange={handleInputChange}
+    />
+    End
+    */
 
   const orderColumns = [
     {
@@ -78,14 +94,14 @@ const Checkout = () => {
     setSearchTerm(newData);
   };
 
+
   const printRecept = async () => {
     const items = ctx.cartData.items;
     const token = localStorage.getItem('token');
-    const clientName = ctx.cartData.client;
     let data = {
       clientSpend: ctx.cartData.total,
-      clientName: ctx.cartData.client
-    }
+      clientName: name,
+    };
     let returnData = await UpdateStockDataApi({
       data: items,
       token: token,
@@ -97,9 +113,8 @@ const Checkout = () => {
         cartData: JSON.stringify(ctx.cartData),
       });
       // This api for update stock from inventory database
-      if (clientName !== null) {
-        await AddSpendOnClient(data);
-      }
+      await AddSpendOnClient(data);
+
       if (returnData.data.errCode !== 0) {
         message.error('Something Wrong!');
         return;
@@ -173,6 +188,16 @@ const Checkout = () => {
     return;
   };
 
+
+  const switchChanged = (e) => {
+
+    if (e === false) {
+      ctx.minusTax();
+    } else {
+
+    }
+ }
+
   return (
     <div>
       {spin ? <Spin className="spinFrame" size="large" /> : null}
@@ -217,21 +242,24 @@ const Checkout = () => {
         <div className="buttonContainer">
           {ctx.cartData && ctx.cartData.items.length > 0 ? (
             <div className={'orderSummarize'}>
+              <Switch
+                checkedChildren="Tax"
+                unCheckedChildren="No Tax"
+                onChange={switchChanged}
+                defaultChecked
+              ></Switch>
               <h3>OrderNumber:</h3>
               <h5>{ctx.cartData.order_number}</h5>
               <p>Amount:{ctx.cartData.totalAmount}</p>
               <p>Subtotal:${ctx.cartData.subtotal.toFixed(2)}</p>
-              <p>Tax:${ctx.cartData.tax.toFixed(2)}</p>
+              <div>
+                Tax:$
+                {ctx.cartData.tax.toFixed(2)}
+              </div>
               <p>Total:${ctx.cartData.total.toFixed(2)}</p>
               <div className="clientNameFrame">
                 <p>Client Name:</p>
-                {/* <input
-                  id="clientInput"
-                  placeholder="Client Name"
-                  type="text"
-                  onChange={handleInputChange}
-                /> */}
-                <Input value={'test'} disabled></Input>
+                <Input value={name} disabled></Input>
               </div>
               <Space size={20}>
                 <Button type="primary" onClick={() => printQuote()}>
