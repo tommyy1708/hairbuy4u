@@ -121,27 +121,55 @@ const Checkout = () => {
         printJS({
           printable: ctx.cartData.items,
           type: 'json',
+          documentTitle: 'recept',
+          repeatTableHeader: true,
           header: `
-       <div style="text-align:center;font-size:14px;">
-          <div style="padding:0;">
-      <h3>Hair Natural Inc. Sales Recept</h3>
+      <div style="text-align:center;font-size:14px;">
+      <h3>Hair Natural Inc. Sales Recept </h3>
       <h4>*****(Save more Pay less at our Website: www.hairbuy4u.com )*****</h4>
       <p>4980 NW 165th Street Suite A21</p>
       <p>Miami Gardens, Florida 33014 United States</p>
       <p>(305)454-9121</p>
-          </div>
       </div>
-      <div styles:“line-height:14px; width:100px; margin:0 auto; text-align:right;” >
-       <p>Client:${ctx.cartData.client}</p>
-       <p>Phone Number:${phone}</p>
-       <p>Casher:${ctx.cartData.casher}</p>
-       <p>Order Number:${ctx.cartData.order_number}</p>
-      <p>Subtotal:$${ctx.cartData.subtotal.toFixed(2)}</p>
-      <p>Tax(7%):$${ctx.cartData.tax.toFixed(2)}</p>
-      <p>Total:$${ctx.cartData.total.toFixed(2)}</p>
+      <div style="font-size:10px;display:flex;" >
+        <div style="text-align:left;margin-right:15px;">
+               <p><span style="font-weight: bold;">Order Number:</span>${
+                 ctx.cartData.order_number
+               }</p>
+          <p><span style="font-weight:bold">Client:</span>${
+            ctx.cartData.client
+          }</p>
+          <p><span style="font-weight: bold;">Phone Number:</span>${phone}</p>
+          <p><span style="font-weight: bold;">Casher:</span>${
+            ctx.cartData.casher
+          }</p>
+
+        </div>
+        <div style="text-align:right;margin-right:15px;">
+          <p><span style="font-weight: bold;">Date:</span>${
+            ctx.cartData.date
+          }</p>
+          <p><span style="font-weight: bold;">Subtotal:</span>$${ctx.cartData.subtotal.toFixed(
+            2
+          )}</p>
+          <p><span style="font-weight: bold;">Tax(7%):</span>$${ctx.cartData.tax.toFixed(
+            2
+          )}</p>
+          <p><span style="font-weight: bold;">Total:</span>$${ctx.cartData.total.toFixed(
+            2
+          )}</p>
+        </div>
       </div>
-        `,
-          properties: ['item_code', 'item', 'price', 'amount'],
+      `,
+          gridHeaderStyle: 'border: 2px solid #3971A5;',
+          gridStyle:
+            'border: 2px solid #3971A5; font-size:10px; text-align:center; white-space:nowrap;',
+          properties: [
+            { field: 'item_code', displayName: 'Item Code' },
+            { field: 'item', displayName: 'Item Name' },
+            { field: 'price', displayName: 'Price' },
+            { field: 'amount', displayName: 'Quantity' },
+          ],
         });
         setSpin(false);
         setTimeout(() => {
