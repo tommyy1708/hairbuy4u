@@ -139,15 +139,30 @@ button {
   font-size: 15rem;
   color: red;
 }
-
+/*Start  Products Detail Page */
 .productsDetailFrame {
   display: flex;
-  justify-content: left;
-  align-items: center;
-  width: 500rem;
   padding: 20rem;
-  font-size: 32rem;
+  margin: 0 auto;
+  justify-content: space-around;
+  text-align: center;
 }
+.productsEditorFrame {
+  border-right: 2px solid red;
+  padding-right:100rem ;
+}
+
+.addInventoryFrame{
+  border-left: 2px solid blue;
+  padding-left: 100rem;
+}
+
+.divider{
+  background-color: #ddd;
+  line-height: 24rem;
+}
+/* End */
+
 /* UI from login page */
 #login {
   width: 100vw;
@@ -188,4 +203,9 @@ button {
   display:  flex;
   padding: 10rem;
   border-bottom: 1px solid #aaa;
+}
+
+/* history_details page */
+.detailsFromOrderFrame{
+  display: flex;
 }

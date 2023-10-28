@@ -65,6 +65,7 @@ const App = () => {
     tax: 0,
     total: 0,
     casher: localStorage.getItem('username'),
+    method:'',
   });
 
   const minusTax = () => {
@@ -186,7 +187,7 @@ const App = () => {
                 />
               </Route>
               {/*Start products page */}
-              <Route path="/products/" element={<Products />}>
+              <Route path="/products/*" element={<Products />}>
                 <Route path=":id" element={<ProductDetail />}></Route>
               </Route>
               {/* Start customer page */}

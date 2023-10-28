@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Badge, Descriptions } from 'antd';
+import { Badge, Descriptions,Space } from 'antd';
 const HistoryDetail = () => {
   const params = useParams();
   const order_number = params.id;
@@ -38,7 +38,7 @@ const HistoryDetail = () => {
     },
     {
       key: '2',
-      label: 'Created Date',
+      label: 'Date',
       children: <p>{orderDetail.date}</p>,
     },
     {
@@ -63,16 +63,30 @@ const HistoryDetail = () => {
     },
     {
       key: '7',
+      label: 'Casher',
+      children: <p>{orderDetail.casher}</p>,
+      span: '1',
+    },
+    {
+      key: '8',
+      label: 'Payment Method',
+      children: <p>{orderDetail.method}</p>,
+      span: 2,
+    },
+    {
+      key: '9',
       label: 'Order Info',
       children: (
         <div>
           {itemDetail.length > 0 ? (
             itemDetail.map((item, index) => (
-              <div key={index}>
-                <p>{item.item}</p>
-                <p>{item.item_code}</p>
-                <p>${item.price}</p>
-                <p>x{item.amount}</p>
+              <div className="detailsFromOrderFrame" key={index}>
+                <Space>
+                <p>Item:{item.item}</p>
+                <p>Item-Code:{item.item_code}</p>
+                <p>Price:${item.price}</p>
+                <p>Amount:{item.amount}</p>
+                </Space>
               </div>
             ))
           ) : (
@@ -82,19 +96,14 @@ const HistoryDetail = () => {
       ),
       span: 3,
     },
-    {
-      key: '8',
-      label: 'Casher',
-      children: <p>{orderDetail.casher}</p>,
-    },
   ];
 
   return (
     <div>
-      <p>{order_number}</p>
       <Descriptions
         bordered={true}
-        title="Order Details"
+        title="Order Detail Information"
+        layout="horizontal"
         items={items}
       />
     </div>

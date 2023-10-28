@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import CheckOutContent from '../store/CheckOutContent';
 import { Link, useParams } from 'react-router-dom';
-import { Space, Button,Switch, message, Spin, Input } from 'antd';
+import { Space, Button, Switch, message, Spin, Select } from 'antd';
 import CheckoutForm from '../Component/CheckoutForm/CheckoutForm';
 import printJS from 'print-js';
 import {
@@ -14,10 +14,7 @@ const Checkout = () => {
   const ctx = useContext(CheckOutContent);
   const [searchTerm, setSearchTerm] = useState('');
   const [spin, setSpin] = useState(false);
-  // const [tax, setTax] = useState(ctx.cartData.tax)
-  // const [total, setTotal] = useState(ctx.cartData.total)
-  // console.log("🚀 ~ file: Checkout.jsx:18 ~ Checkout ~ tax:", tax)
-  // console.log("🚀 ~ file: Checkout.jsx:18 ~ Checkout ~ total:", total)
+  const [payment, setPayment] = useState('');
   const { phone, name } = useParams();
   ctx.cartData.client = name;
 
@@ -84,7 +81,6 @@ const Checkout = () => {
       ),
     },
   ];
-
   const searchClicked = () => {
     const input = document.getElementById('searchInput');
     const keyword = input.value.trim();
@@ -94,7 +90,10 @@ const Checkout = () => {
     setSearchTerm(newData);
   };
 
-
+  const methodChange = (value) => {
+    setPayment(value);
+    ctx.cartData.method = payment;
+  };
   const printRecept = async () => {
     const items = ctx.cartData.items;
     const token = localStorage.getItem('token');
@@ -123,21 +122,24 @@ const Checkout = () => {
           printable: ctx.cartData.items,
           type: 'json',
           header: `
-        <div>
-        <div style="padding:0; margin=0; font-size:14px;line-height: normal;">
-        <h4>Hair Natural Inc. Receipt
-        (Save more Pay less at our Website: www.hairbuy4u.com )</h4>
-        <p>4980 NW 165th Street Suite A21</p>
-        <p>Miami Gardens, Florida 33014 United States</p>
-        <p>(305)454-9121</p>
-        </div>
-        <div styles:“line-height:14px; width:100px” >
-        <p>Client:${ctx.cartData.client}</p>
-        <p>Subtotal:$${ctx.cartData.subtotal.toFixed(2)}</p>
-        <p>Tax(7%):$${ctx.cartData.tax.toFixed(2)}</p>
-        <p>Total:$${ctx.cartData.total.toFixed(2)}</p>
-        </div>
-         </div>
+       <div style="text-align:center;font-size:14px;">
+          <div style="padding:0;">
+      <h3>Hair Natural Inc. Sales Recept</h3>
+      <h4>*****(Save more Pay less at our Website: www.hairbuy4u.com )*****</h4>
+      <p>4980 NW 165th Street Suite A21</p>
+      <p>Miami Gardens, Florida 33014 United States</p>
+      <p>(305)454-9121</p>
+          </div>
+      </div>
+      <div styles:“line-height:14px; width:100px; margin:0 auto; text-align:right;” >
+       <p>Client:${ctx.cartData.client}</p>
+       <p>Phone Number:${phone}</p>
+       <p>Casher:${ctx.cartData.casher}</p>
+       <p>Order Number:${ctx.cartData.order_number}</p>
+      <p>Subtotal:$${ctx.cartData.subtotal.toFixed(2)}</p>
+      <p>Tax(7%):$${ctx.cartData.tax.toFixed(2)}</p>
+      <p>Total:$${ctx.cartData.total.toFixed(2)}</p>
+      </div>
         `,
           properties: ['item_code', 'item', 'price', 'amount'],
         });
@@ -154,28 +156,61 @@ const Checkout = () => {
   };
 
   const printQuote = () => {
+    if (payment.length <= 0) {
+      message.error('Please choose payment method');
+      return;
+    }
     setSpin(true);
     printJS({
       printable: ctx.cartData.items,
       type: 'json',
+      documentTitle: 'quote',
+      repeatTableHeader:true,
       header: `
-      <div>
-      <div style="padding:0; margin=0; font-size:14px;line-height: normal;">
-      <h4>Hair Natural Inc. Receipt
-      (Save more Pay less at our Website: www.hairbuy4u.com )</h4>
+      <div style="text-align:center;font-size:14px;">
+      <h3>Hair Natural Inc. Sales Quote </h3>
+      <h4>*****(Save more Pay less at our Website: www.hairbuy4u.com )*****</h4>
       <p>4980 NW 165th Street Suite A21</p>
       <p>Miami Gardens, Florida 33014 United States</p>
       <p>(305)454-9121</p>
       </div>
-      <div styles:“line-height:14px; width:100px” >
-       <p>Client:${ctx.cartData.client}</p>
-      <p>Subtotal:$${ctx.cartData.subtotal.toFixed(2)}</p>
-      <p>Tax(7%):$${ctx.cartData.tax.toFixed(2)}</p>
-      <p>Total:$${ctx.cartData.total.toFixed(2)}</p>
+      <div style="font-size:10px;display:flex;" >
+        <div style="text-align:left;margin-right:15px;">
+               <p><span style="font-weight: bold;">Order Number:</span>${
+                 ctx.cartData.order_number
+               }</p>
+          <p><span style="font-weight:bold">Client:</span>${
+            ctx.cartData.client
+          }</p>
+          <p><span style="font-weight: bold;">Phone Number:</span>${phone}</p>
+          <p><span style="font-weight: bold;">Casher:</span>${
+            ctx.cartData.casher
+          }</p>
+
+        </div>
+        <div style="text-align:right;margin-right:15px;">
+          <p><span style="font-weight: bold;">Date:</span>${ctx.cartData.date}</p>
+          <p><span style="font-weight: bold;">Subtotal:</span>$${ctx.cartData.subtotal.toFixed(
+            2
+          )}</p>
+          <p><span style="font-weight: bold;">Tax(7%):</span>$${ctx.cartData.tax.toFixed(
+            2
+          )}</p>
+          <p><span style="font-weight: bold;">Total:</span>$${ctx.cartData.total.toFixed(
+            2
+          )}</p>
+        </div>
       </div>
-       </div>
       `,
-      properties: ['item_code', 'item', 'price', 'amount'],
+      gridHeaderStyle: 'border: 2px solid #3971A5;',
+      gridStyle:
+        'border: 2px solid #3971A5; font-size:10px; text-align:center; white-space:nowrap;',
+      properties: [
+        { field: 'item_code', displayName: 'Item Code' },
+        { field: 'item', displayName: 'Item Name' },
+        { field: 'price', displayName: 'Price' },
+        { field: 'amount', displayName: 'Quantity' },
+      ],
     });
     try {
       setTimeout(() => {
@@ -188,15 +223,12 @@ const Checkout = () => {
     return;
   };
 
-
   const switchChanged = (e) => {
-
     if (e === false) {
       ctx.minusTax();
     } else {
-
     }
- }
+  };
 
   return (
     <div>
@@ -257,10 +289,30 @@ const Checkout = () => {
                 {ctx.cartData.tax.toFixed(2)}
               </div>
               <p>Total:${ctx.cartData.total.toFixed(2)}</p>
-              <div className="clientNameFrame">
-                <p>Client Name:</p>
-                <Input value={name} disabled></Input>
-              </div>
+              <p>Payment: </p>
+              <Select
+                className="paymentValue"
+                placeholder="Choose...."
+                style={{
+                  width: 130,
+                }}
+                onChange={methodChange}
+                options={[
+                  {
+                    value: 'CreditCard',
+                    label: 'Credit Card',
+                  },
+                  {
+                    value: 'Cash',
+                    label: 'Cash',
+                  },
+                  {
+                    value: 'Check',
+                    label: 'Check',
+                  },
+                ]}
+              />
+              <div className="clientNameFrame"></div>
               <Space size={20}>
                 <Button type="primary" onClick={() => printQuote()}>
                   Quote
