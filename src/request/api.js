@@ -20,13 +20,13 @@ export const ProductsDetailApi = (params) =>
 export const ProductsUpdateApi = (params) =>
   axios.put('/api/products/update', params);
 //add new inventory for product
-export const AddNewInventory = (params) => {
-  axios.post('/api/add-inventory', params);
-}
-
+export const AddNewInventoryApi = (params) => axios.post('/api/add-inventory', params);
+//Got elements from table of add_inventory_data
+export const GotInventoryDataApi = (params) => axios.get('/api/add-inventory', { params });
+//add new inventory for product
+export const AsynchronousApi = (params) => axios.put('/api/add-inventory', params);
 //Add new client
 export const AddNewClientApi = (params) =>
   axios.post('/api/client', params);
-
 //Inquiry client
 export const InquiryClientApi = () => axios.get('/api/client');

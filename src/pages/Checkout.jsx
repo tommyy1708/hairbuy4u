@@ -95,6 +95,10 @@ const Checkout = () => {
     ctx.cartData.method = payment;
   };
   const printRecept = async () => {
+     if (payment.length <= 0) {
+       message.error('Please choose payment method first');
+       return;
+     }
     const items = ctx.cartData.items;
     const token = localStorage.getItem('token');
     let data = {
@@ -317,18 +321,18 @@ const Checkout = () => {
                 {ctx.cartData.tax.toFixed(2)}
               </div>
               <p>Total:${ctx.cartData.total.toFixed(2)}</p>
-              <p>Payment: </p>
+              <p>Payment:
               <Select
                 className="paymentValue"
                 placeholder="Choose...."
                 style={{
-                  width: 130,
+                  width: 120,
                 }}
                 onChange={methodChange}
                 options={[
                   {
-                    value: 'CreditCard',
-                    label: 'Credit Card',
+                    value: 'Credit or Debit Card',
+                    label: 'Credit/Debit Card',
                   },
                   {
                     value: 'Cash',
@@ -338,8 +342,21 @@ const Checkout = () => {
                     value: 'Check',
                     label: 'Check',
                   },
+                  {
+                    value: 'Bank Transfer',
+                    label: 'Bank Transfer',
+                  },
+                  {
+                    value: 'Paypal',
+                    label: 'Paypal',
+                  },
+                  {
+                    value: 'others',
+                    label: 'others',
+                  },
                 ]}
               />
+              </p>
               <div className="clientNameFrame"></div>
               <Space size={20}>
                 <Button type="primary" onClick={() => printQuote()}>

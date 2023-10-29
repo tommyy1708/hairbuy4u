@@ -10,13 +10,19 @@ import {
   Table,
   Space,
 } from 'antd';
-import { ProductsUpdateApi, AddNewInventory } from '../request/api';
+import moment from 'moment-timezone';
+import {
+  ProductsUpdateApi,
+  AddNewInventoryApi,
+  GotInventoryDataApi,
+  AsynchronousApi,
+} from '../request/api';
 const ProductDetail = (props) => {
   const { id } = props;
   const cleanedString = id.replace(/'/g, '');
   const [productsDetail, setProductsDetail] = useState('');
-  console.log("🚀 ~ file: ProductDetail.jsx:18 ~ ProductDetail ~ productsDetail:", productsDetail)
   const [showLoading, setShowLoading] = useState(false);
+  const [addInventoryHistory, setAddInventoryHistory] = useState('');
 
   useEffect(() => {
     setShowLoading(false);
@@ -24,11 +30,19 @@ const ProductDetail = (props) => {
       item_code: cleanedString,
     })
       .then((res) => {
-          setProductsDetail(res.data.productDetail[0]);
+        setProductsDetail(res.data.productDetail[0]);
       })
       .catch((error) => {
         message.info(error);
       });
+
+    GotInventoryDataApi({
+      item_code: cleanedString,
+    }).then((res) => {
+      if (res.data.errCode === 0) {
+        setAddInventoryHistory(res.data.data);
+      }
+    });
   }, []);
 
   const onFinish = async (values) => {
@@ -58,11 +72,32 @@ const ProductDetail = (props) => {
   const handleAddInventory = async (values) => {
     const data = {
       item_code: productsDetail.item_code,
-      item:productsDetail.item,
+      item: productsDetail.item,
       qty: values.qty,
       cost: values.cost,
+      date: moment()
+        .tz('America/New_York')
+        .format('YYYY-MM-DD-HH:mm'),
     };
-    await AddNewInventory(data);
+    try {
+      // setShowLoading(true);
+      message.success('Add list success!');
+      await AddNewInventoryApi(data);
+
+      // for asynchronous data
+      const asyncData = {
+        item_code: productsDetail.item_code,
+        qty: values.qty,
+        cost: values.cost,
+      };
+      await AsynchronousApi(asyncData);
+
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 2000);
+    } catch (error) {
+      console.log('Something wrong', error);
+    }
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -233,15 +268,9 @@ const ProductDetail = (props) => {
             initialValues={{
               remember: true,
             }}
-            // onFinish={handleAddInventory}
+            onFinish={handleAddInventory}
             autoComplete="off"
           >
-            {/* <Form.Item label="Item_code" name="item_code">
-              <Input
-                disabled
-                placeholder={productsDetail.item_code}
-              />
-            </Form.Item> */}
             <Form.Item
               label="Amount"
               name="qty"
@@ -279,7 +308,7 @@ const ProductDetail = (props) => {
       <div className="inventoryList">
         <Table
           bordered
-          dataSource={dataSource}
+          dataSource={addInventoryHistory}
           columns={inventoryColumns}
         />
       </div>
