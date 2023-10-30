@@ -23,6 +23,7 @@ const ProductDetail = (props) => {
   const [productsDetail, setProductsDetail] = useState('');
   const [showLoading, setShowLoading] = useState(false);
   const [addInventoryHistory, setAddInventoryHistory] = useState('');
+  const [disabledButton, setDisabledButton] = useState(false);
 
   useEffect(() => {
     setShowLoading(false);
@@ -51,12 +52,14 @@ const ProductDetail = (props) => {
       id: itemId,
       data: values,
     };
+    setDisabledButton(true);
     setShowLoading(true);
     try {
       if (values != null) {
         await ProductsUpdateApi(data).then((res) => {
           message.success('Change success!');
           setTimeout(() => {
+            setDisabledButton(false);
             window.location.reload(false);
           }, [2000]);
         });
@@ -70,6 +73,7 @@ const ProductDetail = (props) => {
   };
 
   const handleAddInventory = async (values) => {
+    setDisabledButton(true);
     setShowLoading(true);
     const data = {
       item_code: productsDetail.item_code,
@@ -93,6 +97,7 @@ const ProductDetail = (props) => {
       await AsynchronousApi(asyncData);
 
       setTimeout(() => {
+        setDisabledButton(false);
          window.location.reload();
       }, 2000);
     } catch (error) {
@@ -104,21 +109,6 @@ const ProductDetail = (props) => {
     console.log('Failed:', errorInfo);
   };
 
-  // start for table
-  const [dataSource, setDataSource] = useState([
-    {
-      key: 0,
-      date: 'Edward King 0',
-      qty: 32,
-      cost: 9.99,
-    },
-    {
-      key: 1,
-      date: 'Edward King 1',
-      qty: 15,
-      cost: 9.99,
-    },
-  ]);
 
   const inventoryColumns = [
     {
@@ -247,7 +237,11 @@ const ProductDetail = (props) => {
                 span: 16,
               }}
             >
-              <Button type="primary" htmlType="submit">
+              <Button
+                type="primary"
+                htmlType="submit"
+                disabled={disabledButton}
+              >
                 Edit
               </Button>
             </Form.Item>
@@ -295,7 +289,11 @@ const ProductDetail = (props) => {
                 span: 16,
               }}
             >
-              <Button type="primary" htmlType="submit">
+              <Button
+                type="primary"
+                htmlType="submit"
+                disabled={disabledButton}
+              >
                 Add To Inventory
               </Button>
             </Form.Item>
