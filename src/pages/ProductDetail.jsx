@@ -70,6 +70,7 @@ const ProductDetail = (props) => {
   };
 
   const handleAddInventory = async (values) => {
+    setShowLoading(true);
     const data = {
       item_code: productsDetail.item_code,
       item: productsDetail.item,
@@ -80,7 +81,6 @@ const ProductDetail = (props) => {
         .format('YYYY-MM-DD-HH:mm'),
     };
     try {
-      // setShowLoading(true);
       message.success('Add list success!');
       await AddNewInventoryApi(data);
 
@@ -92,9 +92,9 @@ const ProductDetail = (props) => {
       };
       await AsynchronousApi(asyncData);
 
-      // setTimeout(() => {
-      //   window.location.reload();
-      // }, 2000);
+      setTimeout(() => {
+         window.location.reload();
+      }, 2000);
     } catch (error) {
       console.log('Something wrong', error);
     }

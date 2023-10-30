@@ -17,6 +17,7 @@ const Checkout = () => {
   const [payment, setPayment] = useState('');
   const { phone, name } = useParams();
   ctx.cartData.client = name;
+  ctx.cartData.method = payment;
 
   /*Start Here segment of HTML and function for input client name at checkout page
   const handleInputChange = () => {
@@ -90,10 +91,8 @@ const Checkout = () => {
     setSearchTerm(newData);
   };
 
-  const methodChange = (value) => {
-    setPayment(value);
-    ctx.cartData.method = payment;
-  };
+
+  //Recept function
   const printRecept = async () => {
      if (payment.length <= 0) {
        message.error('Please choose payment method first');
@@ -175,8 +174,8 @@ const Checkout = () => {
             { field: 'amount', displayName: 'Quantity' },
           ],
         });
-        setSpin(false);
         setTimeout(() => {
+          setSpin(false);
           window.location.reload(false);
         }, [5000]);
       }
@@ -186,7 +185,7 @@ const Checkout = () => {
       console.log(error);
     }
   };
-
+//Quote function
   const printQuote = () => {
     if (payment.length <= 0) {
       message.error('Please choose payment method');
@@ -255,6 +254,10 @@ const Checkout = () => {
     return;
   };
 
+    const methodChange = (value) => {
+      setPayment(value);
+    };
+
   const switchChanged = (e) => {
     if (e === false) {
       ctx.minusTax();
@@ -316,12 +319,12 @@ const Checkout = () => {
               <h5>{ctx.cartData.order_number}</h5>
               <p>Amount:{ctx.cartData.totalAmount}</p>
               <p>Subtotal:${ctx.cartData.subtotal.toFixed(2)}</p>
-              <div>
+              <p>
                 Tax:$
                 {ctx.cartData.tax.toFixed(2)}
-              </div>
+              </p>
               <p>Total:${ctx.cartData.total.toFixed(2)}</p>
-              <p>Payment:
+              <div>Payment:
               <Select
                 className="paymentValue"
                 placeholder="Choose...."
@@ -356,7 +359,7 @@ const Checkout = () => {
                   },
                 ]}
               />
-              </p>
+              </div>
               <div className="clientNameFrame"></div>
               <Space size={20}>
                 <Button type="primary" onClick={() => printQuote()}>
