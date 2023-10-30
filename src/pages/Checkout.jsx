@@ -15,6 +15,7 @@ const Checkout = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [spin, setSpin] = useState(false);
   const [payment, setPayment] = useState('');
+  const [disabledButton, setDisabledButton] = useState(false);
   const { phone, name } = useParams();
   ctx.cartData.client = name;
   ctx.cartData.method = payment;
@@ -98,6 +99,8 @@ const Checkout = () => {
        message.error('Please choose payment method first');
        return;
      }
+    setSpin(true);
+    setDisabledButton(true);
     const items = ctx.cartData.items;
     const token = localStorage.getItem('token');
     let data = {
@@ -108,7 +111,7 @@ const Checkout = () => {
       data: items,
       token: token,
     });
-    setSpin(true);
+
     try {
       //This Api for add new order into order database
       await AddCartDataApi({
@@ -176,6 +179,7 @@ const Checkout = () => {
         });
         setTimeout(() => {
           setSpin(false);
+           setDisabledButton(false);
           window.location.reload(false);
         }, [5000]);
       }
@@ -191,7 +195,8 @@ const Checkout = () => {
       message.error('Please choose payment method');
       return;
     }
-    setSpin(true);
+        setSpin(true);
+        setDisabledButton(true);
     printJS({
       printable: ctx.cartData.items,
       type: 'json',
@@ -324,48 +329,57 @@ const Checkout = () => {
                 {ctx.cartData.tax.toFixed(2)}
               </p>
               <p>Total:${ctx.cartData.total.toFixed(2)}</p>
-              <div>Payment:
-              <Select
-                className="paymentValue"
-                placeholder="Choose...."
-                style={{
-                  width: 120,
-                }}
-                onChange={methodChange}
-                options={[
-                  {
-                    value: 'Credit or Debit Card',
-                    label: 'Credit/Debit Card',
-                  },
-                  {
-                    value: 'Cash',
-                    label: 'Cash',
-                  },
-                  {
-                    value: 'Check',
-                    label: 'Check',
-                  },
-                  {
-                    value: 'Bank Transfer',
-                    label: 'Bank Transfer',
-                  },
-                  {
-                    value: 'Paypal',
-                    label: 'Paypal',
-                  },
-                  {
-                    value: 'others',
-                    label: 'others',
-                  },
-                ]}
-              />
+              <div>
+                Payment:
+                <Select
+                  className="paymentValue"
+                  placeholder="Choose...."
+                  style={{
+                    width: 120,
+                  }}
+                  onChange={methodChange}
+                  options={[
+                    {
+                      value: 'Credit or Debit Card',
+                      label: 'Credit/Debit Card',
+                    },
+                    {
+                      value: 'Cash',
+                      label: 'Cash',
+                    },
+                    {
+                      value: 'Check',
+                      label: 'Check',
+                    },
+                    {
+                      value: 'Bank Transfer',
+                      label: 'Bank Transfer',
+                    },
+                    {
+                      value: 'Paypal',
+                      label: 'Paypal',
+                    },
+                    {
+                      value: 'others',
+                      label: 'others',
+                    },
+                  ]}
+                />
               </div>
               <div className="clientNameFrame"></div>
               <Space size={20}>
-                <Button type="primary" onClick={() => printQuote()}>
+                <Button
+                  type="primary"
+                  onClick={() => printQuote()}
+                  disabled={disabledButton}
+                >
                   Quote
                 </Button>
-                <Button type="primary" onClick={() => printRecept()}>
+                <Button
+                  type="primary"
+                  onClick={() => printRecept()}
+                  disabled={disabledButton}
+                >
                   Recept
                 </Button>
               </Space>

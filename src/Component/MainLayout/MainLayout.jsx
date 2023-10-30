@@ -5,7 +5,7 @@ import {
   useLocation,
   Link,
 } from 'react-router-dom';
-import { message } from 'antd';
+import { message} from 'antd';
 import styles from './MainLayout.module.css';
 import Menu from '../Menu/Menu';
 import SubWindow from '../SubWindow/SubWindow';

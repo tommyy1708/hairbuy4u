@@ -21,6 +21,7 @@ const Customer = () => {
   const [originData, setOriginData] = useState('');
   const [clientsData, setClientsData] = useState('');
   const [showSub, setShowSub] = useState(false);
+  const [disabledButton, setDisabledButton] = useState(false);
   let navigate = useNavigate();
   let location = useLocation();
   useEffect(() => {
@@ -41,6 +42,7 @@ const Customer = () => {
   }, [navigate]);
 
   const addNewClient = async (values) => {
+    setDisabledButton(true);
     let result = await AddNewClientApi(values);
     if (result.data.errCode === 0) {
       message.success(result.data.message);
@@ -216,7 +218,7 @@ const Customer = () => {
               </Select>
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" disabled={disabledButton}>
                 Add New Client
               </Button>
             </Form.Item>
