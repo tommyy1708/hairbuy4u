@@ -16,7 +16,9 @@ import {
   AddNewInventoryApi,
   GotInventoryDataApi,
   AsynchronousApi,
+  ModifyAddNewInventoryApi,
 } from '../request/api';
+import { type } from '@testing-library/user-event/dist/type';
 const ProductDetail = (props) => {
   const { id } = props;
   const cleanedString = id.replace(/'/g, '');
@@ -47,6 +49,19 @@ const ProductDetail = (props) => {
   }, []);
 
   const onFinish = async (values) => {
+   const allUndefined = Object.values(values).every(
+     (value) => value === undefined
+   );
+
+    if (allUndefined) {
+      setDisabledButton(true);
+      message.error('Nothing changed')
+      setTimeout(() => {
+        setDisabledButton(false);
+      }, 3000);
+      return;
+    }
+
     let itemId = productsDetail.item_code;
     const data = {
       id: itemId,
@@ -109,7 +124,6 @@ const ProductDetail = (props) => {
     console.log('Failed:', errorInfo);
   };
 
-
   const inventoryColumns = [
     {
       title: 'Index',
@@ -130,8 +144,8 @@ const ProductDetail = (props) => {
       render: (_, record) => (
         <input
           className={`inventory_qty_${record.key}`}
-          type="number"
-          value={record.qty}
+          defaultValue={record.qty}
+          type='number'
           disabled
         />
       ),
@@ -144,6 +158,7 @@ const ProductDetail = (props) => {
         <input
           className={`inventory_qty_${record.key}`}
           defaultValue={record.cost}
+          type='number'
           disabled
         />
       ),
@@ -168,12 +183,35 @@ const ProductDetail = (props) => {
           </Button>
           <Button
             type="primary"
-            onClick={() => {
+            disabled={disabledButton}
+            onClick={async () => {
+              setShowLoading(true);
+              setDisabledButton(true);
               let indexOfList = document.getElementsByClassName(
                 `inventory_qty_${record.key}`
               );
+              let newQty = indexOfList[0].value;
+              let newCost = indexOfList[1].value;
+              let listKey = record.key;
               indexOfList[0].disabled = true;
               indexOfList[1].disabled = true;
+              let idAndData = {
+                item_code: productsDetail.item_code,
+                data: {
+                  key: listKey,
+                  qty: newQty,
+                  cost: newCost,
+                },
+              }
+              let resultResponse = await ModifyAddNewInventoryApi(idAndData)
+              if (resultResponse.data.errCode === 0) {
+                setTimeout(() => {
+                  setDisabledButton(false);
+                   setShowLoading(false);
+                  window.location.reload();
+                }, 2000);
+              }
+              return;
             }}
           >
             Save
@@ -182,6 +220,7 @@ const ProductDetail = (props) => {
       ),
     },
   ];
+
 
   return (
     <>

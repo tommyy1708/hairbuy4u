@@ -25,6 +25,8 @@ export const AddNewInventoryApi = (params) => axios.post('/api/add-inventory', p
 export const GotInventoryDataApi = (params) => axios.get('/api/add-inventory', { params });
 //add new inventory for product
 export const AsynchronousApi = (params) => axios.put('/api/add-inventory', params);
+// Update add_inventory_data
+export const ModifyAddNewInventoryApi = (params) => axios.put('/api/add-inventory-modify', params);
 //Add new client
 export const AddNewClientApi = (params) =>
   axios.post('/api/client', params);

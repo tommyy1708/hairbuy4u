@@ -20,6 +20,7 @@ import TradeHistory from './pages/TradeHistory.jsx';
 import CheckOutContent from './store/CheckOutContent.js';
 import HistoryDetail from './pages/HistoryDetail.jsx';
 import ProductDetail from './pages/ProductDetail.jsx';
+import { message } from 'antd';
 
 const App = () => {
   const fetchInventory = async () => {
@@ -81,6 +82,10 @@ const App = () => {
   };
 
   const addItemToCart = (item) => {
+    if (item.qty <= item.amount) {
+      message.error('Stock shortage!')
+      return;
+    }
     const newCart = { ...cartData };
     if (cartData.items.indexOf(item) === -1) {
       item.amount = 1;
