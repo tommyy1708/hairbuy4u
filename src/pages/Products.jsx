@@ -1,15 +1,19 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Filter from '../Component/Filter/Filter';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Space, Table } from 'antd';
+import { Space, Table, Col, Row, Statistic } from 'antd';
+import { DollarCircleFilled } from '@ant-design/icons';
 import CheckOutContent from '../store/CheckOutContent';
 import ProductDetail from './ProductDetail';
+import { InquiryTotalCostApi } from '../request/api';
 
 export default function Products() {
   const params = useParams();
   const ctx = useContext(CheckOutContent);
   const navigate = useNavigate();
   const [itemsData, setItemsData] = useState(ctx.inventoryData);
+  const userName = localStorage.getItem('username')
+  const [totalCost, setTotalCost] = useState('')
   const goToDetail = (itemNum) => {
     navigate(`/products/'${itemNum}'`);
   };
@@ -72,7 +76,19 @@ export default function Products() {
       ),
     },
   ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let result = await InquiryTotalCostApi();
+        let resultCost = parseFloat(result.data.data.total_cost).toFixed(2);
+        setTotalCost(resultCost);
+      } catch (error) {
+        console.error("Error fetching total cost:", error);
+      }
+    };
 
+    fetchData();
+  }, []);
   const emptySearch = () => {
     setItemsData(ctx.inventoryData);
     const input = document.getElementById('filter_input');
@@ -80,13 +96,26 @@ export default function Products() {
   };
 
   return (
-    <div className='productsFrame'>
+    <div className="productsFrame">
       {params.id ? (
         <>
           <ProductDetail id={params.id} />
         </>
       ) : (
         <>
+          {userName === 'admin' ? (
+            <Row gutter={16}>
+              <Col span={12}>
+                <Statistic
+                  title="Total Cost"
+                  value={totalCost}
+                  prefix={<DollarCircleFilled />}
+                />
+              </Col>
+            </Row>
+          ) : (
+            ''
+          )}
           <Filter
             setItemsData={setItemsData}
             inventoryData={ctx.inventoryData}

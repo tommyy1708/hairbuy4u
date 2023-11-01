@@ -163,62 +163,62 @@ const ProductDetail = (props) => {
         />
       ),
     },
-    {
-      title: 'Edit',
-      width: 100,
-      render: (_, record) => (
-        <Space>
-          <Button
-            danger
-            type="primary"
-            onClick={() => {
-              let indexOfList = document.getElementsByClassName(
-                `inventory_qty_${record.key}`
-              );
-              indexOfList[0].disabled = false;
-              indexOfList[1].disabled = false;
-            }}
-          >
-            Edit
-          </Button>
-          <Button
-            type="primary"
-            disabled={disabledButton}
-            onClick={async () => {
-              setShowLoading(true);
-              setDisabledButton(true);
-              let indexOfList = document.getElementsByClassName(
-                `inventory_qty_${record.key}`
-              );
-              let newQty = indexOfList[0].value;
-              let newCost = indexOfList[1].value;
-              let listKey = record.key;
-              indexOfList[0].disabled = true;
-              indexOfList[1].disabled = true;
-              let idAndData = {
-                item_code: productsDetail.item_code,
-                data: {
-                  key: listKey,
-                  qty: newQty,
-                  cost: newCost,
-                },
-              }
-              let resultResponse = await ModifyAddNewInventoryApi(idAndData)
-              if (resultResponse.data.errCode === 0) {
-                setTimeout(() => {
-                  setDisabledButton(false);
-                   setShowLoading(false);
-                  window.location.reload();
-                }, 2000);
-              }
-              return;
-            }}
-          >
-            Save
-          </Button>
-        </Space>
-      ),
-    },
+    // {
+    //   title: 'Edit',
+    //   width: 100,
+    //   render: (_, record) => (
+    //     <Space>
+    //       <Button
+    //         danger
+    //         type="primary"
+    //         onClick={() => {
+    //           let indexOfList = document.getElementsByClassName(
+    //             `inventory_qty_${record.key}`
+    //           );
+    //           indexOfList[0].disabled = false;
+    //           indexOfList[1].disabled = false;
+    //         }}
+    //       >
+    //         Edit
+    //       </Button>
+    //       <Button
+    //         type="primary"
+    //         disabled={disabledButton}
+    //         onClick={async () => {
+    //           setShowLoading(true);
+    //           setDisabledButton(true);
+    //           let indexOfList = document.getElementsByClassName(
+    //             `inventory_qty_${record.key}`
+    //           );
+    //           let newQty = indexOfList[0].value;
+    //           let newCost = indexOfList[1].value;
+    //           let listKey = record.key;
+    //           indexOfList[0].disabled = true;
+    //           indexOfList[1].disabled = true;
+    //           let idAndData = {
+    //             item_code: productsDetail.item_code,
+    //             data: {
+    //               key: listKey,
+    //               qty: newQty,
+    //               cost: newCost,
+    //             },
+    //           }
+    //           let resultResponse = await ModifyAddNewInventoryApi(idAndData)
+    //           if (resultResponse.data.errCode === 0) {
+    //             setTimeout(() => {
+    //               setDisabledButton(false);
+    //                setShowLoading(false);
+    //               window.location.reload();
+    //             }, 2000);
+    //           }
+    //           return;
+    //         }}
+    //       >
+    //         Save
+    //       </Button>
+    //     </Space>
+    //   ),
+    // },
   ];
 
 

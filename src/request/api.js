@@ -32,3 +32,5 @@ export const AddNewClientApi = (params) =>
   axios.post('/api/client', params);
 //Inquiry client
 export const InquiryClientApi = () => axios.get('/api/client');
+//Inquiry current total cost
+export const InquiryTotalCostApi = () => axios.get('/api/total-cost');
