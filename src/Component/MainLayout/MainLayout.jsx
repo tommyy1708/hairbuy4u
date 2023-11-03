@@ -10,7 +10,8 @@ import styles from './MainLayout.module.css';
 import Menu from '../Menu/Menu';
 import SubWindow from '../SubWindow/SubWindow';
 import axios from 'axios';
-
+import env from 'react-dotenv';
+// console.log(process.env.TITLE);
 const MainLayout = () => {
   let navigate = useNavigate();
   const [username, setUsername] = useState('');
@@ -42,12 +43,11 @@ const MainLayout = () => {
         }
       });
   }, [navigate]);
-
   return (
     <div className={`${styles.mainLayout}`}>
       <div className={`${styles.dark} ${styles.header}`}>
         <Link to={'/'}>
-          <h2>HairBuy4u CMS</h2>
+          <h2>{env.WEB_TITLE}</h2>
         </Link>
         <p>Casher-{username}</p>
       </div>
@@ -62,7 +62,7 @@ const MainLayout = () => {
         )}
       </div>
       <div className={`${styles.footer}`}>
-        <p>Copyright by Hua Zhang</p>
+        <p>{env.COPYRIGHT}</p>
       </div>
     </div>
   );
