@@ -1,30 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Space } from 'antd';
-import { Link, useLocation } from 'react-router-dom';
-import HistoryDetail from '../pages/HistoryDetail';
-import axios from 'axios';
-
+import { Table, Space, Spin } from 'antd';
+import { Link } from 'react-router-dom';
+import {GetOrderHistoryDataApi} from '../request/api'
 const TradeHistory = (props) => {
-  const [showDetail, setShowDetail] = useState(false);
-  const path = useLocation();
-  useEffect(() => {
-    if (path.pathname.indexOf('detail') !== -1) {
-      setShowDetail(true);
-    } else {
-      setShowDetail(false);
-    }
-  }, [path.pathname]);
+  const [order_data, setOrder_Data] = useState('');
+  const [flag, setFlag] = useState(true);
 
   const order_historyApi = async () => {
-    const result = await axios.get('/api/order_history');
+    const result = await GetOrderHistoryDataApi();
     setOrder_Data(result.data.allOrderData);
   };
 
   useEffect(() => {
-    order_historyApi();
-  }, []);
-
-  const [order_data, setOrder_Data] = useState('');
+    if (flag) {
+      order_historyApi();
+      setFlag(false);
+    }
+  },[flag]);
 
   const historyColumns = [
     {
@@ -45,7 +37,7 @@ const TradeHistory = (props) => {
       defaultSortOrder: 'descend',
       sorter: (a, b) => a.order_number - b.order_number,
       render: (_, record) => (
-        <Link to={`order_detail/${record.order_number}`}>
+        <Link to={`/history/order_detail/${record.order_number}`}>
           {record.order_number}
         </Link>
       ),
@@ -63,14 +55,14 @@ const TradeHistory = (props) => {
 
   return (
     <div>
-      {showDetail ? (
-        <HistoryDetail></HistoryDetail>
-      ) : (
-          <Table
+      {order_data?.length > 0 ? (
+        <Table
           columns={historyColumns}
           dataSource={order_data}
           rowKey={(record) => record.order_number}
         />
+      ) : (
+        <Spin className="spinFrame" size="large" />
       )}
     </div>
   );

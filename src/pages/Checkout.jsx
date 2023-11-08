@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect,useState } from 'react';
 import CheckOutContent from '../store/CheckOutContent';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Space, Button, Switch, message, Spin, Select } from 'antd';
 import CheckoutForm from '../Component/CheckoutForm/CheckoutForm';
 import printJS from 'print-js';
@@ -8,32 +8,25 @@ import {
   AddCartDataApi,
   UpdateStockDataApi,
   AddSpendOnClient,
+  GetAllInventoryDataApi,
 } from '../request/api';
 
 const Checkout = () => {
   const ctx = useContext(CheckOutContent);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState([]);
   const [spin, setSpin] = useState(false);
   const [payment, setPayment] = useState('');
   const [disabledButton, setDisabledButton] = useState(false);
+  const [taxFree, setTaxFree] = useState(true);
   const { phone, name } = useParams();
-  ctx.cartData.client = name;
-  ctx.cartData.method = payment;
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    ctx.initialCartData();
+  }, [location.pathname]);
 
-  /*Start Here segment of HTML and function for input client name at checkout page
-  const handleInputChange = () => {
-    let clientInput = document.getElementById('clientInput');
-    ctx.clientNameChange(clientInput.value);
-  };
-
-  <input
-        id="clientInput"
-        placeholder="Client Name"
-        type="text"
-        onChange={handleInputChange}
-    />
-    End
-    */
+  console.log('car data', ctx.cartData);
 
   const orderColumns = [
     {
@@ -83,59 +76,68 @@ const Checkout = () => {
       ),
     },
   ];
-  const searchClicked = () => {
-    const input = document.getElementById('searchInput');
-    const keyword = input.value.trim();
-    const newData = ctx.inventoryData.filter(
-      (element) => element.item_code.indexOf(keyword) !== -1
-    );
-    setSearchTerm(newData);
-  };
 
+  const searchClicked = async () => {
+     ctx.cartData.client = name;
+     ctx.cartData.method = payment;
+    const result = await GetAllInventoryDataApi();
+    if (result.status === 200) {
+      const { errCode, data } = result.data;
+      const input = document.getElementById('searchInput');
+      const keyword = input.value.trim();
+      const newData = data.filter(
+        (element) => element.item_code.indexOf(keyword) !== -1
+      );
+      setSearchTerm(newData);
+    }
+    return;
+  };
 
   //Recept function
   const printRecept = async () => {
-     if (payment.length <= 0) {
-       message.error('Please choose payment method first');
-       return;
-     }
+    if (payment.length <= 0) {
+      message.error('Please choose payment method first');
+      return;
+    }
     setSpin(true);
     setDisabledButton(true);
-    const items = ctx.cartData.items;
-    const token = localStorage.getItem('token');
     let data = {
       clientSpend: ctx.cartData.total,
       clientName: name,
     };
     let returnData = await UpdateStockDataApi({
-      data: items,
-      token: token,
+      data: ctx.cartData.items,
+      token: localStorage.getItem('token'),
     });
-
     try {
-      //This Api for add new order into order database
-      await AddCartDataApi({
-        cartData: JSON.stringify(ctx.cartData),
-      });
-      // This api for update stock from inventory database
-      await AddSpendOnClient(data);
-
       if (returnData.data.errCode !== 0) {
-        message.error('Something Wrong!');
+        message.error(`Token expired! Redirecting to login page`);
+        setTimeout(() => {
+          localStorage.clear();
+          navigate('/login');
+        }, 3000);
         return;
       } else {
+        //This Api for add new order into order database
+        await AddCartDataApi({
+          cartData: JSON.stringify(ctx.cartData),
+        });
+        // This api for update stock from inventory database
+        await AddSpendOnClient(data);
         printJS({
           printable: ctx.cartData.items,
           type: 'json',
           documentTitle: 'recept',
           repeatTableHeader: true,
           header: `
-      <div style="text-align:center;font-size:14px;">
-      <h3>Hair Natural Inc. Sales Recept </h3>
-      <h4>*****(Save more Pay less at our Website: www.hairbuy4u.com )*****</h4>
-      <p>4980 NW 165th Street Suite A21</p>
-      <p>Miami Gardens, Florida 33014 United States</p>
-      <p>(305)454-9121</p>
+<div style="text-align:center;font-size:12px;">
+      <h3>${process.env.REACT_APP_COMPANY_NAME} Sales Recept </h3>
+      <h4>*****(Save more Pay less at our Website: www.${
+        process.env.REACT_APP_WEBURL
+      }.com )*****</h4>
+      <p>${process.env.REACT_APP_COMPANY_ADDRESS1}</p>
+      <p>${process.env.REACT_APP_COMPANY_ADDRESS2}</p>
+      <p>${process.env.REACT_APP_COMPANY_PHONE}</p>
       </div>
       <div style="font-size:10px;display:flex;" >
         <div style="text-align:left;margin-right:15px;">
@@ -169,7 +171,7 @@ const Checkout = () => {
       `,
           gridHeaderStyle: 'border: 2px solid #3971A5;',
           gridStyle:
-            'border: 2px solid #3971A5; font-size:10px; text-align:center; white-space:nowrap;',
+            'border: 2px solid #3971A5; font-size:14px; text-align:center; white-space:nowrap;',
           properties: [
             { field: 'item_code', displayName: 'Item Code' },
             { field: 'item', displayName: 'Item Name' },
@@ -179,8 +181,8 @@ const Checkout = () => {
         });
         setTimeout(() => {
           setSpin(false);
-           setDisabledButton(false);
-          window.location.reload(false);
+          setDisabledButton(false);
+          navigate('/history');
         }, [5000]);
       }
     } catch (error) {
@@ -189,28 +191,30 @@ const Checkout = () => {
       console.log(error);
     }
   };
-//Quote function
+  //Quote function
   const printQuote = () => {
-    if (payment.length <= 0) {
-      message.error('Please choose payment method');
-      return;
-    }
-        setSpin(true);
-        setDisabledButton(true);
+    setSpin(true);
+    setDisabledButton(true);
     printJS({
       printable: ctx.cartData.items,
       type: 'json',
       documentTitle: 'quote',
-      repeatTableHeader:true,
+      repeatTableHeader: true,
+      onPrintDialogClose: () => {
+        setSpin(false);
+        setDisabledButton(false);
+      },
       header: `
-      <div style="text-align:center;font-size:14px;">
-      <h3>Hair Natural Inc. Sales Quote </h3>
-      <h4>*****(Save more Pay less at our Website: www.hairbuy4u.com )*****</h4>
-      <p>4980 NW 165th Street Suite A21</p>
-      <p>Miami Gardens, Florida 33014 United States</p>
-      <p>(305)454-9121</p>
+      <div style="text-align:center;font-size:12px;">
+      <h3>${process.env.REACT_APP_COMPANY_NAME} Sales Quote </h3>
+      <h4>*****(Save more Pay less at our Website: www.${
+        process.env.REACT_APP_WEBURL
+      }.com )*****</h4>
+      <p>${process.env.REACT_APP_COMPANY_ADDRESS1}</p>
+      <p>${process.env.REACT_APP_COMPANY_ADDRESS2}</p>
+      <p>${process.env.REACT_APP_COMPANY_PHONE}</p>
       </div>
-      <div style="font-size:10px;display:flex;" >
+      <div style="font-size:12px;display:flex;" >
         <div style="text-align:left;margin-right:15px;">
                <p><span style="font-weight: bold;">Order Number:</span>${
                  ctx.cartData.order_number
@@ -225,7 +229,9 @@ const Checkout = () => {
 
         </div>
         <div style="text-align:right;margin-right:15px;">
-          <p><span style="font-weight: bold;">Date:</span>${ctx.cartData.date}</p>
+          <p><span style="font-weight: bold;">Date:</span>${
+            ctx.cartData.date
+          }</p>
           <p><span style="font-weight: bold;">Subtotal:</span>$${ctx.cartData.subtotal.toFixed(
             2
           )}</p>
@@ -240,7 +246,7 @@ const Checkout = () => {
       `,
       gridHeaderStyle: 'border: 2px solid #3971A5;',
       gridStyle:
-        'border: 2px solid #3971A5; font-size:10px; text-align:center; white-space:nowrap;',
+        'border: 2px solid #3971A5; font-size:12px; text-align:center; white-space:nowrap;',
       properties: [
         { field: 'item_code', displayName: 'Item Code' },
         { field: 'item', displayName: 'Item Name' },
@@ -248,25 +254,21 @@ const Checkout = () => {
         { field: 'amount', displayName: 'Quantity' },
       ],
     });
-    try {
-      setTimeout(() => {
-        window.location.reload(false);
-      }, [10000]);
-    } catch (error) {
-      message.info('Something wrong!');
-      console.log(error);
-    }
+
     return;
   };
 
-    const methodChange = (value) => {
-      setPayment(value);
-    };
+  const methodChange = (value) => {
+    setPayment(value);
+  };
 
   const switchChanged = (e) => {
-    if (e === false) {
+    if (e === false && ctx.cartData.tax !== 0) {
+      setTaxFree(false);
       ctx.minusTax();
-    } else {
+    } else if (e === true && ctx.cartData.tax === 0) {
+      setTaxFree(true);
+      ctx.plusTax();
     }
   };
 
@@ -296,14 +298,15 @@ const Checkout = () => {
       </div>
       <div className="orderDetails">
         <div className="note">
-          <p>
-            !!! Before editing price make sure you confirm to the
-            final amount of this item !!!
+          <p style={{ backgroundColor: '#dc1010', color: '#fff' }}>
+            !!! Before editing price make sure you confirm the final
+            amount of this item !!!
           </p>
         </div>
         <div className="orderTable">
           <CheckoutForm
             orderColumns={orderColumns}
+            taxFree={taxFree}
             orderList={ctx.cartData}
             addItemToCart={ctx.addItemToCart}
             subItemToCart={ctx.subItemToCart}

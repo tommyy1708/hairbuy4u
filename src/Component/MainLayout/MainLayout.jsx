@@ -5,49 +5,43 @@ import {
   useLocation,
   Link,
 } from 'react-router-dom';
-import { message} from 'antd';
 import styles from './MainLayout.module.css';
 import Menu from '../Menu/Menu';
-import SubWindow from '../SubWindow/SubWindow';
-import axios from 'axios';
-import env from 'react-dotenv';
-// console.log(process.env.TITLE);
-const MainLayout = () => {
-  let navigate = useNavigate();
-  const [username, setUsername] = useState('');
-  const [showSub, setShowSub] = useState(false);
-  let location = useLocation();
+import { VerifyTokenApi } from '../../request/api';
+import { message,Spin } from 'antd';
 
-  useEffect(() => {
-    let token = localStorage.getItem('token');
-    setUsername(localStorage.getItem('username'));
-    if (location.pathname === '/') {
-      setShowSub(true);
-    } else {
-      setShowSub(false);
+const MainLayout = () => {
+  const navigate = useNavigate();
+  const [username, setUsername] = useState(
+    localStorage.getItem('username')
+  );
+    const [showSpin, setShowSpin] = useState(false);
+
+  const verifyToken = async (jwt) => {
+    const response = await VerifyTokenApi(jwt);
+    let status = response.data.status;
+    if (!status) {
+      message.error('Token expired, redirecting to login page');
+      setShowSpin(true);
+      setTimeout(() => {
+        localStorage.clear();
+        navigate('/login');
+      },3000)
     }
-    axios
-      .get('/api/verify', {
-        headers: {
-          Authorization: `${token}`,
-          'Content-Type': 'application/json',
-        },
-      })
-      .then((response) => {
-        let flag = response.data.status;
-        if (!flag) {
-          message.info(response.data.message);
-          setTimeout(() => {
-            navigate('/login');
-          }, 2000);
-        }
-      });
+    return;
+  };
+  
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    verifyToken(token);
   }, [navigate]);
+
   return (
     <div className={`${styles.mainLayout}`}>
+      {showSpin ? <Spin className="spinFrame" size="large" />:null}
       <div className={`${styles.dark} ${styles.header}`}>
         <Link to={'/'}>
-          <h2>{env.WEB_TITLE}</h2>
+          <h2>{process.env.REACT_APP_WEB_TITLE}</h2>
         </Link>
         <p>Casher-{username}</p>
       </div>
@@ -55,14 +49,14 @@ const MainLayout = () => {
         <Menu />
       </div>
       <div className={`${styles.subWindow}`}>
-        {showSub === true ? (
-          <SubWindow username={username}></SubWindow>
-        ) : (
-          <Outlet></Outlet>
-        )}
+        <Outlet></Outlet>
       </div>
       <div className={`${styles.footer}`}>
-        <p>{env.COPYRIGHT}</p>
+        <p>
+          © {process.env.REACT_APP_YEAR} Copyright by{' '}
+          {process.env.REACT_APP_COMPANY_NAME} All rights reserved.
+        </p>
+        <p>Powered By {process.env.REACT_APP_AUTHOR_NAME}</p>
       </div>
     </div>
   );

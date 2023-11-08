@@ -10,7 +10,6 @@ import moment from 'moment-timezone';
 //Components
 import MainLayout from './Component/MainLayout/MainLayout.jsx';
 //Pages
-import Buy from './pages/Buy';
 import Login from './pages/Login';
 import Products from './pages/Products';
 import Customer from './pages/Customer';
@@ -23,17 +22,21 @@ import ProductDetail from './pages/ProductDetail.jsx';
 import { message } from 'antd';
 
 const App = () => {
+  const [fetch, setFetch] = useState(true);
+  const [inventoryData, setInventoryData] = useState('');
+  const [admin, setAdmin] = useState('');
   const fetchInventory = async () => {
     const result = await axios.get('/api/sale');
     setInventoryData(result.data.data);
   };
 
   useEffect(() => {
-    fetchInventory();
-  }, []);
-  //inventoryData
-  const [inventoryData, setInventoryData] = useState('');
-  //Initial cartData
+    if (fetch) {
+      fetchInventory();
+      setAdmin(localStorage.getItem('username'))
+      setFetch(false);
+    }
+  }, [fetch]);
 
   //Start order number generator
   const oNmber = () => {
@@ -54,7 +57,6 @@ const App = () => {
   };
 
   //End order number generator
-
   const [cartData, setCartData] = useState({
     order_number: oNmber(),
     items: [],
@@ -66,12 +68,40 @@ const App = () => {
     tax: 0,
     total: 0,
     casher: localStorage.getItem('username'),
-    method:'',
+    method: '',
   });
+
+  const initialCartData = () => {
+    setCartData({
+      order_number: oNmber(),
+      items: [],
+      date: moment()
+        .tz('America/New_York')
+        .format('YYYY-MM-DD-HH:mm'),
+      client: '',
+      discount: 0,
+      totalAmount: 0,
+      subtotal: 0,
+      tax: 0,
+      total: 0,
+      casher: localStorage.getItem('username'),
+      method: '',
+    });
+  };
 
   const minusTax = () => {
     let newTotal = cartData.total - cartData.tax;
     const updatedTotal = { ...cartData, total: newTotal, tax: 0 };
+    setCartData(updatedTotal);
+  };
+  const plusTax = () => {
+    let newTax = cartData.subtotal * 0.07;
+    let newTotal = cartData.subtotal + newTax;
+    const updatedTotal = {
+      ...cartData,
+      total: parseFloat(newTotal),
+      tax: parseFloat(newTax),
+    };
     setCartData(updatedTotal);
   };
 
@@ -83,7 +113,7 @@ const App = () => {
 
   const addItemToCart = (item) => {
     if (item.qty <= item.amount) {
-      message.error('Stock shortage!')
+      message.error('Stock shortage!');
       return;
     }
     const newCart = { ...cartData };
@@ -102,7 +132,7 @@ const App = () => {
     newCart.total += item_total;
     setCartData(newCart);
   };
-
+  //minus quantity from shopping cart
   const subItemToCart = (item) => {
     const newCart = { ...cartData };
     if (cartData.items.indexOf(item) === -1) {
@@ -120,25 +150,38 @@ const App = () => {
 
     setCartData(newCart);
   };
-  const removeItemToCart = (item) => {
+  //remove this item from shopping cart
+  const removeItemToCart = (item, taxFree) => {
+    console.log(
+      '🚀 ~ file: App.js:134 ~ removeItemToCart ~ taxFree:',
+      taxFree
+    );
     const newCart = { ...cartData };
     const index = cartData.items.indexOf(item);
     if (cartData.items.indexOf(item) === -1) {
       console.log(`item doesn't appear`);
     }
 
-    let item_tax = item.price * 0.07 * item.amount;
-    let item_subtotal = item.price * item.amount;
-    let item_total = item_tax + item_subtotal;
-    newCart.tax -= item_tax;
-    newCart.subtotal -= item_subtotal;
-    newCart.totalAmount -= item.amount;
-    newCart.total -= item_total;
-    newCart.items.splice(index, 1);
-
-    setCartData(newCart);
+    if (!taxFree) {
+      let item_tax = item.price * 0.07 * item.amount;
+      let item_subtotal = item.price * item.amount;
+      let item_total = item_tax + item_subtotal;
+      newCart.tax -= item_tax;
+      newCart.subtotal -= item_subtotal;
+      newCart.totalAmount -= item.amount;
+      newCart.total -= item_total;
+      newCart.items.splice(index, 1);
+      setCartData(newCart);
+    } else {
+      let item_subtotal = item.price * item.amount;
+      newCart.subtotal -= item_subtotal;
+      newCart.totalAmount -= item.amount;
+      newCart.total -= item_subtotal;
+      newCart.items.splice(index, 1);
+      setCartData(newCart);
+    }
   };
-
+  //edit price for item from shopping cart
   const editPrice = (item, newPrice, newAmount) => {
     const newCart = { ...cartData };
 
@@ -162,7 +205,6 @@ const App = () => {
       0
     );
     newCart.total = newCart.subtotal + newCart.tax;
-
     setCartData(newCart);
   };
 
@@ -170,38 +212,38 @@ const App = () => {
     <CheckOutContent.Provider
       value={{
         cartData,
+        admin,
+        inventoryData,
         setCartData,
         editPrice,
         addItemToCart,
         subItemToCart,
         removeItemToCart,
         clientNameChange,
+        initialCartData,
         minusTax,
-        inventoryData,
+        plusTax,
       }}
     >
       <div className="App">
         <Router>
           <Routes>
             <Route path="/" element={<MainLayout />}>
-              <Route path="/buy" element={<Buy />}></Route>
-              <Route path="/history" element={<TradeHistory />}>
-                <Route
-                  path="order_detail/:id"
-                  element={<HistoryDetail />}
-                />
-              </Route>
-              {/*Start products page */}
-              <Route path="/products/*" element={<Products />}>
-                <Route path=":id" element={<ProductDetail />}></Route>
-              </Route>
-              {/* Start customer page */}
-              <Route path="/customer/" element={<Customer />}>
-                <Route
-                  path="checkout/:phone/:name"
-                  element={<Checkout />}
-                />
-              </Route>
+              <Route path="/customer" element={<Customer />} />
+              <Route
+                path="/checkout/:phone/:name"
+                element={<Checkout />}
+              />
+              <Route path="/products" element={<Products />} />
+              <Route
+                path="/product-edit/:id"
+                element={<ProductDetail />}
+              />
+              <Route path="/history" element={<TradeHistory />} />
+              <Route
+                path="/history/order_detail/:id"
+                element={<HistoryDetail />}
+              />
             </Route>
             <Route path="*" element={<Missing />}></Route>
             <Route path="/login" element={<Login />}></Route>

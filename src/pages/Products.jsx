@@ -1,22 +1,30 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useCallback } from 'react';
 import Filter from '../Component/Filter/Filter';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Space, Table, Col, Row, Statistic } from 'antd';
+import { Space, Table, Col, Row, Statistic, Button } from 'antd';
 import { DollarCircleFilled } from '@ant-design/icons';
 import CheckOutContent from '../store/CheckOutContent';
 import ProductDetail from './ProductDetail';
 import { InquiryTotalCostApi } from '../request/api';
 
 export default function Products() {
-  const params = useParams();
   const ctx = useContext(CheckOutContent);
   const navigate = useNavigate();
   const [itemsData, setItemsData] = useState(ctx.inventoryData);
+  const [fetch, setFetch] = useState(true);
   const userName = localStorage.getItem('username')
   const [totalCost, setTotalCost] = useState('')
-  const goToDetail = (itemNum) => {
-    navigate(`/products/'${itemNum}'`);
-  };
+  const goToDetail = useCallback((itemNum) => {
+    navigate(`/product-edit/${itemNum}`);
+  },[navigate]);
+
+  useEffect(() => {
+    if (fetch) {
+      fetchData();
+      setFetch(false);
+    }
+  }, [fetch]);
+
   const columns = [
     {
       title: 'ItemCode',
@@ -61,34 +69,26 @@ export default function Products() {
       ),
     },
     {
-      title: 'Category',
-      dataIndex: 'category',
-      key: 'category',
-    },
-    {
       title: 'Act',
-      render: (_, record) => (
-        <>
-          <button className='editButton' onClick={() => goToDetail(record.item_code)}>
-            Edit
-          </button>
+      render: (_, record) => {
+       return ( <>
+          <Button type='primary' className='editButton' onClick={() =>goToDetail(record.item_code)}>
+          Edit
+
+        </Button >
         </>
-      ),
+        );
+      },
     },
   ];
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        let result = await InquiryTotalCostApi();
-        let resultCost = parseFloat(result.data.data.total_cost).toFixed(2);
-        setTotalCost(resultCost);
-      } catch (error) {
-        console.error("Error fetching total cost:", error);
-      }
-    };
 
-    fetchData();
-  }, []);
+  //got total cost
+  const fetchData = async () => {
+      let result = await InquiryTotalCostApi();
+      let resultCost = parseFloat(result.data.data.total_cost).toFixed(2);
+      setTotalCost(resultCost);
+  };
+
   const emptySearch = () => {
     setItemsData(ctx.inventoryData);
     const input = document.getElementById('filter_input');
@@ -97,11 +97,6 @@ export default function Products() {
 
   return (
     <div className="productsFrame">
-      {params.id ? (
-        <>
-          <ProductDetail id={params.id} />
-        </>
-      ) : (
         <>
           {userName === 'admin' ? (
             <Row gutter={16}>
@@ -125,7 +120,6 @@ export default function Products() {
             <Table columns={columns} dataSource={itemsData} />
           </div>
         </>
-      )}
     </div>
   );
 }

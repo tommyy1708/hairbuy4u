@@ -1,34 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Badge, Descriptions,Space } from 'antd';
+import { Badge, Descriptions, Space, Spin } from 'antd';
+import axios from 'axios';
 const HistoryDetail = () => {
-  const params = useParams();
-  const order_number = params.id;
+  const { id } = useParams();
   const [orderDetail, setOrderDetail] = useState('');
-  const [itemDetail, setItemDetail] = useState('');
+  const itemsLength = orderDetail?.items?.length || 0;
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `/api/order_history/order_detail/${id}`
+        );
+        if (response) {
+          const orderInfo = response.data.orderDetail;
+          setOrderDetail(orderInfo);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
-  useEffect(
-    () => async (title, body) => {
-      await fetch('/api/order_history/order_detail/:id', {
-        method: 'POST',
-        body: JSON.stringify({
-          order_number,
-        }),
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8',
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setOrderDetail(data.orderDetail);
-          setItemDetail(data.orderDetail.items);
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
-    },
-    []
-  );
+    fetchData();
+  }, [id]);
 
   const items: DescriptionsProps['items'] = [
     {
@@ -78,20 +73,17 @@ const HistoryDetail = () => {
       label: 'Order Info',
       children: (
         <div>
-          {itemDetail.length > 0 ? (
-            itemDetail.map((item, index) => (
+          {itemsLength > 0 &&
+            orderDetail.items.map((item, index) => (
               <div className="detailsFromOrderFrame" key={index}>
                 <Space>
-                <p>Item:{item.item}</p>
-                <p>Item-Code:{item.item_code}</p>
-                <p>Price:${item.price}</p>
-                <p>Amount:{item.amount}</p>
+                  <p>Item:{item.item}</p>
+                  <p>Item-Code:{item.item_code}</p>
+                  <p>Price:${item.price}</p>
+                  <p>Amount:{item.amount}</p>
                 </Space>
               </div>
-            ))
-          ) : (
-            <div>Nothing</div>
-          )}
+            ))}
         </div>
       ),
       span: 3,
@@ -100,12 +92,16 @@ const HistoryDetail = () => {
 
   return (
     <div>
-      <Descriptions
-        bordered={true}
-        title="Order Detail Information"
-        layout="horizontal"
-        items={items}
-      />
+      {itemsLength > 0 ? (
+        <Descriptions
+          bordered={true}
+          title={`Order:${id} Information`}
+          layout="horizontal"
+          items={items}
+        />
+      ) : (
+        <Spin className="spinFrame" size="large" />
+      )}
     </div>
   );
 };

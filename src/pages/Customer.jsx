@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Space,
   Table,
@@ -12,34 +12,19 @@ import { InquiryClientApi, AddNewClientApi } from '../request/api';
 import { SearchOutlined } from '@ant-design/icons';
 import {
   Link,
-  Outlet,
-  useNavigate,
-  useLocation,
 } from 'react-router-dom';
 
 const Customer = () => {
-  const [originData, setOriginData] = useState('');
-  const [clientsData, setClientsData] = useState('');
-  const [showSub, setShowSub] = useState(false);
+  const [clientsData, setClientsData] = useState([]);
   const [disabledButton, setDisabledButton] = useState(false);
-  let navigate = useNavigate();
-  let location = useLocation();
-  useEffect(() => {
-    if (location.pathname === '/customer') {
-      setShowSub(false);
-    } else {
-      setShowSub(true);
-    }
-    try {
-      async function fetchClients() {
-        let clients = await InquiryClientApi();
-        setOriginData(clients.data.data);
-      }
-      fetchClients();
-    } catch (error) {
-      message.info(error);
-    }
-  }, [navigate]);
+
+  // useEffect(() => {
+  //   if (location.pathname === '/customer') {
+  //     setShowSub(false);
+  //   } else {
+  //     setShowSub(true);
+  //   }
+  // },[]);
 
   const addNewClient = async (values) => {
     setDisabledButton(true);
@@ -55,14 +40,11 @@ const Customer = () => {
     return;
   };
 
-  const emptySearch = () => {
-    setClientsData(originData);
+  const emptySearch = async () => {
+     const clients = await InquiryClientApi();
+     setClientsData(clients.data.data);
     const input = document.getElementById('filter_input');
     input.value = '';
-  };
-
-  const handleNewOrder = (e) => {
-    const clientName = e.name;
   };
 
   const header = [
@@ -105,7 +87,9 @@ const Customer = () => {
       dataIndex: 'newOrder',
       render: (_, record) => (
         <Button>
-          <Link to={`/customer/checkout/${record.phone}/${record.name}`}>
+          <Link
+            to={`/checkout/${record.phone}/${record.name}`}
+          >
             New Order
           </Link>
         </Button>
@@ -113,11 +97,12 @@ const Customer = () => {
     },
   ];
 
-  const inputChangeHandler = (e) => {
+  const searClientByPhone = async (e) => {
+    const clients = await InquiryClientApi();
     const input = document.getElementById('filter_input');
     const keyword = input.value.trim();
     if (keyword.length !== 0) {
-      const newData = originData.filter(
+      const newData = clients.data.data.filter(
         (e) => e.phone.indexOf(keyword) !== -1
       );
       setClientsData(newData);
@@ -129,8 +114,6 @@ const Customer = () => {
   const { Option } = Select;
   return (
     <>
-      {showSub === false ? (
-        <>
           <div className="searchFrame">
             <Space>
               <input
@@ -142,7 +125,7 @@ const Customer = () => {
               <Button
                 className="content"
                 icon={<SearchOutlined />}
-                onClick={inputChangeHandler}
+                onClick={searClientByPhone}
                 type="primary"
               >
                 Search
@@ -156,7 +139,6 @@ const Customer = () => {
               </Button>
             </Space>
           </div>
-
           <Form
             className="newClientFrame"
             name="newClient"
@@ -218,16 +200,16 @@ const Customer = () => {
               </Select>
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit" disabled={disabledButton}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                disabled={disabledButton}
+              >
                 Add New Client
               </Button>
             </Form.Item>
           </Form>
           <Table columns={header} dataSource={clientsData} />
-        </>
-      ) : (
-        <Outlet></Outlet>
-      )}
     </>
   );
 };

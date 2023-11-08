@@ -2,20 +2,21 @@ import React, { useState } from 'react';
 import { Form, Input, Button, message, Spin } from 'antd';
 import { LoginApi } from '../request/api';
 import { useNavigate } from 'react-router';
+
 export default function Login() {
   const navigate = useNavigate();
   const [showLoading, setShowLoading] = useState(false);
   const [count, setCount] = useState(0);
-  let lgButton = document.getElementById('loginButton');
-
-  const onSubmit = (values) => {
-    setCount(prev => prev + 1);
-    if (count >= 4) {
-      message.error('You had multiple wrong, please contact manager!')
-      lgButton?.setAttribute('disabled', 'disabled');
-    }
+  const onSubmit = async (values) => {
     setShowLoading(true);
-    LoginApi(values).then((res) => {
+    setCount((prev) => prev + 1);
+    if (count >= 4) {
+      message.error(
+        'You had multiple wrong, please contact manager!'
+      );
+    }
+
+    await LoginApi(values).then((res) => {
       let code = res.data.errCode;
       if (code === 0) {
         localStorage.setItem(
@@ -41,18 +42,17 @@ export default function Login() {
     });
   };
 
+
   return (
     <div id="login">
       {showLoading ? (
         <div>
-          <Spin
-            delay="500"
-            className="spinFrame"
-            size="large"
-          />
+          <Spin delay="500" className="spinFrame" size="large" />
         </div>
       ) : null}
-      <h3>Hair Natural Inc.</h3>
+      <div className="login_title">
+        <h3>{process.env.REACT_APP_WEB_TITLE}</h3>
+      </div>
       <div className="login_box">
         <Form
           name="basic"
@@ -72,7 +72,6 @@ export default function Login() {
           >
             <Input />
           </Form.Item>
-
           <Form.Item
             label="Password"
             name="password"
@@ -86,12 +85,7 @@ export default function Login() {
             <Input.Password />
           </Form.Item>
           <Form.Item>
-            <Button
-              id="loginButton"
-              type="primary"
-              htmlType="submit"
-              block
-            >
+            <Button type="primary" htmlType="submit" block>
               Submit
             </Button>
           </Form.Item>

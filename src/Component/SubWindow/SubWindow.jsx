@@ -2,16 +2,18 @@ import React from 'react';
 import styles from './SubWindow.module.css';
 import { DollarCircleFilled, SmileFilled } from '@ant-design/icons';
 import { Col, Row, Statistic } from 'antd';
+import env from 'react-dotenv';
+
 const SubWindow = (props) => {
   const { username } = props;
-  // const onPanelChange = (value, mode) => {
-  //   console.log(value.format('YYYY-MM-DD'), mode);
-  // };
+
   return (
     <div className={`${styles.frame}`}>
       <div>
         <h4>Hi {username}!</h4>
-        <p>Welcome to Hair Natural Inc. CMS System</p>
+        <p>
+          Welcome to {process.env.REACT_APP_COMPANY_NAME} CMS System
+        </p>
       </div>
       <div className={`${styles.calendar}`}>
         <Row gutter={16}>

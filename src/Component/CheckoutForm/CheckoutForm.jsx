@@ -5,6 +5,7 @@ const CheckoutForm = (props) => {
   //This components to shows items in the cart
   const orderList = props.orderList;
   const {
+    taxFree,
     editPrice,
     addItemToCart,
     subItemToCart,
@@ -21,7 +22,6 @@ const CheckoutForm = (props) => {
     let newAmount = item.amount;
     editPrice(item, newPrice, newAmount);
   };
-
   return (
     <div className={`${styles.orderListComponent}`}>
       {orderList && orderList.items.length > 0 ? (
@@ -53,7 +53,7 @@ const CheckoutForm = (props) => {
                 </Button>
                 <Button
                   danger
-                  onClick={() => removeItemToCart(item)}
+                  onClick={() => removeItemToCart(item, taxFree)}
                 >
                   remove
                 </Button>

@@ -33,6 +33,8 @@
   color: #000;
 }
 .footer{
+  display: flex;
+  justify-content: space-evenly;
   width: 100%;
   background-color: #101c2d;
   color: #fff;

@@ -1,5 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { ProductsDetailApi } from '../request/api';
+import React, { useEffect, useContext, useState } from 'react';
+import {
+  ProductsDetailApi,
+  GotInventoryDataApi,
+} from '../request/api';
 import {
   Button,
   Form,
@@ -8,75 +11,65 @@ import {
   Spin,
   Divider,
   Table,
-  Space,
 } from 'antd';
+import { useParams } from 'react-router-dom';
 import moment from 'moment-timezone';
 import {
   ProductsUpdateApi,
   AddNewInventoryApi,
-  GotInventoryDataApi,
   AsynchronousApi,
-  ModifyAddNewInventoryApi,
 } from '../request/api';
-import { type } from '@testing-library/user-event/dist/type';
-const ProductDetail = (props) => {
-  const { id } = props;
-  const cleanedString = id.replace(/'/g, '');
-  const [productsDetail, setProductsDetail] = useState('');
+const ProductDetail = () => {
+  const params = useParams();
+  const id = params.id;
+  const [productsDetail, setProductsDetail] = useState([]);
   const [showLoading, setShowLoading] = useState(false);
   const [addInventoryHistory, setAddInventoryHistory] = useState('');
   const [disabledButton, setDisabledButton] = useState(false);
+  const [fetch, setFetch] = useState(true);
+  const fetchProductsDetail = async (itemCode) => {
+    const productInfo = await ProductsDetailApi(itemCode);
+    setProductsDetail(productInfo.data.productDetail[0]);
+    const productHistory = await GotInventoryDataApi(itemCode);
+    setAddInventoryHistory(productHistory.data.data);
+  };
 
   useEffect(() => {
-    setShowLoading(false);
-    ProductsDetailApi({
-      item_code: cleanedString,
-    })
-      .then((res) => {
-        setProductsDetail(res.data.productDetail[0]);
-      })
-      .catch((error) => {
-        message.info(error);
-      });
+    if (fetch) {
+      fetchProductsDetail(id);
+      setFetch(false);
+    }
+  }, [fetch]);
 
-    GotInventoryDataApi({
-      item_code: cleanedString,
-    }).then((res) => {
-      if (res.data.errCode === 0) {
-        setAddInventoryHistory(res.data.data);
-      }
-    });
-  }, []);
-
-  const onFinish = async (values) => {
-   const allUndefined = Object.values(values).every(
-     (value) => value === undefined
-   );
-
-    if (allUndefined) {
+  const handleEditProductInfo = async (values) => {
+    const invalidEdit = Object.values(values).every(
+      (value) => value === undefined
+    );
+    if (invalidEdit) {
       setDisabledButton(true);
-      message.error('Nothing changed')
+      message.error('Nothing changed');
       setTimeout(() => {
         setDisabledButton(false);
       }, 3000);
       return;
     }
 
-    let itemId = productsDetail.item_code;
-    const data = {
-      id: itemId,
-      data: values,
-    };
     setDisabledButton(true);
     setShowLoading(true);
+    const data = {
+      id: productsDetail.item_code,
+      data: values,
+    };
+
     try {
       if (values != null) {
         await ProductsUpdateApi(data).then((res) => {
-          message.success('Change success!');
-          setTimeout(() => {
-            setDisabledButton(false);
-            window.location.reload(false);
-          }, [2000]);
+          if (res.data.errCode === 0) {
+            message.success('Change success!');
+            setTimeout(() => {
+              window.location.reload();
+            }, [2000]);
+          }
         });
       } else {
         message.info('nothing changed');
@@ -98,25 +91,30 @@ const ProductDetail = (props) => {
       date: moment()
         .tz('America/New_York')
         .format('YYYY-MM-DD-HH:mm'),
+      casher: localStorage.getItem('username'),
     };
     try {
-      message.success('Add list success!');
-      await AddNewInventoryApi(data);
-
-      // for asynchronous data
-      const asyncData = {
-        item_code: productsDetail.item_code,
-        qty: values.qty,
-        cost: values.cost,
-      };
-      await AsynchronousApi(asyncData);
-
-      setTimeout(() => {
-        setDisabledButton(false);
-         window.location.reload();
-      }, 2000);
+      const response = await AddNewInventoryApi(data);
+      if (response.data.errCode === 0) {
+        // for asynchronous data
+        const asyncData = {
+          item_code: productsDetail.item_code,
+          qty: values.qty,
+          cost: values.cost,
+        };
+        await AsynchronousApi(asyncData).then((res) => {
+          if (res.data.errCode === 0) {
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000);
+          }
+        });
+      }
     } catch (error) {
-      console.log('Something wrong', error);
+      message.error('Something wrong, contact manager');
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     }
   };
 
@@ -129,6 +127,8 @@ const ProductDetail = (props) => {
       title: 'Index',
       dataIndex: 'key',
       key: 'key',
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => a.key - b.key,
       width: 50,
     },
     {
@@ -145,7 +145,7 @@ const ProductDetail = (props) => {
         <input
           className={`inventory_qty_${record.key}`}
           defaultValue={record.qty}
-          type='number'
+          type="number"
           disabled
         />
       ),
@@ -158,69 +158,17 @@ const ProductDetail = (props) => {
         <input
           className={`inventory_qty_${record.key}`}
           defaultValue={record.cost}
-          type='number'
+          type="number"
           disabled
         />
       ),
     },
-    // {
-    //   title: 'Edit',
-    //   width: 100,
-    //   render: (_, record) => (
-    //     <Space>
-    //       <Button
-    //         danger
-    //         type="primary"
-    //         onClick={() => {
-    //           let indexOfList = document.getElementsByClassName(
-    //             `inventory_qty_${record.key}`
-    //           );
-    //           indexOfList[0].disabled = false;
-    //           indexOfList[1].disabled = false;
-    //         }}
-    //       >
-    //         Edit
-    //       </Button>
-    //       <Button
-    //         type="primary"
-    //         disabled={disabledButton}
-    //         onClick={async () => {
-    //           setShowLoading(true);
-    //           setDisabledButton(true);
-    //           let indexOfList = document.getElementsByClassName(
-    //             `inventory_qty_${record.key}`
-    //           );
-    //           let newQty = indexOfList[0].value;
-    //           let newCost = indexOfList[1].value;
-    //           let listKey = record.key;
-    //           indexOfList[0].disabled = true;
-    //           indexOfList[1].disabled = true;
-    //           let idAndData = {
-    //             item_code: productsDetail.item_code,
-    //             data: {
-    //               key: listKey,
-    //               qty: newQty,
-    //               cost: newCost,
-    //             },
-    //           }
-    //           let resultResponse = await ModifyAddNewInventoryApi(idAndData)
-    //           if (resultResponse.data.errCode === 0) {
-    //             setTimeout(() => {
-    //               setDisabledButton(false);
-    //                setShowLoading(false);
-    //               window.location.reload();
-    //             }, 2000);
-    //           }
-    //           return;
-    //         }}
-    //       >
-    //         Save
-    //       </Button>
-    //     </Space>
-    //   ),
-    // },
+    {
+      title: 'Casher',
+      dataIndex: 'casher',
+      key: 'casher',
+    },
   ];
-
 
   return (
     <>
@@ -245,7 +193,7 @@ const ProductDetail = (props) => {
             initialValues={{
               remember: true,
             }}
-            onFinish={onFinish}
+            onFinish={handleEditProductInfo}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
           >
@@ -286,6 +234,7 @@ const ProductDetail = (props) => {
             </Form.Item>
           </Form>
         </div>
+        <div className="straightLine"></div>
         <div className="addInventoryFrame">
           <Form
             name="addInventoryForm"

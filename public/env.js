@@ -1,4 +1,9 @@
 window.env = {
-  "WEB_TITLE": "Hairbuy4u",
-  "COPYRIGHT": "Copyright by Hua Zhang"
+  "REACT_APP_YEAR": "2023",
+  "REACT_APP_AUTHOR_NAME": "HUA ZHANG",
+  "REACT_APP_TEC_SUPPORT": "HUA ZHANG",
+  "REACT_APP_COMPANY_NAME": "Hair Natural Inc.",
+  "REACT_APP_COMPANY_ADDRESS1": "4980 NW 165th Street Suite A21",
+  "REACT_APP_COMPANY_ADDRESS2": "Miami Gardens, Florida 33014 United States",
+  "REACT_APP_COMPANY_PHONE": ""
 };
