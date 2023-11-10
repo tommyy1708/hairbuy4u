@@ -1,21 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import {
-  useNavigate,
-  Outlet,
-  useLocation,
-  Link,
-} from 'react-router-dom';
+import { useNavigate, Outlet, Link } from 'react-router-dom';
 import styles from './MainLayout.module.css';
 import Menu from '../Menu/Menu';
 import { VerifyTokenApi } from '../../request/api';
-import { message,Spin } from 'antd';
+import { message, Spin, Button } from 'antd';
 
 const MainLayout = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState(
     localStorage.getItem('username')
   );
-    const [showSpin, setShowSpin] = useState(false);
+  const [showSpin, setShowSpin] = useState(false);
 
   const verifyToken = async (jwt) => {
     const response = await VerifyTokenApi(jwt);
@@ -26,11 +21,11 @@ const MainLayout = () => {
       setTimeout(() => {
         localStorage.clear();
         navigate('/login');
-      },3000)
+      }, 3000);
     }
     return;
   };
-  
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     verifyToken(token);
@@ -38,12 +33,27 @@ const MainLayout = () => {
 
   return (
     <div className={`${styles.mainLayout}`}>
-      {showSpin ? <Spin className="spinFrame" size="large" />:null}
+      {showSpin ? <Spin className="spinFrame" size="large" /> : null}
       <div className={`${styles.dark} ${styles.header}`}>
-        <Link to={'/'}>
-          <h2>{process.env.REACT_APP_WEB_TITLE}</h2>
-        </Link>
-        <p>Casher-{username}</p>
+        <div className={styles.header_left}>
+          <Link to={'/'}>
+            <h2>{process.env.REACT_APP_WEB_TITLE}</h2>
+          </Link>
+        </div>
+        <div className={styles.header_right}>
+          <h2>Casher-{username}</h2>
+          <Button
+            onClick={(e) => {
+              message.info('Logout......');
+              setTimeout(() => {
+                localStorage.clear();
+                navigate('/login');
+              }, 3000);
+            }}
+          >
+            Logout
+          </Button>
+        </div>
       </div>
       <div className={`${styles.dark} ${styles.leftBar}`}>
         <Menu />

@@ -1,6 +1,7 @@
 
 .searchInput {
   display: flex;
+  align-items: baseline;
   border-bottom: 1px solid #ccc;
 }
 

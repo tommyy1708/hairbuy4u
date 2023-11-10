@@ -18,14 +18,6 @@ const Customer = () => {
   const [clientsData, setClientsData] = useState([]);
   const [disabledButton, setDisabledButton] = useState(false);
 
-  // useEffect(() => {
-  //   if (location.pathname === '/customer') {
-  //     setShowSub(false);
-  //   } else {
-  //     setShowSub(true);
-  //   }
-  // },[]);
-
   const addNewClient = async (values) => {
     setDisabledButton(true);
     let result = await AddNewClientApi(values);

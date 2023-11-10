@@ -1,11 +1,18 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react';
 import Filter from '../Component/Filter/Filter';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Space, Table, Col, Row, Statistic, Button } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import {
+  Space,
+  Table,
+  Col,
+  Row,
+  Statistic,
+  Button,
+} from 'antd';
 import { DollarCircleFilled } from '@ant-design/icons';
 import CheckOutContent from '../store/CheckOutContent';
-import ProductDetail from './ProductDetail';
 import { InquiryTotalCostApi } from '../request/api';
+import AddNewProduct from '../Component/AddNewProduct/AddNewProduct';
 
 export default function Products() {
   const ctx = useContext(CheckOutContent);
@@ -24,6 +31,7 @@ export default function Products() {
       setFetch(false);
     }
   }, [fetch]);
+
 
   const columns = [
     {
@@ -74,7 +82,6 @@ export default function Products() {
        return ( <>
           <Button type='primary' className='editButton' onClick={() =>goToDetail(record.item_code)}>
           Edit
-
         </Button >
         </>
         );
@@ -97,29 +104,29 @@ export default function Products() {
 
   return (
     <div className="productsFrame">
-        <>
-          {userName === 'admin' ? (
-            <Row gutter={16}>
-              <Col span={12}>
-                <Statistic
-                  title="Total Cost"
-                  value={totalCost}
-                  prefix={<DollarCircleFilled />}
-                />
-              </Col>
-            </Row>
-          ) : (
-            ''
-          )}
-          <Filter
-            setItemsData={setItemsData}
-            inventoryData={ctx.inventoryData}
-            emptySearch={emptySearch}
-          />
-          <div className="inquiry_table">
-            <Table columns={columns} dataSource={itemsData} />
-          </div>
-        </>
+      <>
+        {userName === 'admin' ? (
+          <Row gutter={16}>
+            <Col span={12}>
+              <Statistic
+                title="Total Cost"
+                value={totalCost}
+                prefix={<DollarCircleFilled />}
+              />
+            </Col>
+          </Row>
+        ) : (
+          ''
+        )}
+        <Filter
+          setItemsData={setItemsData}
+          inventoryData={ctx.inventoryData}
+          emptySearch={emptySearch}
+        />
+        <div className="inquiry_table">
+          <Table columns={columns} dataSource={itemsData} />
+        </div>
+      </>
     </div>
   );
 }

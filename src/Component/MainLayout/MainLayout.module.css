@@ -11,11 +11,22 @@
 }
 
 .header {
-  display: flex;
-  padding-left: 60rem;
   width: 100%;
+  padding-left: 60rem;
   line-height: 40rem;
-  justify-content: flex-start;
+}
+.header_left{
+  float: left;
+}
+.header_right{
+  display: flex;
+  align-items: baseline;
+  margin-right: 15rem;
+  float: right;
+}
+
+.header_right button{
+  margin-left: 15rem;
 }
 
 .header p{
