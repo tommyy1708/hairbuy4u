@@ -21,7 +21,7 @@ const Checkout = () => {
   const { phone, name } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     ctx.initialCartData();
   }, [location.pathname]);
@@ -132,9 +132,6 @@ const Checkout = () => {
           header: `
 <div style="text-align:center;font-size:12px;">
       <h3>${process.env.REACT_APP_COMPANY_NAME} Sales Recept </h3>
-      <h4>*****(Save more Pay less at our Website: www.${
-        process.env.REACT_APP_WEBURL
-      }.com )*****</h4>
       <p>${process.env.REACT_APP_COMPANY_ADDRESS1}</p>
       <p>${process.env.REACT_APP_COMPANY_ADDRESS2}</p>
       <p>${process.env.REACT_APP_COMPANY_PHONE}</p>
@@ -207,9 +204,6 @@ const Checkout = () => {
       header: `
       <div style="text-align:center;font-size:12px;">
       <h3>${process.env.REACT_APP_COMPANY_NAME} Sales Quote </h3>
-      <h4>*****(Save more Pay less at our Website: www.${
-        process.env.REACT_APP_WEBURL
-      }.com )*****</h4>
       <p>${process.env.REACT_APP_COMPANY_ADDRESS1}</p>
       <p>${process.env.REACT_APP_COMPANY_ADDRESS2}</p>
       <p>${process.env.REACT_APP_COMPANY_PHONE}</p>

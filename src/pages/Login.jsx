@@ -21,7 +21,7 @@ export default function Login() {
       if (code === 0) {
         localStorage.setItem(
           'username',
-          res.data.userInfo[0].username
+          res.data.userInfo[0].userName
         );
         localStorage.setItem('token', res.data.userInfo[0].token);
         message.success(res.data.message);

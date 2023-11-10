@@ -11,6 +11,7 @@ const CheckoutForm = (props) => {
     subItemToCart,
     removeItemToCart,
   } = props;
+  
   const handleUpPrice = (item) => {
     let newPrice = document.getElementsByClassName(
       `input${item.key}`
@@ -22,6 +23,7 @@ const CheckoutForm = (props) => {
     let newAmount = item.amount;
     editPrice(item, newPrice, newAmount);
   };
+
   return (
     <div className={`${styles.orderListComponent}`}>
       {orderList && orderList.items.length > 0 ? (

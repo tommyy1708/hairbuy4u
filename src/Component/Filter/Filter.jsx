@@ -3,6 +3,7 @@ import Styles from './Filter.module.css';
 import { Button, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import AddNewProduct from '../AddNewProduct/AddNewProduct';
+
 const Filter = (props) => {
   const { setItemsData, inventoryData, emptySearch } = props;
 
@@ -14,6 +15,7 @@ const Filter = (props) => {
     );
     setItemsData(newData);
   };
+
   return (
     <div className={`${Styles.searchInput}`}>
       <Input
@@ -36,7 +38,7 @@ const Filter = (props) => {
       >
         Show All Items
       </Button>
-      <AddNewProduct/>
+      <AddNewProduct setItemsData={setItemsData} />
     </div>
   );
 };

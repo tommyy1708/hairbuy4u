@@ -7,7 +7,7 @@ export const VerifyTokenApi = (params) =>
   axios.get('/api/verify', {
     headers: {
       Authorization: `Bearer ${params}`,
-    },
+    }
   });
 //inquire orderHistory database
 export const GetOrderHistoryDataApi = () =>
@@ -45,12 +45,8 @@ export const GetAllInventoryDataApi = () =>
 //Add new client
 export const AddNewClientApi = (params) =>
   axios.post('/api/client', params);
-
-  //!! i'm working now
-export const AddNewProductsApi = (params) => {
-  axios.post('/api/add-new-product', params);
-};
-
+//Add new item into inventory_data
+export const AddNewProductsApi = (params) => axios.post('/api/add-new-product', params);
 //Inquiry client
 export const InquiryClientApi = () => axios.get('/api/client');
 //Inquiry current total cost

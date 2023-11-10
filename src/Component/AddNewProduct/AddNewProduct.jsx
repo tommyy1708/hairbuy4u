@@ -1,10 +1,25 @@
-import React, { useState } from 'react';
-import { Button, Form, Input, InputNumber, Modal, Radio, message } from 'antd';
-import { AddNewProductsApi } from '../../request/api';
-import styles from './AddNewProducts.module.css'
+import React, { useState, useContext } from 'react';
+import {
+  Button,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  Radio,
+  message,
+  Spin,
+} from 'antd';
+import CheckOutContent from '../../store/CheckOutContent';
+import {
+  AddNewProductsApi,
+  GetAllInventoryDataApi,
+  InquiryClientApi,
+} from '../../request/api';
 
-const AddNewProduct = () => {
+const AddNewProduct = (props) => {
+  const ctx = useContext(CheckOutContent);
   const [open, setOpen] = useState(false);
+  const [spin, setSpin] = useState(false);
   const CollectionCreateForm = ({ open, onCreate, onCancel }) => {
     const [form] = Form.useForm();
     return (
@@ -106,21 +121,31 @@ const AddNewProduct = () => {
       </Modal>
     );
   };
+
   const onCreate = async (values) => {
+    if (values && values.category === undefined) {
+      values.category = 'Non Classified';
+    }
+    setSpin(true);
     try {
-      await AddNewProductsApi(values);
-      message.success('Add new products success!')
-      setTimeout(() => {
+      const response = await AddNewProductsApi(values);
+      if (response) {
+        const updateData = await GetAllInventoryDataApi();
         setOpen(false);
-      },2000)
+        props.setItemsData(updateData.data.data);
+        message.success('Add new products success!');
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      }
     } catch (error) {
-      message.error('Something wrong, please contact manager')
       console.log(error);
     }
   };
 
   return (
     <>
+      {spin ? <Spin className="spinFrame" size="large" /> : null}
       <Button
         type="primary"
         onClick={() => {
