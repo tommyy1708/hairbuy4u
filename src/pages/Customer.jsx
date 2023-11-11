@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Space,
   Table,
@@ -10,13 +10,12 @@ import {
 } from 'antd';
 import { InquiryClientApi, AddNewClientApi } from '../request/api';
 import { SearchOutlined } from '@ant-design/icons';
-import {
-  Link,
-} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Customer = () => {
   const [clientsData, setClientsData] = useState([]);
   const [disabledButton, setDisabledButton] = useState(false);
+  const [flag, setFlag] = useState(true);
 
   const addNewClient = async (values) => {
     setDisabledButton(true);
@@ -32,9 +31,22 @@ const Customer = () => {
     return;
   };
 
+  const initialClientData = async () => {
+    await InquiryClientApi().then((res) => {
+      setClientsData(res.data.data);
+    });
+  };
+
+  useEffect(() => {
+    if (flag) {
+      initialClientData();
+      setFlag(false);
+    }
+  }, [flag]);
+
   const emptySearch = async () => {
-     const clients = await InquiryClientApi();
-     setClientsData(clients.data.data);
+    const clients = await InquiryClientApi();
+    setClientsData(clients.data.data);
     const input = document.getElementById('filter_input');
     input.value = '';
   };
@@ -79,9 +91,7 @@ const Customer = () => {
       dataIndex: 'newOrder',
       render: (_, record) => (
         <Button>
-          <Link
-            to={`/checkout/${record.phone}/${record.name}`}
-          >
+          <Link to={`/checkout/${record.phone}/${record.name}`}>
             New Order
           </Link>
         </Button>
@@ -90,118 +100,109 @@ const Customer = () => {
   ];
 
   const searClientByPhone = async (e) => {
-    const clients = await InquiryClientApi();
     const input = document.getElementById('filter_input');
     const keyword = input.value.trim();
-    if (keyword.length !== 0) {
-      const newData = clients.data.data.filter(
-        (e) => e.phone.indexOf(keyword) !== -1
-      );
-      setClientsData(newData);
-    } else {
-      message.info('Please input phone number of client');
-    }
+    const filteredItems = clientsData.filter(
+      (item) => item.phone === keyword
+    );
+    setClientsData(filteredItems);
   };
 
   const { Option } = Select;
   return (
     <>
-          <div className="searchFrame">
-            <Space>
-              <input
-                id="filter_input"
-                className="content"
-                type="text"
-                placeholder={'Enter phone number'}
-              />
-              <Button
-                className="content"
-                icon={<SearchOutlined />}
-                onClick={searClientByPhone}
-                type="primary"
-              >
-                Search
-              </Button>
-              <Button
-                className="content"
-                icon={<SearchOutlined />}
-                onClick={() => emptySearch()}
-              >
-                Show All Clients
-              </Button>
-            </Space>
-          </div>
-          <Form
-            className="newClientFrame"
-            name="newClient"
-            labelCol={{
-              span: 8,
-            }}
-            wrapperCol={{
-              span: 16,
-            }}
-            style={{
-              maxWidth: 600,
-            }}
-            initialValues={{
-              remember: true,
-            }}
-            onFinish={addNewClient}
-            autoComplete="off"
+      <div className="searchFrame">
+        <Space>
+          <input
+            id="filter_input"
+            className="content"
+            type="text"
+            placeholder={'Enter phone number'}
+          />
+          <Button
+            className="content"
+            icon={<SearchOutlined />}
+            onClick={searClientByPhone}
+            type="primary"
           >
-            <Form.Item
-              label="Name"
-              name="name"
-              rules={[
-                { required: true, message: 'Please input name' },
-              ]}
-            >
-              <Input placeholder={'name of client'} />
-            </Form.Item>
-            <Form.Item
-              label="Contact"
-              name="address"
-              rules={[
-                { required: true, message: 'Please input address' },
-              ]}
-            >
-              <Input placeholder={'contact info'} />
-            </Form.Item>
-            <Form.Item
-              label="Phone"
-              name="phone"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please input phone number',
-                },
-              ]}
-            >
-              <Input placeholder={'phone number'} />
-            </Form.Item>
-            <Form.Item
-              label="Type"
-              name="type"
-              rules={[
-                { required: true, message: 'Please choose type' },
-              ]}
-            >
-              <Select placeholder={'Choose client type'}>
-                <Option value="wholeSale">Whole Sale</Option>
-                <Option value="retail">Retail</Option>
-              </Select>
-            </Form.Item>
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                disabled={disabledButton}
-              >
-                Add New Client
-              </Button>
-            </Form.Item>
-          </Form>
-          <Table columns={header} dataSource={clientsData} />
+            Search
+          </Button>
+          <Button
+            className="content"
+            icon={<SearchOutlined />}
+            onClick={() => emptySearch()}
+          >
+            Show All Clients
+          </Button>
+        </Space>
+      </div>
+      <Form
+        className="newClientFrame"
+        name="newClient"
+        labelCol={{
+          span: 8,
+        }}
+        wrapperCol={{
+          span: 16,
+        }}
+        style={{
+          maxWidth: 600,
+        }}
+        initialValues={{
+          remember: true,
+        }}
+        onFinish={addNewClient}
+        autoComplete="off"
+      >
+        <Form.Item
+          label="Name"
+          name="name"
+          rules={[{ required: true, message: 'Please input name' }]}
+        >
+          <Input placeholder={'name of client'} />
+        </Form.Item>
+        <Form.Item
+          label="Contact"
+          name="address"
+          rules={[
+            { required: true, message: 'Please input address' },
+          ]}
+        >
+          <Input placeholder={'contact info'} />
+        </Form.Item>
+        <Form.Item
+          label="Phone"
+          name="phone"
+          rules={[
+            {
+              required: true,
+              message: 'Please input phone number',
+            },
+          ]}
+        >
+          <Input placeholder={'phone number'} />
+        </Form.Item>
+        <Form.Item
+          label="Type"
+          name="type"
+          rules={[{ required: true, message: 'Please choose type' }]}
+        >
+          <Select placeholder={'Choose client type'}>
+            <Option value="wholeSale">Whole Sale</Option>
+            <Option value="retail">Retail</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            disabled={disabledButton}
+          >
+            Add New Client
+          </Button>
+        </Form.Item>
+      </Form>
+      <Table columns={header} dataSource={clientsData} />
     </>
   );
 };
