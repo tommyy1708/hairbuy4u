@@ -12,7 +12,6 @@ import {
 import { DollarCircleFilled } from '@ant-design/icons';
 import CheckOutContent from '../store/CheckOutContent';
 import { InquiryTotalCostApi } from '../request/api';
-import AddNewProduct from '../Component/AddNewProduct/AddNewProduct';
 
 export default function Products() {
   const ctx = useContext(CheckOutContent);

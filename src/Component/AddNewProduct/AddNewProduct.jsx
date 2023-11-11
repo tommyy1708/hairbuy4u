@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   Form,
@@ -9,15 +9,12 @@ import {
   message,
   Spin,
 } from 'antd';
-import CheckOutContent from '../../store/CheckOutContent';
 import {
   AddNewProductsApi,
   GetAllInventoryDataApi,
-  InquiryClientApi,
 } from '../../request/api';
 
 const AddNewProduct = (props) => {
-  const ctx = useContext(CheckOutContent);
   const [open, setOpen] = useState(false);
   const [spin, setSpin] = useState(false);
   const CollectionCreateForm = ({ open, onCreate, onCancel }) => {

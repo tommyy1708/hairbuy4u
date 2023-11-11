@@ -1,6 +1,15 @@
-import React, { useContext, useEffect,useState } from 'react';
+import React, {
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import CheckOutContent from '../store/CheckOutContent';
-import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
+import {
+  Link,
+  useParams,
+  useNavigate,
+  useLocation,
+} from 'react-router-dom';
 import { Space, Button, Switch, message, Spin, Select } from 'antd';
 import CheckoutForm from '../Component/CheckoutForm/CheckoutForm';
 import printJS from 'print-js';
@@ -21,12 +30,10 @@ const Checkout = () => {
   const { phone, name } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-
   useEffect(() => {
     ctx.initialCartData();
+    // eslint-disable-next-line
   }, [location.pathname]);
-
-  console.log('car data', ctx.cartData);
 
   const orderColumns = [
     {
@@ -78,11 +85,9 @@ const Checkout = () => {
   ];
 
   const searchClicked = async () => {
-     ctx.cartData.client = name;
-     ctx.cartData.method = payment;
     const result = await GetAllInventoryDataApi();
     if (result.status === 200) {
-      const { errCode, data } = result.data;
+      const { data } = result.data;
       const input = document.getElementById('searchInput');
       const keyword = input.value.trim();
       const newData = data.filter(
@@ -95,6 +100,8 @@ const Checkout = () => {
 
   //Recept function
   const printRecept = async () => {
+    ctx.cartData.method = payment;
+    ctx.cartData.client = name;
     if (payment.length <= 0) {
       message.error('Please choose payment method first');
       return;
@@ -104,6 +111,7 @@ const Checkout = () => {
     let data = {
       clientSpend: ctx.cartData.total,
       clientName: name,
+      clientPhone:phone,
     };
     let returnData = await UpdateStockDataApi({
       data: ctx.cartData.items,
