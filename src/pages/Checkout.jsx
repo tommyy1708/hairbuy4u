@@ -241,7 +241,7 @@ const Checkout = () => {
         { field: 'item_code', displayName: 'Item Code' },
         { field: 'item', displayName: 'Item Name' },
         { field: 'price', displayName: 'Price' },
-        { field: 'amount', displayName: 'Quantity' },
+        { field: 'amount', displayName: 'Quantity' },4
       ],
     });
 
@@ -316,12 +316,9 @@ const Checkout = () => {
               <h3>OrderNumber:</h3>
               <h5>{ctx.cartData.order_number}</h5>
               <p>Amount:{ctx.cartData.totalAmount}</p>
-              <p>Subtotal:${ctx.cartData.subtotal}</p>
-              <p>
-                Tax:$
-                {ctx.cartData.tax}
-              </p>
-              <p>Total:${ctx.cartData.total}</p>
+              <p>Subtotal:${ctx.cartData.subtotal.toFixed(2)}</p>
+              <p>Tax:${ctx.cartData.tax.toFixed(2)}</p>
+              <p>Total:${ctx.cartData.total.toFixed(2)}</p>
               <div>
                 Payment:
                 <Select
