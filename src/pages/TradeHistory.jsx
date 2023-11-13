@@ -48,7 +48,7 @@ const TradeHistory = (props) => {
       key: 'total',
       dataIndex: 'total',
       render: (_, record) => (
-        <Space>${record.total.toFixed(2)}</Space>
+        <Space>${record.total}</Space>
       ),
     },
   ];

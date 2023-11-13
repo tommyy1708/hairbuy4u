@@ -83,7 +83,7 @@ const Customer = () => {
       render: (_, record) =>
         record.spend === null
           ? `$ 0.00`
-          : `$ ${record.spend.toFixed(2)}`,
+          : `$ ${record.spend}`,
     },
     {
       title: 'New Order',
@@ -105,6 +105,7 @@ const Customer = () => {
     const filteredItems = clientsData.filter(
       (item) => item.phone === keyword
     );
+    console.log("🚀 ~ file: Customer.jsx:108 ~ searClientByPhone ~ filteredItems:", filteredItems)
     setClientsData(filteredItems);
   };
 

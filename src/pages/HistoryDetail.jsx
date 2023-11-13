@@ -5,23 +5,48 @@ import axios from 'axios';
 const HistoryDetail = () => {
   const { id } = useParams();
   const [orderDetail, setOrderDetail] = useState('');
+  const [orderItems, setOrderItems] = useState('');
+  const [profit, setProfit] = useState(0);
+  const [nTotalCost, setNTotalCost] = useState(0);
   const itemsLength = orderDetail?.items?.length || 0;
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `/api/order_history/order_detail/${id}`
-        );
-        if (response) {
-          const orderInfo = response.data.orderDetail;
-          setOrderDetail(orderInfo);
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
 
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `/api/order_history/order_detail/${id}`
+      );
+      if (response) {
+        const orderInfo = response.data.orderDetail;
+        const aItemsInfo = orderInfo.items;
+        console.log(
+          '🚀 ~ file: HistoryDetail.jsx:20 ~ fetchData ~ aItemsInfo:',
+          aItemsInfo
+        );
+        setOrderDetail(orderInfo);
+        setOrderItems(aItemsInfo);
+        const nTotal = calculate(aItemsInfo);
+        setProfit(nTotal.profit);
+        setNTotalCost(nTotal.totalCost);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  function calculate(items) {
+    let totalCost = 0;
+    let totalPrice = 0;
+    let profit = 0;
+    for (let i = 0; i < items.length; i++) {
+      totalCost += items[i].cost * items[i].amount;
+      totalPrice += items[i].price * items[i].amount;
+    }
+    profit = totalPrice - totalCost;
+
+    return { profit: profit, totalCost: totalCost };
+  }
+
+  useEffect(() => {
     fetchData();
   }, [id]);
 
@@ -48,28 +73,34 @@ const HistoryDetail = () => {
     },
     {
       key: '5',
-      label: 'Discount',
-      children: <p>${orderDetail.discount}</p>,
+      label: 'Cost',
+      children: <p>${nTotalCost}</p>,
     },
     {
       key: '6',
-      label: 'Status',
-      children: <Badge status="success" text="Finished" />,
+      label: 'Profit',
+      children: <p>${profit.toFixed(2)}</p>,
     },
     {
       key: '7',
       label: 'Casher',
       children: <p>{orderDetail.casher}</p>,
-      span: '1',
+      span: 1,
     },
     {
       key: '8',
       label: 'Payment Method',
       children: <p>{orderDetail.method}</p>,
-      span: 2,
+      span: 1,
     },
     {
       key: '9',
+      label: 'Discount',
+      children: <p>${orderDetail.discount}</p>,
+      span: 1,
+    },
+    {
+      key: '10',
       label: 'Order Info',
       children: (
         <div>
