@@ -86,6 +86,8 @@ const App = () => {
       total: 0,
       casher: localStorage.getItem('username'),
       method: '',
+      total_cost:0,
+      profit: 0,
     });
   };
 
@@ -132,7 +134,7 @@ const App = () => {
     newCart.total += item_total;
     setCartData(newCart);
   };
-  
+
   //minus quantity from shopping cart
   const subItemToCart = (item) => {
     const newCart = { ...cartData };
