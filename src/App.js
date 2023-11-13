@@ -181,7 +181,7 @@ const App = () => {
       newCart.subtotal -= item_subtotal;
       newCart.totalAmount -= item.amount;
       newCart.tax -= item_tax;
-      newCart.total -= item_subtotal;
+      newCart.total -= item_subtotal + item_tax;
       newCart.items.splice(index, 1);
       setCartData(newCart);
     }
