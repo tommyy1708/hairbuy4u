@@ -162,9 +162,15 @@ const Checkout = () => {
           <p><span style="font-weight: bold;">Date:</span>${
             ctx.cartData.date
           }</p>
-          <p><span style="font-weight: bold;">Subtotal:</span>$${ctx.cartData.subtotal}</p>
-          <p><span style="font-weight: bold;">Tax(7%):</span>$${ctx.cartData.tax}</p>
-          <p><span style="font-weight: bold;">Total:</span>$${ctx.cartData.total}</p>
+          <p><span style="font-weight: bold;">Subtotal:</span>$${ctx.cartData.subtotal.toFixed(
+            2
+          )}</p>
+          <p><span style="font-weight: bold;">Tax(7%):</span>$${ctx.cartData.tax.toFixed(
+            2
+          )}</p>
+          <p><span style="font-weight: bold;">Total:</span>$${ctx.cartData.total.toFixed(
+            2
+          )}</p>
         </div>
       </div>
       `,
@@ -228,9 +234,9 @@ const Checkout = () => {
           <p><span style="font-weight: bold;">Date:</span>${
             ctx.cartData.date
           }</p>
-          <p><span style="font-weight: bold;">Subtotal:</span>$${ctx.cartData.subtotal}</p>
-          <p><span style="font-weight: bold;">Tax(7%):</span>$${ctx.cartData.tax}</p>
-          <p><span style="font-weight: bold;">Total:</span>$${ctx.cartData.total}</p>
+          <p><span style="font-weight: bold;">Subtotal:</span>$${ctx.cartData.subtotal.toFixed(2)}</p>
+          <p><span style="font-weight: bold;">Tax(7%):</span>$${ctx.cartData.tax.toFixed(2)}</p>
+          <p><span style="font-weight: bold;">Total:</span>$${ctx.cartData.total.toFixed(2)}</p>
         </div>
       </div>
       `,
