@@ -33,7 +33,7 @@ const App = () => {
   useEffect(() => {
     if (fetch) {
       fetchInventory();
-      setAdmin(localStorage.getItem('username'))
+      setAdmin(localStorage.getItem('username'));
       setFetch(false);
     }
   }, [fetch]);
@@ -86,7 +86,7 @@ const App = () => {
       total: 0,
       casher: localStorage.getItem('username'),
       method: '',
-      total_cost:0,
+      total_cost: 0,
       profit: 0,
     });
   };
@@ -176,9 +176,11 @@ const App = () => {
       newCart.items.splice(index, 1);
       setCartData(newCart);
     } else {
+      let item_tax = item.price * 0.07 * item.amount;
       let item_subtotal = item.price * item.amount;
       newCart.subtotal -= item_subtotal;
       newCart.totalAmount -= item.amount;
+      newCart.tax -= item_tax;
       newCart.total -= item_subtotal;
       newCart.items.splice(index, 1);
       setCartData(newCart);
