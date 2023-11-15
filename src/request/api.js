@@ -51,3 +51,6 @@ export const AddNewProductsApi = (params) => axios.post('/api/add-new-product', 
 export const InquiryClientApi = () => axios.get('/api/client');
 //Inquiry current total cost
 export const InquiryTotalCostApi = () => axios.get('/api/total-cost');
+//!! Inquiry order reports lines on date
+export const InquiryOrderDataOnDate = (params) =>
+  axios.get('/api/get-reports', {params});

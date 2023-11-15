@@ -1,8 +1,4 @@
-import React, {
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import CheckOutContent from '../store/CheckOutContent';
 import {
   Link,
@@ -98,10 +94,26 @@ const Checkout = () => {
     return;
   };
 
+  function fCalculateProfit(data) {
+    const aItems = ctx.cartData.items;
+    let totalCost = 0;
+    let totalPrice = 0;
+    let profit = 0;
+    for (let i = 0; i < aItems.length; i++) {
+      totalCost += aItems[i].cost * aItems[i].amount;
+      totalPrice += aItems[i].price * aItems[i].amount;
+    }
+    profit = totalPrice - totalCost;
+    return { profit: profit, totalCost: totalCost };
+  }
+
   //Recept function
   const printRecept = async () => {
     ctx.cartData.method = payment;
     ctx.cartData.client = name;
+    const nProfit = fCalculateProfit(ctx.cartData.items);
+    ctx.cartData.total_cost = nProfit.totalCost;
+    ctx.cartData.profit = nProfit.profit;
     if (payment.length <= 0) {
       message.error('Please choose payment method first');
       return;
@@ -111,12 +123,13 @@ const Checkout = () => {
     let data = {
       clientSpend: ctx.cartData.total,
       clientName: name,
-      clientPhone:phone,
+      clientPhone: phone,
     };
     let returnData = await UpdateStockDataApi({
       data: ctx.cartData.items,
       token: localStorage.getItem('token'),
     });
+
     try {
       if (returnData.data.errCode !== 0) {
         message.error(`Token expired! Redirecting to login page`);
@@ -132,6 +145,7 @@ const Checkout = () => {
         });
         // This api for update stock from inventory database
         await AddSpendOnClient(data);
+        //The printJS represent content of printer
         printJS({
           printable: ctx.cartData.items,
           type: 'json',
@@ -185,8 +199,6 @@ const Checkout = () => {
           ],
         });
         setTimeout(() => {
-          setSpin(false);
-          setDisabledButton(false);
           navigate('/history');
         }, [5000]);
       }
@@ -234,9 +246,15 @@ const Checkout = () => {
           <p><span style="font-weight: bold;">Date:</span>${
             ctx.cartData.date
           }</p>
-          <p><span style="font-weight: bold;">Subtotal:</span>$${ctx.cartData.subtotal.toFixed(2)}</p>
-          <p><span style="font-weight: bold;">Tax(7%):</span>$${ctx.cartData.tax.toFixed(2)}</p>
-          <p><span style="font-weight: bold;">Total:</span>$${ctx.cartData.total.toFixed(2)}</p>
+          <p><span style="font-weight: bold;">Subtotal:</span>$${ctx.cartData.subtotal.toFixed(
+            2
+          )}</p>
+          <p><span style="font-weight: bold;">Tax(7%):</span>$${ctx.cartData.tax.toFixed(
+            2
+          )}</p>
+          <p><span style="font-weight: bold;">Total:</span>$${ctx.cartData.total.toFixed(
+            2
+          )}</p>
         </div>
       </div>
       `,
@@ -247,10 +265,12 @@ const Checkout = () => {
         { field: 'item_code', displayName: 'Item Code' },
         { field: 'item', displayName: 'Item Name' },
         { field: 'price', displayName: 'Price' },
-        { field: 'amount', displayName: 'Quantity' },4
+        { field: 'amount', displayName: 'Quantity' },
       ],
     });
-
+    setTimeout(() => {
+      navigate('/history');
+    }, [5000]);
     return;
   };
 
@@ -336,8 +356,8 @@ const Checkout = () => {
                   onChange={methodChange}
                   options={[
                     {
-                      value: 'Credit or Debit Card',
-                      label: 'Credit/Debit Card',
+                      value: 'Card',
+                      label: 'Card',
                     },
                     {
                       value: 'Cash',
@@ -354,6 +374,10 @@ const Checkout = () => {
                     {
                       value: 'Paypal',
                       label: 'Paypal',
+                    },
+                    {
+                      value: 'Credit Offered',
+                      label: 'Credit Offered',
                     },
                     {
                       value: 'others',

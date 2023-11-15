@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Badge, Descriptions, Space, Spin } from 'antd';
+import { Descriptions, Space, Spin } from 'antd';
 import axios from 'axios';
 const HistoryDetail = () => {
   const { id } = useParams();
@@ -12,17 +12,17 @@ const HistoryDetail = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(
+      const o_a_orders_Data = await axios.get(
         `/api/order_history/order_detail/${id}`
       );
-      if (response) {
-        const orderInfo = response.data.orderDetail;
-        const aItemsInfo = orderInfo.items;
+      if (o_a_orders_Data) {
+        const o_a_orderInfo = o_a_orders_Data.data.orderDetail;
+        const aItemsInfo = o_a_orderInfo.items;
         console.log(
-          '🚀 ~ file: HistoryDetail.jsx:20 ~ fetchData ~ aItemsInfo:',
+          '🚀 aItemsInfo=',
           aItemsInfo
         );
-        setOrderDetail(orderInfo);
+        setOrderDetail(o_a_orderInfo);
         setOrderItems(aItemsInfo);
         const nTotal = calculate(aItemsInfo);
         setProfit(nTotal.profit);

@@ -9,7 +9,7 @@ import moment from 'moment-timezone';
 
 //Components
 import MainLayout from './Component/MainLayout/MainLayout.jsx';
-//Pages
+// Start Pages
 import Login from './pages/Login';
 import Products from './pages/Products';
 import Customer from './pages/Customer';
@@ -19,6 +19,8 @@ import TradeHistory from './pages/TradeHistory.jsx';
 import CheckOutContent from './store/CheckOutContent.js';
 import HistoryDetail from './pages/HistoryDetail.jsx';
 import ProductDetail from './pages/ProductDetail.jsx';
+import Report from './pages/Report.jsx';
+// End Pages
 import { message } from 'antd';
 
 const App = () => {
@@ -51,7 +53,6 @@ const App = () => {
       3,
       '0'
     );
-
     const orderNumber = `${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}`;
     return orderNumber;
   };
@@ -69,6 +70,8 @@ const App = () => {
     total: 0,
     casher: localStorage.getItem('username'),
     method: '',
+    total_cost: 0,
+    profit: 0,
   });
 
   const initialCartData = () => {
@@ -155,10 +158,6 @@ const App = () => {
   };
   //remove this item from shopping cart
   const removeItemToCart = (item, taxFree) => {
-    console.log(
-      '🚀 ~ file: App.js:134 ~ removeItemToCart ~ taxFree:',
-      taxFree
-    );
     const newCart = { ...cartData };
     const index = cartData.items.indexOf(item);
     if (cartData.items.indexOf(item) === -1) {
@@ -249,9 +248,13 @@ const App = () => {
                 path="/history/order_detail/:id"
                 element={<HistoryDetail />}
               />
+              <Route
+                path="/report"
+                element={<Report />}
+              />
             </Route>
-            <Route path="*" element={<Missing />}></Route>
-            <Route path="/login" element={<Login />}></Route>
+            <Route path="*" element={<Missing />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </Router>
       </div>

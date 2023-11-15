@@ -3,7 +3,7 @@ import styles from './Menu.module.css'
 import {Link} from 'react-router-dom';
 
 const Menu = () => {
-  
+
   const items = [
     {
       key: 1,
@@ -16,6 +16,10 @@ const Menu = () => {
     {
       key: 3,
       label: 'history',
+    },
+    {
+      key: 4,
+      label: 'report',
     },
   ];
 

@@ -219,3 +219,10 @@ button {
 .detailsFromOrderFrame{
   display: flex;
 }
+
+/* Report page */
+.report-header{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
