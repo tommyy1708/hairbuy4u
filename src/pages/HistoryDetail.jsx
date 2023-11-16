@@ -18,10 +18,6 @@ const HistoryDetail = () => {
       if (o_a_orders_Data) {
         const o_a_orderInfo = o_a_orders_Data.data.orderDetail;
         const aItemsInfo = o_a_orderInfo.items;
-        console.log(
-          '🚀 aItemsInfo=',
-          aItemsInfo
-        );
         setOrderDetail(o_a_orderInfo);
         setOrderItems(aItemsInfo);
         const nTotal = calculate(aItemsInfo);

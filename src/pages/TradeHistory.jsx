@@ -55,15 +55,11 @@ const TradeHistory = (props) => {
 
   return (
     <div>
-      {order_data?.length > 0 ? (
         <Table
           columns={historyColumns}
           dataSource={order_data}
           rowKey={(record) => record.order_number}
         />
-      ) : (
-        <Spin className="spinFrame" size="large" />
-      )}
     </div>
   );
 };

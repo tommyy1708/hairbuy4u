@@ -7,6 +7,7 @@ import {
   Col,
   Row,
   Statistic,
+  message,
 } from 'antd';
 import { InquiryOrderDataOnDate } from '../request/api';
 
@@ -16,27 +17,41 @@ const Report = () => {
   const [aOrderData, setAOrderData] = useState('');
   const [nTotalProfit, setNTotalProfit] = useState(0);
   const [nTotalCost, setNTotalCost] = useState(0);
+  const [nRevenue, setNRevenue] = useState(0);
+  const [dateNotNone, setDateNotNone] = useState(false);
   const { RangePicker } = DatePicker;
 
   const gotData = async () => {
-    const data = {
-      begin: begin,
-      end: end,
-    };
-    const aOrderData = await InquiryOrderDataOnDate(data);
-    if (aOrderData) {
-      setAOrderData(aOrderData.data.data.aReports);
-      setNTotalCost(aOrderData.data.data.aStatistics[0].totalCost);
-      setNTotalProfit(
-        aOrderData.data.data.aStatistics[0].totalProfit
-      );
+    if (dateNotNone) {
+      const data = {
+        begin: begin,
+        end: end,
+      };
+      const aOrderData = await InquiryOrderDataOnDate(data);
+      if (aOrderData) {
+        setAOrderData(aOrderData.data.data.aReports);
+        setNTotalCost(aOrderData.data.data.aStatistics[0].totalCost);
+        setNTotalProfit(
+          aOrderData.data.data.aStatistics[0].totalProfit
+        );
+        setNRevenue(aOrderData.data.data.aStatistics[0].totalTotal);
+      }
+    } else {
+      message.info('Please select date!');
+      return;
     }
-    return;
   };
 
   const onChange = (date, dateString) => {
-    setBegin(dateString[0]);
-    setEnd(dateString[1]);
+    if (dateString !== '') {
+      setBegin(dateString[0]);
+      setEnd(dateString[1]);
+      setDateNotNone(true);
+      return;
+    } else {
+      message.info('Date invalid, reselect date!');
+      return;
+    }
   };
 
   const columns = [
@@ -78,7 +93,11 @@ const Report = () => {
       <div className="report-header">
         <div>
           <Space>
-            <RangePicker onChange={onChange} />
+            <RangePicker
+              className="report-datePicker"
+              onChange={onChange}
+              inputReadOnly={true}
+            />
             <Button type="primary" onClick={gotData}>
               Get Report
             </Button>
@@ -87,12 +106,23 @@ const Report = () => {
         <div>
           <Row gutter={100}>
             <Col span={50}>
-              <Statistic title="Total Cost($)" value={nTotalCost} />
+              <Statistic
+                title="Total Cost($)"
+                value={nTotalCost}
+                precision={2}
+              />
             </Col>
             <Col span={50}>
               <Statistic
                 title="Total Profit($)"
                 value={nTotalProfit}
+                precision={2}
+              />
+            </Col>
+            <Col span={50}>
+              <Statistic
+                title="Total Revenue($)"
+                value={nRevenue}
                 precision={2}
               />
             </Col>
@@ -103,6 +133,7 @@ const Report = () => {
         columns={columns}
         dataSource={aOrderData}
         size="middle"
+        rowKey={(record)=> record.order_number}
       />
     </div>
   );
