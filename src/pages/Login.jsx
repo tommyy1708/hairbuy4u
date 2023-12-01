@@ -7,6 +7,7 @@ export default function Login() {
   const navigate = useNavigate();
   const [showLoading, setShowLoading] = useState(false);
   const [count, setCount] = useState(0);
+  console.log(process.env.REACT_APP_BASEURL)
   const onSubmit = async (values) => {
     setShowLoading(true);
     setCount((prev) => prev + 1);

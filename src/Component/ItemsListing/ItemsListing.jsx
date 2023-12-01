@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from './CheckoutForm.module.css';
+import styles from './ItemsListing.module.css';
 import { Button, Result } from 'antd';
-const CheckoutForm = (props) => {
+const ItemsListing = (props) => {
   //This components to shows items in the cart
   const orderList = props.orderList;
   const {
@@ -11,7 +11,7 @@ const CheckoutForm = (props) => {
     subItemToCart,
     removeItemToCart,
   } = props;
-  
+
   const handleUpPrice = (item) => {
     let newPrice = document.getElementsByClassName(
       `input${item.key}`
@@ -83,4 +83,4 @@ const CheckoutForm = (props) => {
   );
 };
 
-export default CheckoutForm;
+export default ItemsListing;

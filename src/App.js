@@ -13,13 +13,14 @@ import MainLayout from './Component/MainLayout/MainLayout.jsx';
 import Login from './pages/Login';
 import Products from './pages/Products';
 import Customer from './pages/Customer';
-import Missing from './pages/404.jsx';
+// import Missing from './pages/404.jsx';
 import Checkout from './pages/Checkout.jsx';
 import TradeHistory from './pages/TradeHistory.jsx';
 import CheckOutContent from './store/CheckOutContent.js';
 import HistoryDetail from './pages/HistoryDetail.jsx';
 import ProductDetail from './pages/ProductDetail.jsx';
 import Report from './pages/Report.jsx';
+import Quotes from './pages/Quotes.jsx';
 // End Pages
 import { message } from 'antd';
 
@@ -58,21 +59,7 @@ const App = () => {
   };
 
   //End order number generator
-  const [cartData, setCartData] = useState({
-    order_number: oNmber(),
-    items: [],
-    date: moment().tz('America/New_York').format('YYYY-MM-DD-HH:mm'),
-    client: '',
-    discount: 0,
-    totalAmount: 0,
-    subtotal: 0,
-    tax: 0,
-    total: 0,
-    casher: localStorage.getItem('username'),
-    method: '',
-    total_cost: 0,
-    profit: 0,
-  });
+  const [cartData, setCartData] = useState('');
 
   const initialCartData = () => {
     setCartData({
@@ -91,6 +78,7 @@ const App = () => {
       method: '',
       total_cost: 0,
       profit: 0,
+      status: '',
     });
   };
 
@@ -252,8 +240,12 @@ const App = () => {
                 path="/report"
                 element={<Report />}
               />
+              <Route
+                path="/quotes"
+                element={<Quotes />}
+              />
             </Route>
-            <Route path="*" element={<Missing />} />
+            <Route path="*" />
             <Route path="/login" element={<Login />} />
           </Routes>
         </Router>

@@ -12,6 +12,8 @@ export const VerifyTokenApi = (params) =>
 //inquire orderHistory database
 export const GetOrderHistoryDataApi = () =>
   axios.get('/api/order_history');
+//inquire qoute orders
+export const GetQuotesHistoryDataApi = () => axios.get('/api/quote_history');
 //add new order to orders database
 export const AddCartDataApi = (params) =>
   axios.post('/api/shopping-cart', params);

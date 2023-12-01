@@ -70,7 +70,7 @@ const HistoryDetail = () => {
     {
       key: '5',
       label: 'Cost',
-      children: <p>${nTotalCost}</p>,
+      children: <p>${nTotalCost.toFixed(2)}</p>,
     },
     {
       key: '6',
@@ -92,7 +92,7 @@ const HistoryDetail = () => {
     {
       key: '9',
       label: 'Discount',
-      children: <p>${orderDetail.discount}</p>,
+      children: <p>${parseFloat(orderDetail.discount).toFixed(2)}</p>,
       span: 1,
     },
     {

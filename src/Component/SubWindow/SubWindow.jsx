@@ -2,7 +2,6 @@ import React from 'react';
 import styles from './SubWindow.module.css';
 import { DollarCircleFilled, SmileFilled } from '@ant-design/icons';
 import { Col, Row, Statistic } from 'antd';
-import env from 'react-dotenv';
 
 const SubWindow = (props) => {
   const { username } = props;

@@ -2,8 +2,8 @@ import axios from "axios";
 
 //settings
 const instance = axios.create({
-  baseURL: 'http://127.0.0.1:3000/api',
-  timeout: 3000,
+  baseURL: `${process.env.REACT_APP_BASEURL}`,
+  timeout: 5000,
 });
 
 //add request interceptor

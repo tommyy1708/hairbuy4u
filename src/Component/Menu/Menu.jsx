@@ -19,6 +19,10 @@ const Menu = () => {
     },
     {
       key: 4,
+      label: 'quotes',
+    },
+    {
+      key: 5,
       label: 'report',
     },
   ];

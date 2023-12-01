@@ -6,8 +6,16 @@ import {
   useNavigate,
   useLocation,
 } from 'react-router-dom';
-import { Space, Button, Switch, message, Spin, Select } from 'antd';
-import CheckoutForm from '../Component/CheckoutForm/CheckoutForm';
+import {
+  Space,
+  Button,
+  Switch,
+  message,
+  Spin,
+  Select,
+  Radio,
+} from 'antd';
+import ItemsListing from '../Component/ItemsListing/ItemsListing';
 import printJS from 'print-js';
 import {
   AddCartDataApi,
@@ -24,6 +32,10 @@ const Checkout = () => {
   const [disabledButton, setDisabledButton] = useState(false);
   const [taxFree, setTaxFree] = useState(true);
   const { phone, name } = useParams();
+  const [nRadio, setNRadio] = useState('');
+  const onChange = (e) => {
+    setNRadio(e.target.value);
+  };
   const location = useLocation();
   const navigate = useNavigate();
   useEffect(() => {
@@ -109,17 +121,21 @@ const Checkout = () => {
 
   //Recept function
   const printRecept = async () => {
-    ctx.cartData.method = payment;
-    ctx.cartData.client = name;
-    const nProfit = fCalculateProfit(ctx.cartData.items);
-    ctx.cartData.total_cost = nProfit.totalCost;
-    ctx.cartData.profit = nProfit.profit;
     if (payment.length <= 0) {
-      message.error('Please choose payment method first');
+      message.error('Please choose payment method!');
+      return;
+    } else if (nRadio === '') {
+      message.error('Please choose order type!');
       return;
     }
     setSpin(true);
     setDisabledButton(true);
+    const nProfit = await fCalculateProfit(ctx.cartData.items);
+    ctx.cartData.status = nRadio;
+    ctx.cartData.method = payment;
+    ctx.cartData.client = name;
+    ctx.cartData.total_cost = nProfit.totalCost;
+    ctx.cartData.profit = nProfit.profit;
     let data = {
       clientSpend: ctx.cartData.total,
       clientName: name,
@@ -320,7 +336,7 @@ const Checkout = () => {
           </p>
         </div>
         <div className="orderTable">
-          <CheckoutForm
+          <ItemsListing
             orderColumns={orderColumns}
             taxFree={taxFree}
             orderList={ctx.cartData}
@@ -387,6 +403,12 @@ const Checkout = () => {
                 />
               </div>
               <div className="clientNameFrame"></div>
+              <div className="radio">
+                <Radio.Group onChange={onChange} value={nRadio}>
+                  <Radio value={1}>Quote</Radio>
+                  <Radio value={0}>Recept</Radio>
+                </Radio.Group>
+              </div>
               <Space size={20}>
                 <Button
                   type="primary"
